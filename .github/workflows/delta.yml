@@ -1,0 +1,81 @@
+name: delta-update
+
+# Refresh cve.tsv from the upstream cvelistV5 deltaLog.
+# Schedule: every 4 hours, plus a manual trigger.
+on:
+  schedule:
+    - cron: "17 */4 * * *"   # 17 minutes past every 4th hour (off-the-hour)
+  workflow_dispatch:
+  push:
+    paths:
+      - "delta_update.py"
+      - "_cve_index.py"
+      - ".github/workflows/delta.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: delta-update
+  cancel-in-progress: true
+
+jobs:
+  update-tsv:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Show current stats
+        run: |
+          if [ -f cve.tsv ]; then
+            echo "current rows: $(wc -l < cve.tsv)"
+          else
+            echo "current rows: (no cve.tsv yet)"
+          fi
+          if [ -f cve.tsv.watermark.json ]; then
+            echo "current watermark:"
+            cat cve.tsv.watermark.json
+          else
+            echo "current watermark: (none)"
+          fi
+
+      # If cve.tsv doesn't exist yet (first run), bootstrap with the full
+      # offline build so we have a sane starting point before applying deltas.
+      - name: Bootstrap full index if missing
+        if: ${{ !hashFiles('cve.tsv') }}
+        run: |
+          git clone --depth 1 https://github.com/CVEProject/cvelistV5.git /tmp/cvelistV5
+          python3 tsv.py --src /tmp/cvelistV5/cves --out cve.tsv --state cve.tsv.state.json
+          rm -rf /tmp/cvelistV5
+
+      - name: Apply upstream delta
+        env:
+          HTTP_PROXY: ""
+          HTTPS_PROXY: ""
+        run: python3 delta_update.py --no-proxy
+
+      - name: Show new stats
+        run: |
+          echo "rows: $(wc -l < cve.tsv)"
+          echo "watermark:"
+          cat cve.tsv.watermark.json
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet cve.tsv cve.tsv.watermark.json cve.tsv.state.json; then
+            echo "no changes to commit"
+            exit 0
+          fi
+          git add cve.tsv cve.tsv.watermark.json cve.tsv.state.json
+          ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          git commit -m "delta: refresh cve.tsv (${ts})"
+          git push
