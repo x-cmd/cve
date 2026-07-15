@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# Build artifacts (kept locally for fast incremental rebuilds,
+# regenerated on every CI run from delta_update.py)
+cve.tsv.state.json
+
+# Test / scratch
+data/
+*.bak
