@@ -1,0 +1,66 @@
+name: release-xz
+
+# Repackage every cve-*.tsv + index.tsv as xz-compressed release
+# assets. The release is tagged `data` and re-created each run with
+# `--clobber` so consumers always see today's data.
+#
+# NB: NO .xz files are committed to the main branch — binaries belong
+# in release assets, not source.
+
+on:
+  schedule:
+    - cron: "37 2 * * *"   # 02:37 UTC daily; off-the-hour to spread load
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["delta-update"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-xz
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xz
+        run: |
+          command -v xz && xz --version
+          # xz-utils is preinstalled on ubuntu-latest; this is just a guard.
+
+      - name: Compress every TSV with xz -9
+        # -k keeps the .tsv on disk (we'll git-clean afterwards) so the
+        # workflow doesn't accidentally delete source files.
+        # -9 = best compression; the per-year TSV shrinks ~85%.
+        run: |
+          mkdir -p release
+          for f in cve-*.tsv index.tsv; do
+              [ -f "$f" ] || continue
+              xz -9 -k -c "$f" > "release/${f}.xz"
+          done
+          echo "--- compressed ---"
+          ls -lh release/
+
+      - name: Recreate the 'data' release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # --clobber overwrites the previous 'data' release in one step.
+          # Generates a release on every push (no notes spam) so the
+          # assets always reflect the latest committed TSVs.
+          gh release create data \
+              --title "data" \
+              --notes "Auto-generated xz-compressed CVE index." \
+              --clobber \
+              release/*.xz
+
+      - name: Cleanup
+        # Remove the local .xz artifacts we built in the checkout so
+        # the workflow doesn't try to commit them.
+        run: rm -rf release
