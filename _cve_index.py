@@ -37,8 +37,23 @@ GHSA_RE = re.compile(r"GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}", re.IGNORECASE)
 def parse_record(source: Any, *, is_path: bool = True) -> tuple | None:
     """Parse a CVE record from a Path or an already-loaded dict.
 
-    Returns (cve, year, no, ghsa, score, desc) or None when the record is
-    REJECTED, malformed, or not a CVE JSON file.
+    Returns a 9-tuple
+        (cve, year, no, vp, ghsa, score, patched, cwe, desc)
+    where:
+        cve      — full CVE id, e.g. "CVE-2024-0001"
+        year     — 4-digit year segment
+        no       — numeric segment
+        vp       — "<vendor>/<product>;<vendor>/<product>;..." — all
+                   affected vendor/product pairs joined with ";". No
+                   limit (a vuln in a popular library can touch dozens of
+                   products). Missing vendor/product yields empty string.
+        ghsa     — GHSA id(s) found in references, ";" joined
+        score    — highest CVSS base score across v4 / v3.1 / v3.0 / v2
+        patched  — "1" if containers.cna.solutions[] is non-empty, else "0"
+        cwe      — CWE numbers (prefix-stripped) joined with ";". No limit.
+        desc     — English description, single-line
+
+    Returns None when the record is REJECTED, malformed, or not a CVE JSON.
     """
     if is_path:
         path = Path(source)
@@ -71,10 +86,13 @@ def parse_record(source: Any, *, is_path: bool = True) -> tuple | None:
     if not cve_id:
         return None
 
+    vp = _extract_vp(record)
     desc = _extract_description(record)
     score = _extract_score(record)
     ghsa = _extract_ghsa(record)
-    return (cve_id, year, number, ghsa, score, desc)
+    patched = _extract_patched(record)
+    cwe = _extract_cwe(record)
+    return (cve_id, year, number, vp, ghsa, score, patched, cwe, desc)
 
 
 def _extract_description(record: dict) -> str:
@@ -143,7 +161,60 @@ def _extract_ghsa(record: dict) -> str:
     return ";".join(seen)
 
 
+def _extract_vp(record: dict) -> str:
+    """Extract <vendor>/<product>;<vendor>/<product>;... for every affected
+    entry in containers.cna.affected[]. No limit — a single library vuln
+    can affect dozens of products, and the user wants them all.
+
+    Order matches the source JSON. Empty cells (missing vendor or product)
+    are kept as empty strings so the field width is predictable.
+    """
+    pairs: list[str] = []
+    for aff in record.get("containers", {}).get("cna", {}).get("affected", []) or []:
+        vendor = aff.get("vendor") or ""
+        product = aff.get("product") or ""
+        # Always emit `<vendor>/<product>`, even if both are empty —
+        # preserves the count of affected entries. `///` means "no data".
+        pairs.append(f"{vendor}/{product}")
+    return ";".join(pairs)
+
+
+def _extract_patched(record: dict) -> str:
+    """Return "1" if the CNA published a remediation (solutions[] non-empty),
+    else "0". A non-empty solution is the strongest signal we have for
+    "patch available" without parsing every reference URL.
+    """
+    cna = record.get("containers", {}).get("cna", {})
+    return "1" if cna.get("solutions") else "0"
+
+
+_CWE_PREFIX_RE = re.compile(r"^CWE-", re.IGNORECASE)
+
+def _extract_cwe(record: dict) -> str:
+    """Extract CWE numbers (prefix-stripped) joined with ";". No limit.
+
+    Source: containers.cna.problemTypes[].descriptions[].cweId. We strip
+    the "CWE-" prefix because callers can always re-add it; storing just
+    the number keeps the field tight.
+    """
+    ids: list[str] = []
+    seen: set[str] = set()
+    for pt in record.get("containers", {}).get("cna", {}).get("problemTypes", []) or []:
+        for desc in pt.get("descriptions", []) or []:
+            cid = desc.get("cweId")
+            if not cid:
+                continue
+            n = _CWE_PREFIX_RE.sub("", str(cid))
+            if n and n not in seen:
+                seen.add(n)
+                ids.append(n)
+    return ";".join(ids)
+
+
 # ---------- tsv i/o ----------------------------------------------------------
+
+
+_CVE_COLUMNS = 9
 
 
 def load_tsv(path: Path) -> tuple[dict[str, list[str]], dict[str, int]]:
@@ -155,12 +226,12 @@ def load_tsv(path: Path) -> tuple[dict[str, list[str]], dict[str, int]]:
     with path.open("r", encoding="utf-8", newline="") as fh:
         for idx, line in enumerate(fh):
             parts = line.rstrip("\n").split("\t")
-            if len(parts) < 6:
-                parts = parts + [""] * (6 - len(parts))
+            if len(parts) < _CVE_COLUMNS:
+                parts = parts + [""] * (_CVE_COLUMNS - len(parts))
             cve_id = parts[0]
             if not cve_id:
                 continue
-            rows[cve_id] = parts[:6]
+            rows[cve_id] = parts[:_CVE_COLUMNS]
             order[cve_id] = idx
     return rows, order
 
@@ -223,14 +294,14 @@ def load_year_files(root: Path) -> tuple[dict[str, list[str]], dict[str, int], d
             with path.open("r", encoding="utf-8", newline="") as fh:
                 for line in fh:
                     parts = line.rstrip("\n").split("\t")
-                    if len(parts) < 6:
-                        parts = parts + [""] * (6 - len(parts))
+                    if len(parts) < _CVE_COLUMNS:
+                        parts = parts + [""] * (_CVE_COLUMNS - len(parts))
                     cve_id = parts[0]
                     if not cve_id:
                         continue
                     # trust the year segment from the file name over the row
                     parts[1] = year
-                    rows[cve_id] = parts[:6]
+                    rows[cve_id] = parts[:_CVE_COLUMNS]
                     order[cve_id] = len(order)
         except OSError as exc:
             print(f"warn: cannot read {path}: {exc}", file=sys.stderr)
