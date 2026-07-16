@@ -51,13 +51,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # --clobber overwrites the previous 'data' release in one step.
-          # Generates a release on every push (no notes spam) so the
-          # assets always reflect the latest committed TSVs.
+          # `gh release create` has no --clobber flag, so we delete the
+          # previous 'data' release (if any) before creating a new one.
+          # Always overwrite so consumers see the latest committed TSVs.
+          if gh release view data >/dev/null 2>&1; then
+              echo "Deleting existing 'data' release..."
+              gh release delete data --yes --cleanup-tag || true
+          fi
           gh release create data \
               --title "data" \
-              --notes "Auto-generated xz-compressed CVE index." \
-              --clobber \
+              --notes "Auto-generated xz-compressed CVE index (xz -9)." \
               release/*.xz
 
       - name: Cleanup
