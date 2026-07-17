@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 """
-cwe.py — build data/cwe.tsv from the MITRE CWE catalog.
-
-Mirrors the structure of x-cwe/lib/la/stream: parse the first 5 fields
-of the MITRE 2000.csv (ID, Name, Abstraction, Status, Description),
-emit `cwe-id\tname\tabstraction\tstatus\tdesc` rows in **ascending
-cwe-id-numeric order** (CWE-1, CWE-2, ..., CWE-1000, ...).
+cwe.py — fetch the MITRE CWE catalog and write it as a TSV.
 
 Source: https://cwe.mitre.org/data/csv/2000.csv.zip
-Output: data/cwe.tsv
+Output: data/cwe.tsv (tab-separated, all MITRE columns preserved)
 
-Stdlib-only. Run from the repo root after tsv.py / delta_update.py:
+We preserve every column from the upstream CSV — mitigations, related
+weaknesses, observed examples, applicable platforms, common
+consequences, detection methods, modes of introduction, etc. The
+x-cwe module and any other consumer can map these directly back to
+MITRE's column names. The raw 2000.csv.zip is ~644 KB and the
+uncompressed csv is ~3 MB — small enough that we don't need to thin
+the columns. (The on-the-wire release asset will be xz-compressed
+to roughly 100-200 KB.)
 
-    python3 .x-cmd/cwe.py
-
-The x-cwe module reads its own copy of 2000.csv at runtime; the
-companion data/cwe.tsv here is what we publish in this repo so the
-cve report table can reference CWE ids by name without fetching the
-upstream catalog.
+Rows are emitted in ascending numeric cwe-id order (CWE-1, CWE-2,
+... CWE-1434). MITRE skips a few early ids (CWE-1..4 are deprecated
+placeholders) so the sequence is sparse; we just sort numerically.
 """
 
 from __future__ import annotations
@@ -33,12 +32,21 @@ from pathlib import Path
 DEFAULT_OUT = Path(__file__).resolve().parent.parent / "data"
 DEFAULT_URL = "https://cwe.mitre.org/data/csv/2000.csv.zip"
 
-# The x-cwe consumer treats the first 5 fields as the canonical
-# row layout. We mirror that here so `x cve fz` (which shows
-# "CWE-NNNN") lines up with what x cwe info shows when the user
-# jumps from one to the other.
-FIELDS = ("id", "name", "abstraction", "status", "desc")
-TRUNC_DESC = 240   # same as the cve desc cap, so columns line up
+# MITRE's CSV column names (2000.csv). We preserve these verbatim so
+# downstream consumers can use them as-is.
+MITRE_FIELDS = [
+    "CWE-ID", "Name", "Weakness Abstraction", "Status", "Description",
+    "Extended Description", "Related Weaknesses", "Weakness Ordinalities",
+    "Applicable Platforms", "Background Details", "Alternate Terms",
+    "Modes Of Introduction", "Exploitation Factors",
+    "Likelihood of Exploit", "Common Consequences", "Detection Methods",
+    "Potential Mitigations", "Observed Examples", "Functional Areas",
+    "Affected Resources", "Taxonomy Mappings", "Related Attack Patterns",
+    "Notes",
+]
+# Renamed tab header for the TSV — replaces spaces with underscores so
+# column names work as awk / pandas fields.
+TSV_FIELDS = [f.replace(" ", "_") for f in MITRE_FIELDS]
 
 
 def fetch_zip(url: str, timeout: float = 30.0) -> bytes:
@@ -49,8 +57,8 @@ def fetch_zip(url: str, timeout: float = 30.0) -> bytes:
 
 
 def parse_csv(zbytes: bytes) -> list[dict[str, str]]:
-    """Unzip + parse the MITRE 2000.csv. Return list of dicts with the
-    five canonical fields.
+    """Unzip + parse the MITRE 2000.csv. Return list of dicts keyed by
+    the MITRE column names (preserving all fields).
     """
     with zipfile.ZipFile(io.BytesIO(zbytes)) as zf:
         csv_name = next((n for n in zf.namelist() if n.endswith(".csv")), None)
@@ -64,43 +72,19 @@ def parse_csv(zbytes: bytes) -> list[dict[str, str]]:
     reader = csv.DictReader(io.StringIO(text))
     out: list[dict[str, str]] = []
     for row in reader:
-        # Column names in 2000.csv are like "CWE-ID", "Name", etc.
-        # Map to our canonical short names — fall back to whatever
-        # case-insensitive match exists if MITRE renames a column.
-        cid = (
-            row.get("CWE-ID")
-            or row.get("cwe-id")
-            or row.get("ID")
-            or row.get("Id")
-            or ""
-        ).strip()
+        # Drop rows without a CWE id (last "None" row in some MITRE dumps).
+        cid = (row.get("CWE-ID") or "").strip()
         if not cid:
             continue
-        name = (
-            row.get("Name") or row.get("name") or ""
-        ).strip()
-        abst = (
-            row.get("Weakness Abstraction")
-            or row.get("Abstraction")
-            or row.get("abstraction")
-            or ""
-        ).strip()
-        status = (
-            row.get("Status") or row.get("status") or ""
-        ).strip()
-        desc = (row.get("Description") or row.get("description") or "").strip()
-        # Collapse whitespace and truncate to first sentence (mirror
-        # the cve description handling) so the TSV stays single-line.
-        desc = " ".join(desc.split())
-        if len(desc) > TRUNC_DESC:
-            desc = desc[:TRUNC_DESC]
-        out.append({
-            "id": cid,
-            "name": name,
-            "abstraction": abst,
-            "status": status,
-            "desc": desc,
-        })
+        # Re-emit every column we know about, preserving order. Missing
+        # columns become empty strings.
+        record = {}
+        for mitre_field, tsv_field in zip(MITRE_FIELDS, TSV_FIELDS):
+            value = (row.get(mitre_field) or "").strip()
+            # Collapse internal whitespace so each row is one TSV line.
+            value = " ".join(value.split())
+            record[tsv_field] = value
+        out.append(record)
     return out
 
 
@@ -108,7 +92,7 @@ def cwe_sort_key(row: dict[str, str]) -> tuple[int, str]:
     """Sort by CWE-id as an integer when possible (CWE-79 < CWE-100),
     fall back to lexicographic for non-numeric ids.
     """
-    raw = row["id"]
+    raw = row["CWE-ID"]
     try:
         return (0, f"{int(raw):09d}")
     except ValueError:
@@ -118,9 +102,21 @@ def cwe_sort_key(row: dict[str, str]) -> tuple[int, str]:
 def write_tsv(rows: list[dict[str, str]], out: Path) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", encoding="utf-8", newline="") as fh:
-        fh.write("\t".join(FIELDS) + "\n")
+        fh.write("\t".join(TSV_FIELDS) + "\n")
         for row in rows:
-            fh.write("\t".join(row[f] for f in FIELDS) + "\n")
+            fh.write("\t".join(row[f] for f in TSV_FIELDS) + "\n")
+
+
+# Slim view of the catalog — just id + name — for the README's
+# quick-reference table and for cwe_report.py to join against.
+# We expose this as a separate function so cwe_report.py can call it
+# without re-parsing the upstream zip.
+def write_cwe_slim(rows: list[dict[str, str]], out: Path) -> None:
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("w", encoding="utf-8", newline="") as fh:
+        fh.write("CWE-ID\tName\n")
+        for row in rows:
+            fh.write(f"{row['CWE-ID']}\t{row['Name']}\n")
 
 
 def main(argv: list[str]) -> int:
@@ -138,7 +134,12 @@ def main(argv: list[str]) -> int:
     rows.sort(key=cwe_sort_key)
     write_tsv(rows, out)
 
-    print(f"wrote {out} ({len(rows)} CWE rows)", file=sys.stderr)
+    # Also emit a slim 2-col id+name catalog for the report join.
+    slim_out = DEFAULT_OUT / "cwe.slim.tsv"
+    write_cwe_slim(rows, slim_out)
+
+    print(f"wrote {out} ({len(rows)} CWE rows, full 21 cols)", file=sys.stderr)
+    print(f"wrote {slim_out} ({len(rows)} CWE rows, slim 2 cols)", file=sys.stderr)
     return 0
 
 
