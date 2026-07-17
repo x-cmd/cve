@@ -54,14 +54,19 @@ jobs:
       # up-to-date before we package them. The script writes into
       # ./data/ by default and is dependency-free (Python stdlib only).
       # ----------------------------------------------------------------
-      - name: Run producer
+      - name: Build TSVs from upstream cvelistV5
+        # Shallow clone of cvelistV5 (--depth 1) is enough — we only
+        # need HEAD, not history. Runs `tsv.py --rebuild` against
+        # the local clone to write fresh data/cve-YYYY.tsv.
         run: |
           mkdir -p data
-          # delta_update.py does the incremental fetch against the
-          # upstream deltaLog — much cheaper than rebuilding from
-          # scratch.
-          python3 .x-cmd/delta_update.py 2>&1 | tail -20 || \
-            python3 .x-cmd/tsv.py --rebuild 2>&1 | tail -20
+          git clone --depth 1 https://github.com/CVEProject/cvelistV5.git \
+              /tmp/cvelistV5 2>&1 | tail -3
+          python3 .x-cmd/tsv.py \
+              --src /tmp/cvelistV5/cves \
+              --out data \
+              --rebuild 2>&1 | tail -5
+          rm -rf /tmp/cvelistV5
 
       # ----------------------------------------------------------------
       # Build cve.report.tsv + cve.report.md from the freshly-updated
