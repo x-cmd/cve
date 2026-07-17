@@ -96,32 +96,22 @@ def parse_record(source: Any, *, is_path: bool = True) -> tuple | None:
 
 
 def _extract_description(record: dict) -> str:
-    """Return the English description, truncated to the first sentence.
+    """Return the full English description verbatim.
 
-    Linux CNA pastes full kernel bug reports — slab dumps, call traces,
-    hex addresses — into the description field, yielding rows 1000+
-    characters long. That makes the per-year TSV balloon to 18MB+ and
-    the fzf picker unusable. We keep just the first sentence: the
-    one-line summary of what's affected. Hard-cap at 240 chars.
+    We collapse internal whitespace (newlines / tabs) to single spaces
+    so each row fits on a single TSV line, but otherwise preserve the
+    entire upstream text — including the slab dumps, call traces, and
+    hex addresses that Linux CNA routinely pastes in. Truncating or
+    summarising the description at the producer level would silently
+    drop information; consumers that want a shorter view should slice
+    the row at display time, not at write time.
     """
     cna = record.get("containers", {}).get("cna", {})
     for entry in cna.get("descriptions", []) or []:
         if entry.get("lang") == "en":
             value = entry.get("value", "") or ""
-            value = " ".join(value.split())
-            break
-    else:
-        return ""
-
-    # First sentence: first '. ' or end-of-string. Hard-cap 240.
-    if len(value) > 240:
-        value = value[:240]
-    cut = value.find(". ")
-    if cut >= 0:
-        return value[: cut + 1]
-    if value.endswith("."):
-        return value
-    return value.rstrip() + "…"
+            return " ".join(value.split())
+    return ""
 
 
 def _extract_score(record: dict) -> str:
