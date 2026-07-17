@@ -31,7 +31,7 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,6 +62,38 @@ jobs:
           # scratch.
           python3 .x-cmd/delta_update.py 2>&1 | tail -20 || \
             python3 .x-cmd/tsv.py --rebuild 2>&1 | tail -20
+
+      # ----------------------------------------------------------------
+      # Build cve.report.tsv + cve.report.md from the freshly-updated
+      # data/. The markdown file is what gets inlined into the README
+      # on the next step.
+      # ----------------------------------------------------------------
+      - name: Generate year stats report
+        run: |
+          python3 .x-cmd/report.py
+
+      - name: Inline report into README
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          md = Path("data/cve.report.md").read_text(encoding="utf-8")
+          readme = Path("README.md").read_text(encoding="utf-8")
+          begin = "<!-- BEGIN cve.report.md -->"
+          end   = "<!-- END cve.report.md -->"
+          # Extract the auto-generated block from cve.report.md (the
+          # block already includes its BEGIN/END markers in the body).
+          body = md.split(begin, 1)[1].split(end, 1)[0]
+          block = begin + body + end
+          if begin in readme and end in readme:
+              i, j = readme.index(begin), readme.index(end) + len(end)
+              new_readme = readme[:i] + block + readme[j:]
+          else:
+              anchor = "## Repository layout"
+              new_readme = readme.replace(anchor, block + "\n" + anchor, 1)
+          Path("README.md").write_text(new_readme, encoding="utf-8")
+          print("inlined report into README.md")
+          PY
+          git diff --stat README.md || true
 
       # ----------------------------------------------------------------
       # Detect which .tsv files have actually changed since the last
