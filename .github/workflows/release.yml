@@ -122,9 +122,11 @@ jobs:
         run: |
           mkdir -p release
           # Tar every data/cve-*.tsv into a plain tar, then xz it.
-          # Strip the data/ prefix so the bundle expands to cve-YYYY.tsv
-          # rather than data/cve-YYYY.tsv.
-          tar -C data -cf - cve-*.tsv | xz -9 -e > release/cve-all.tar.xz
+          # We have to expand the glob BEFORE tar changes directory
+          # (otherwise `cve-*.tsv` resolves against the post-`-C`
+          # directory and finds nothing). Pass the explicit list of
+          # absolute paths to tar, which it then strips via the -C.
+          tar -C data -cf - $(cd data && echo cve-*.tsv) | xz -9 -e > release/cve-all.tar.xz
           ls -lh release/cve-all.tar.xz
 
       # ----------------------------------------------------------------
