@@ -40,9 +40,12 @@ from _cve_index import (
     write_manifest,
 )
 
+# This script lives at .x-cmd/tsv.py inside the repo; the data lives
+# at the sibling data/ directory. DEFAULT_OUT points there so a bare
+# `python3 tsv.py` writes to the right place.
 DEFAULT_SRC = Path("/Users/l/.x-repo/github.com/CVEProject/cvelistV5/cves")
-DEFAULT_OUT = Path(__file__).resolve().parent
-DEFAULT_STATE = Path(__file__).resolve().parent / "cve.tsv.state.json"
+DEFAULT_OUT = Path(__file__).resolve().parent.parent / "data"
+DEFAULT_STATE = DEFAULT_OUT / "cve.tsv.state.json"
 
 
 def iter_cve_files(src: Path):

@@ -53,8 +53,10 @@ from _cve_index import (
     write_manifest,
 )
 
-DEFAULT_TSV = Path(__file__).resolve().parent / "cve.tsv"
-DEFAULT_WATERMARK = Path(__file__).resolve().parent / "cve.tsv.watermark.json"
+# This script lives at .x-cmd/delta_update.py inside the repo; data
+# lives at the sibling data/ directory.
+DEFAULT_TSV = Path(__file__).resolve().parent.parent / "data" / "cve.tsv"
+DEFAULT_WATERMARK = Path(__file__).resolve().parent.parent / "data" / "cve.tsv.watermark.json"
 DEFAULT_DELTA_LOG_URL = (
     "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/deltaLog.json"
 )
