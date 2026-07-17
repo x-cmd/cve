@@ -9,14 +9,44 @@ file, and publishes them as GitHub Release assets at the stable URL
 `https://github.com/x-cmd/cve/releases/download/data/<name>.xz`.
 
 The consumer is the x-cmd shell module
-[`x cve`](https://x-cmd.com/mod/cve) (sourced from
-[x-bash/cve](https://github.com/x-bash/cve)). It downloads whatever
-it needs, decompresses on the fly with `xz -d`, and never has to talk
-to the upstream `cvelistV5` repo at runtime.
+[`x cve`](https://x-cmd.com/mod/cve). It downloads whatever it needs,
+decompresses on the fly with `xz -d`, and never has to talk to the
+upstream `cvelistV5` repo at runtime.
 
 A companion module [`x cwe`](https://x-cmd.com/mod/cwe) browses CWE
 catalog entries; the `cwe` column in our TSV (column 8, prefix-stripped
 numbers like `787`) is what makes cross-module linking possible.
+
+## How users get CVE data (the 4 commands)
+
+```sh
+# 1. Browse — list / fzf over every cached CVE, newest first.
+x cve
+x cve fz
+
+# 2. Look up a single CVE by id (or YYYY-NNNN shorthand).
+x cve info CVE-2024-0001
+x cve info 2024-0001            # same thing, no prefix needed
+
+# 3. Pull the FULL upstream JSON record from CVEProject/cvelistV5:
+#    affected products, references, timeline, ADP containers, etc.
+x cve detail CVE-2024-0001
+
+# 4. Enrich with Shodan's CVE database — EPSS, KEV listing,
+#    exploit writeups, vendor advisories aggregated into one record:
+x shodan cve CVE-2024-0001
+#    (https://x-cmd.com/mod/shodan/cve)
+```
+
+`x cve` and `x shodan cve` chain cleanly:
+
+```sh
+x cve fz | x shodan cve -      # preview every CVE in shodan
+x shodan cve CVE-2024-0001     # equivalent, no pipe needed
+```
+
+No API keys, no sudo, no background services — `x cve` is a thin
+shell module backed by the per-year TSVs this repo publishes daily.
 
 ## Repository layout
 
