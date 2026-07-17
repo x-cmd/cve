@@ -131,5 +131,5 @@ Downstream consumers of these TSVs must retain that attribution.
 
 - [x-cmd/cve module docs](https://x-cmd.com/mod/cve) — consumer (shell)
 - [x-cmd/cwe module docs](https://x-cmd.com/mod/cwe) — companion module
-- [x-bash/cve](https://github.com/x-bash/cve) — consumer source
+- [x-cmd/x-cmd](https://github.com/x-cmd/x-cmd) — module source (`mod/cve/`)
 - [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5) — upstream data
