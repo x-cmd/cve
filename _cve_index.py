@@ -96,12 +96,32 @@ def parse_record(source: Any, *, is_path: bool = True) -> tuple | None:
 
 
 def _extract_description(record: dict) -> str:
+    """Return the English description, truncated to the first sentence.
+
+    Linux CNA pastes full kernel bug reports — slab dumps, call traces,
+    hex addresses — into the description field, yielding rows 1000+
+    characters long. That makes the per-year TSV balloon to 18MB+ and
+    the fzf picker unusable. We keep just the first sentence: the
+    one-line summary of what's affected. Hard-cap at 240 chars.
+    """
     cna = record.get("containers", {}).get("cna", {})
     for entry in cna.get("descriptions", []) or []:
         if entry.get("lang") == "en":
             value = entry.get("value", "") or ""
-            return " ".join(value.split())
-    return ""
+            value = " ".join(value.split())
+            break
+    else:
+        return ""
+
+    # First sentence: first '. ' or end-of-string. Hard-cap 240.
+    if len(value) > 240:
+        value = value[:240]
+    cut = value.find(". ")
+    if cut >= 0:
+        return value[: cut + 1]
+    if value.endswith("."):
+        return value
+    return value.rstrip() + "…"
 
 
 def _extract_score(record: dict) -> str:
@@ -237,7 +257,9 @@ def load_tsv(path: Path) -> tuple[dict[str, list[str]], dict[str, int]]:
 
 
 def save_tsv(path: Path, rows_by_cve: dict[str, list[str]], order: dict[str, int]) -> None:
-    """Atomically write the TSV. New ids append after the existing tail."""
+    """Atomically write the TSV with rows in descending cve-id order
+    (newest first), so consumers reading top-to-bottom see the latest
+    CVEs first without needing a reverse pass."""
     known = set(order)
     next_idx = (max(order.values()) + 1) if order else 0
     for cid in sorted(rows_by_cve):
@@ -245,7 +267,7 @@ def save_tsv(path: Path, rows_by_cve: dict[str, list[str]], order: dict[str, int
             order[cid] = next_idx
             next_idx += 1
 
-    sorted_ids = sorted(rows_by_cve, key=lambda c: order[c])
+    sorted_ids = sorted(rows_by_cve, key=lambda c: order[c], reverse=True)
     fd, tmp_name = tempfile.mkstemp(prefix=path.name + ".", dir=str(path.parent))
     try:
         with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
@@ -335,9 +357,12 @@ def save_year_files(
     years_with_rows = set(buckets)
     target_years = set(only_years) if only_years is not None else years_with_rows
 
-    # Sort each bucket by cve id (lexicographic, matches old behavior).
+    # Sort each bucket by cve id descending — newest id first.
+    # Consumers (x cve ls / fz) want the latest CVEs at the top of
+    # the stream, so we store them in that order on disk and avoid
+    # an extra `tac` pass at read time.
     for year in target_years & years_with_rows:
-        buckets[year].sort()
+        buckets[year].sort(reverse=True)
 
     for year in target_years:
         out = year_file_path(root, year)
