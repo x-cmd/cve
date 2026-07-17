@@ -169,7 +169,38 @@ python3 .x-cmd/delta_update.py
 python3 .x-cmd/delta_update.py --no-proxy          # ignore HTTP_PROXY env
 python3 .x-cmd/delta_update.py --since 2026-07-01  # backfill a date range
 python3 .x-cmd/delta_update.py --dry-run           # just show what would change
+
+# Fetch MITRE CWE catalog → data/cwe.tsv (full 21 columns) +
+# data/cwe.slim.tsv (id+name only, used for joins).
+python3 .x-cmd/cwe.py
+
+# Aggregate cross-reference: how many CVEs reference each CWE,
+# mean + max score. Reads data/cve-*.tsv + data/cwe.slim.tsv.
+python3 .x-cmd/cwe_report.py
 ```
+
+### CWE data — what we publish vs what we derive
+
+This repo emits three different CWE-related files:
+
+| File | Shape | Source | Purpose |
+| ---  | ---   | ---    | ---     |
+| `data/cwe.tsv`        | 21-column TSV (~3 MB), all MITRE fields preserved | Verbatim mirror of MITRE 2000.csv (header row, spaces in column names replaced with `_`) | x-cwe module and any consumer that wants the full CWE catalog without hitting MITRE directly |
+| `data/cwe.slim.tsv`   | 2-column TSV (~50 KB), `CWE-ID\tName` only        | Derived from `data/cwe.tsv` (same row order) | Joined against `data/cve-*.tsv` for cwe_report.py |
+| `data/cwe.report.tsv` | 5-column TSV (~50 KB), `cwe_id\tname\tcve_count\tavg_score\tmax_score` | Aggregated from `data/cve-*.tsv` ∩ `data/cwe.slim.tsv` | README / report — *"which CWEs are most-exploited in our CVE dataset?"* |
+
+**Why we mirror the catalog**: the upstream MITRE 2000.csv.zip is
+644 KB and the unzipped csv is ~3 MB. xz-compressed to ~150 KB.
+We can afford to ship a full mirror, and it gives offline consumers
+the same data they'd get from MITRE without the network hop. The
+TSV keeps MITRE's column names (only spaces → underscores) so
+downstream code can use either format.
+
+**Why we don't ship a copy of the per-CVE catalog as a release
+asset today**: the x-cwe module currently fetches 2000.csv from
+MITRE on its own and caches it locally (`~/.x-cmd.root/local/data/cwe/`).
+A future version of x-cwe could optionally read `data/cwe.tsv` from
+this repo's release instead, but that's not wired up yet.
 
 ## CI
 

@@ -77,6 +77,14 @@ jobs:
         run: |
           python3 .x-cmd/cwe.py
 
+      - name: Generate CWE cross-reference report
+        # For every CWE in the catalog, count how many CVEs in our
+        # data/ reference it, plus avg / max score. Output goes into
+        # data/cwe.report.tsv — derived aggregates only, never a copy
+        # of MITRE's catalog.
+        run: |
+          python3 .x-cmd/cwe_report.py
+
       - name: Generate year stats report
         run: |
           python3 .x-cmd/report.py
