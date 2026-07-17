@@ -1,8 +1,9 @@
 name: release-xz
 
-# Repackage every cve-*.tsv + index.tsv as xz-compressed release
-# assets. The release is tagged `data` and re-created each run with
-# `--clobber` so consumers always see today's data.
+# Repackage the per-year TSV + index.tsv as xz-compressed release
+# assets. Only files that have changed since the last packaged commit
+# (tracked by the `data-packaged` git tag) are re-uploaded, so a
+# typical day uploads 1-2 files instead of all 28.
 #
 # NB: NO .xz files are committed to the main branch — binaries belong
 # in release assets, not source.
@@ -28,42 +29,111 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Need the full history so `git diff <prev>..HEAD` can compare
+          # against the previous packaged commit.
+          fetch-depth: 0
 
       - name: Install xz
         run: |
           command -v xz && xz --version
           # xz-utils is preinstalled on ubuntu-latest; this is just a guard.
 
-      - name: Compress every TSV with xz -9
-        # -k keeps the .tsv on disk (we'll git-clean afterwards) so the
-        # workflow doesn't accidentally delete source files.
-        # -9 = best compression; the per-year TSV shrinks ~85%.
+      # ----------------------------------------------------------------
+      # Detect which .tsv files have actually changed since the last
+      # packaged commit. Skipping unchanged files keeps the release
+      # workflow O(changes-per-day) instead of O(years).
+      # ----------------------------------------------------------------
+      - name: Find previous packaged commit
+        id: prev
+        run: |
+          PREV=$(git rev-list -n 1 data-packaged 2>/dev/null || echo "")
+          echo "prev=${PREV}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect changed .tsv files
+        id: changed
+        run: |
+          if [ -n "${{ steps.prev.outputs.prev }}" ]; then
+              git diff --name-only "${{ steps.prev.outputs.prev }}"..HEAD \
+                  -- 'cve-*.tsv' 'index.tsv' \
+                  | sort -u > changed.txt
+          else
+              # First run ever — upload everything.
+              ls cve-*.tsv index.tsv 2>/dev/null | sort -u > changed.txt
+          fi
+          echo "Files changed since last release:"
+          cat changed.txt
+          echo "changed_count=$(wc -l < changed.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Compress changed files
+        if: steps.changed.outputs.changed_count != '0'
+        # xz -9 = best compression; per-year TSV shrinks ~85%.
+        # -k keeps the .tsv on disk so the workflow doesn't accidentally
+        # delete source files.
         run: |
           mkdir -p release
-          for f in cve-*.tsv index.tsv; do
+          while IFS= read -r f; do
               [ -f "$f" ] || continue
               xz -9 -k -c "$f" > "release/${f}.xz"
-          done
+          done < changed.txt
           echo "--- compressed ---"
           ls -lh release/
 
-      - name: Recreate the 'data' release
+      # ----------------------------------------------------------------
+      # Ensure the `data` release exists (first run creates it), then
+      # for each changed file: delete the existing asset (if any) and
+      # upload the new .xz. The release URL for each asset is stable,
+      # so consumers see no churn.
+      # ----------------------------------------------------------------
+      - name: Ensure 'data' release exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # `gh release create` has no --clobber flag, so we delete the
-          # previous 'data' release (if any) before creating a new one.
-          # Always overwrite so consumers see the latest committed TSVs.
-          if gh release view data >/dev/null 2>&1; then
-              echo "Deleting existing 'data' release..."
-              gh release delete data --yes --cleanup-tag || true
+          if ! gh release view data >/dev/null 2>&1; then
+              echo "Creating 'data' release (first run)..."
+              gh release create data \
+                  --title "data" \
+                  --notes "xz-compressed CVE index (auto-generated daily)." \
+                  --draft
+              # Release starts as draft; assets added below; we publish
+              # at the very end so consumers never see a half-built
+              # release.
           fi
-          gh release create data \
-              --title "data" \
-              --notes "Auto-generated xz-compressed CVE index (xz -9)." \
-              release/*.xz
+
+      - name: Replace changed assets
+        if: steps.changed.outputs.changed_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          while IFS= read -r f; do
+              [ -f "release/${f}.xz" ] || continue
+              # Delete existing asset (if any) so the upload replaces it.
+              gh release delete-asset data "${f}.xz" --yes 2>/dev/null || true
+              echo "Uploading ${f}.xz"
+              gh release upload data "release/${f}.xz" --clobber
+          done < changed.txt
+
+      - name: Publish the release
+        if: steps.changed.outputs.changed_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # If it was created as a draft above, promote it. Idempotent.
+          gh release edit data --draft=false || true
+
+      # ----------------------------------------------------------------
+      # Move the data-packaged tag to the current commit so the next
+      # run can diff against it. Force-push because tags are
+      # deliberately mutable here (that's the whole point).
+      # ----------------------------------------------------------------
+      - name: Move data-packaged tag to current commit
+        if: steps.changed.outputs.changed_count != '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -f data-packaged HEAD
+          git push origin data-packaged --force
 
       - name: Cleanup
-        # Remove the local .xz artifacts we built in the checkout so
-        # the workflow doesn't try to commit them.
-        run: rm -rf release
+        if: always()
+        run: rm -rf release changed.txt
