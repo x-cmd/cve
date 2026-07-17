@@ -1,116 +1,135 @@
-# cve
+# x-cmd/cve
 
-A small public project that maintains a per-year TSV index of
+A daily-updated, per-year CVE index built on top of
 [`CVEProject/cvelistV5`](https://github.com/CVEProject/cvelistV5).
 
-This repo is the **data source**. The consumer is the `x cve` module living
-under `x-bash/cve` — it fetches whatever it needs from this repo at runtime
-(possibly with a curl-based parallel fetcher of its own). Keep the two roles
-separate so the producer stays dependency-free and reproducible.
+This repo is the **producer**. It reads the upstream CVE JSON tree,
+extracts a slim 9-column TSV per calendar year, xz-compresses each
+file, and publishes them as GitHub Release assets at the stable URL
+`https://github.com/x-cmd/cve/releases/download/data/<name>.xz`.
 
-## Layout
+The consumer is the x-cmd shell module
+[`x cve`](https://x-cmd.com/mod/cve) (sourced from
+[x-bash/cve](https://github.com/x-bash/cve)). It downloads whatever
+it needs, decompresses on the fly with `xz -d`, and never has to talk
+to the upstream `cvelistV5` repo at runtime.
+
+A companion module [`x cwe`](https://x-cmd.com/mod/cwe) browses CWE
+catalog entries; the `cwe` column in our TSV (column 8, prefix-stripped
+numbers like `787`) is what makes cross-module linking possible.
+
+## Repository layout
 
 ```
 .
-├── index.tsv                  ← manifest: year\trows\tfile  (smallest possible index)
-├── cve-YYYY.tsv               ← one TSV per year, full row including desc
-├── cve.tsv.state.json         ← per-file mtimes for tsv.py's incremental path
-├── cve.tsv.watermark.json     ← last-consumed fetchTime from deltaLog.json
-├── tsv.py                     ← full rebuild (offline, walks a local clone)
-├── delta_update.py            ← incremental update (network, deltaLog-driven)
-├── _cve_index.py              ← shared parse/IO helpers
-└── .github/workflows/delta.yml← runs every 4 hours in CI
+├── .x-cmd/
+│   ├── tsv.py              # full rebuild from a local cvelistV5 clone
+│   ├── delta_update.py     # incremental update (network, deltaLog-driven)
+│   └── _cve_index.py       # shared parse / IO helpers
+├── data/                   # regenerated on every CI run — NOT in git
+│   ├── cve-YYYY.tsv        # one TSV per year (rows in DESCENDING cve-id order)
+│   ├── index.tsv           # year \t rows \t file
+│   ├── cve.tsv.state.json       # per-file mtimes (for tsv.py incremental)
+│   └── cve.tsv.watermark.json   # last-consumed deltaLog fetchTime
+└── .github/workflows/
+    └── release.yml         # daily 02:37 UTC: run delta_update → xz → upload
 ```
 
-## TSV columns
+`data/` is regenerated from scratch on every CI run, so the working
+tree on `main` stays small (just the 3 scripts and the workflow).
 
-`cve-YYYY.tsv` per year, tab-separated, one row per non-rejected CVE record:
+## Row order — newest first
 
-| Column | Meaning                                                                                       |
-| ------ | --------------------------------------------------------------------------------------------- |
-| `cve`  | Full CVE id, e.g. `CVE-2024-0001`.                                                            |
-| `year` | Year segment parsed from the id, e.g. `2024`.                                                 |
-| `no`   | Numeric segment parsed from the id, e.g. `0001`.                                              |
-| `ghsa` | GitHub Security Advisory id(s) found in `references`, `;`-joined when multiple. Empty if none. |
-| `score`| Highest CVSS base score across CNA + ADP containers (`cvssV4_0` > `cvssV3_1` > `cvssV3_0` > `cvssV2_0`). Empty if absent. |
-| `desc` | English description from the CNA container (newlines/tabs collapsed to spaces). Empty if absent. |
+Every `cve-YYYY.tsv` is written with rows in **descending cve-id order**:
 
-`index.tsv` is just `year\trows\tfile` — a manifest for resource-constrained
-clients that want to know what's available before downloading individual
-year files.
+```
+CVE-2026-99999
+CVE-2026-99998
+CVE-2026-99997
+...
+CVE-2026-00002
+CVE-2026-00001
+CVE-2025-99999
+...
+CVE-1999-00001
+```
+
+The `x cve` consumer walks year files in reverse (`ls -r`) and each
+file is already in reverse order, so a plain `cat` produces
+"newest CVE at the top of the stream". No `tac`, no second pass over
+the data, no surprises.
+
+Why store in reverse? `x cve ls` and `x cve fz` users care about
+*latest* CVEs first — the freshly issued ones, today's score-bombs.
+The producer's `save_year_files` sorts each bucket with
+`sort(reverse=True)` so the on-disk order matches the display order.
+
+## TSV columns (9)
+
+| # | Column   | Meaning                                                                       |
+| - | -------- | ----------------------------------------------------------------------------- |
+| 1 | `cve`    | Full CVE id, e.g. `CVE-2024-0001`.                                            |
+| 2 | `year`   | Year segment parsed from the id.                                              |
+| 3 | `no`     | Numeric segment parsed from the id.                                           |
+| 4 | `vp`     | `<vendor>/<product>;...` from `containers.cna.affected[]`, `;`-joined.       |
+| 5 | `ghsa`   | GitHub Security Advisory id(s) in `references`, `;`-joined. Empty if absent.  |
+| 6 | `score`  | Highest CVSS base score (v4.0 → v3.1 → v3.0 → v2.0, first hit wins).           |
+| 7 | `patched`| `1` if `containers.cna.solutions[]` is non-empty, else `0`.                   |
+| 8 | `cwe`    | CWE number(s) (prefix-stripped) joined with `;`. Empty if absent.             |
+| 9 | `desc`   | English description, first sentence only (≤240 chars).                        |
+
+Field 9 is truncated to the first sentence — Linux CNA routinely
+pastes full kernel slab dumps (kilobytes of `fp=0x...` hex) into the
+description field. Truncating keeps per-year files at ~1-9 MB each
+and makes `x cve fz` lists scannable.
 
 ## Scripts
 
-### `tsv.py` — full rebuild
-
-Walks a local clone of `cvelistV5/cves/` and (re)writes every per-year file
-plus the manifest. Incremental: unchanged files are skipped via mtime state.
+All scripts are dependency-free (Python 3.8+ stdlib). Run from the
+repo root:
 
 ```sh
-python3 tsv.py                            # incremental build
-python3 tsv.py --rebuild                  # ignore state, re-parse everything
-python3 tsv.py --src /path/to/cves --out /tmp/cve-out
+# Full rebuild from a local cvelistV5 clone (~2 minutes for ~350k records)
+python3 .x-cmd/tsv.py
+
+# Force re-parse every file (ignore mtime state)
+python3 .x-cmd/tsv.py --rebuild
+
+# Incremental update via the upstream deltaLog (network only — fast)
+python3 .x-cmd/delta_update.py
+python3 .x-cmd/delta_update.py --no-proxy          # ignore HTTP_PROXY env
+python3 .x-cmd/delta_update.py --since 2026-07-01  # backfill a date range
+python3 .x-cmd/delta_update.py --dry-run           # just show what would change
 ```
 
-### `delta_update.py` — incremental update
+## CI
 
-Consumes `cves/deltaLog.json` from upstream, fetches each changed CVE JSON
-via `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/<path>`, and
-updates only the year file(s) that actually changed. Older years stay frozen
-on disk, so a delta run touches a few megabytes at most.
+`.github/workflows/release.yml` runs daily at **02:37 UTC** (off-the-hour
+to spread load), and on manual dispatch. Each run:
 
-Honors `HTTP_PROXY` / `HTTPS_PROXY` environment variables (so a local
-forwarder like `http://localhost:2026` "防墙" is automatic). The fetcher uses
-`urllib.request` — kept dependency-free and good enough for the producer
-side. The consumer (`x cve`) is free to use a curl-based parallel fetcher
-with HTTP/2 multiplexing.
+1. Runs `delta_update.py` to refresh `data/`.
+2. Compares the working tree against the `data-packaged` git tag — only
+   changed year files + index are repackaged.
+3. xz-compresses each changed file (`xz -9`, ~85% size reduction).
+4. Deletes the existing release asset and uploads the new `.xz`.
+5. Force-moves the `data-packaged` tag to the current commit so the
+   next run's diff is correct.
 
-```sh
-# Online, honors HTTP_PROXY env (e.g. http://localhost:2026):
-python3 delta_update.py
+No `.xz` files are committed to `main` — binaries live in release
+assets, not source.
 
-# Bypass proxy env vars:
-python3 delta_update.py --no-proxy
+## License
 
-# Explicit proxy URL:
-python3 delta_update.py --proxy http://localhost:2026
+Apache License 2.0 — see [`LICENSE`](./LICENSE).
 
-# Offline: read deltaLog.json + every CVE JSON from a local clone
-python3 delta_update.py \
-    --from-local /path/to/cvelistV5/cves/deltaLog.json \
-    --local-root /path/to/cvelistV5 \
-    --no-proxy
+The underlying CVE records are derived from
+[CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5),
+which is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Downstream consumers of these TSVs must retain that attribution.
 
-# Backfill / re-apply a date range:
-python3 delta_update.py --since 2026-07-01T00:00:00Z
+## Related
 
-# Just inspect what would change:
-python3 delta_update.py --dry-run
-```
-
-State files (next to the TSVs):
-- `cve.tsv.state.json` — per-file mtimes (used by `tsv.py`)
-- `cve.tsv.watermark.json` — `{"fetchTime": "...Z"}` last consumed snapshot
-
-## CI: `.github/workflows/delta.yml`
-
-Runs every 4 hours (`17 */4 * * *`), plus on push and via manual dispatch.
-It only commits the year file(s) that actually changed — typical diff size
-for a single delta cycle is a few KB to a few MB.
-
-## Keeping it fresh locally
-
-```sh
-cd /Users/l/.x-repo/github.com/CVEProject/cvelistV5
-git pull --rebase
-python3 /Users/l/.x-repo/github.com/x-cmd/cve/tsv.py
-```
-
-The full rebuild takes ~2 minutes for the whole tree (~350k records). The
-incremental rebuild skips files whose mtime didn't change, so a `git pull`
-followed by `python3 tsv.py` typically finishes in a couple of seconds.
-
-## Public
-
-This project is public. The TSVs are an intentional derived snapshot of an
-already public dataset, and may be redistributed as-is.
+- [x-cmd/cve module docs](https://x-cmd.com/mod/cve) — consumer (shell)
+- [x-cmd/cwe module docs](https://x-cmd.com/mod/cwe) — companion module
+- [x-bash/cve](https://github.com/x-bash/cve) — consumer source
+- [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5) — upstream data

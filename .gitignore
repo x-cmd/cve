@@ -4,8 +4,7 @@ __pycache__/
 
 # Build artifacts (kept locally for fast incremental rebuilds,
 # regenerated on every CI run from delta_update.py)
-cve.tsv.state.json
+data/cve.tsv.state.json
+data/index.tsv
 
-# Test / scratch
-data/
 *.bak

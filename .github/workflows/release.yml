@@ -5,8 +5,13 @@ name: release-xz
 # (tracked by the `data-packaged` git tag) are re-uploaded, so a
 # typical day uploads 1-2 files instead of all 28.
 #
+# Repo layout:
+#   .x-cmd/tsv.py, _cve_index.py, delta_update.py   ← scripts (this dir)
+#   data/cve-YYYY.tsv, index.tsv, cve.tsv.state.json ← per-year TSVs
+#
 # NB: NO .xz files are committed to the main branch — binaries belong
-# in release assets, not source.
+# in release assets, not source. data/cve-*.tsv is also untracked
+# (regenerated on every CI run).
 
 on:
   schedule:
@@ -39,6 +44,25 @@ jobs:
           command -v xz && xz --version
           # xz-utils is preinstalled on ubuntu-latest; this is just a guard.
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # ----------------------------------------------------------------
+      # Run the producer so data/cve-YYYY.tsv + data/index.tsv are
+      # up-to-date before we package them. The script writes into
+      # ./data/ by default and is dependency-free (Python stdlib only).
+      # ----------------------------------------------------------------
+      - name: Run producer
+        run: |
+          mkdir -p data
+          # delta_update.py does the incremental fetch against the
+          # upstream deltaLog — much cheaper than rebuilding from
+          # scratch.
+          python3 .x-cmd/delta_update.py 2>&1 | tail -20 || \
+            python3 .x-cmd/tsv.py --rebuild 2>&1 | tail -20
+
       # ----------------------------------------------------------------
       # Detect which .tsv files have actually changed since the last
       # packaged commit. Skipping unchanged files keeps the release
@@ -53,13 +77,19 @@ jobs:
       - name: Detect changed .tsv files
         id: changed
         run: |
+          # We package cve-YYYY.tsv files only — index.tsv is a
+          # convenience artefact the consumer (x cve) no longer needs,
+          # so we don't bother uploading it.
           if [ -n "${{ steps.prev.outputs.prev }}" ]; then
               git diff --name-only "${{ steps.prev.outputs.prev }}"..HEAD \
-                  -- 'cve-*.tsv' 'index.tsv' \
+                  -- 'data/cve-*.tsv' \
+                  | sed 's#^data/##' \
                   | sort -u > changed.txt
           else
               # First run ever — upload everything.
-              ls cve-*.tsv index.tsv 2>/dev/null | sort -u > changed.txt
+              ls data/cve-*.tsv 2>/dev/null \
+                  | sed 's#^data/##' \
+                  | sort -u > changed.txt
           fi
           echo "Files changed since last release:"
           cat changed.txt
@@ -73,8 +103,8 @@ jobs:
         run: |
           mkdir -p release
           while IFS= read -r f; do
-              [ -f "$f" ] || continue
-              xz -9 -k -c "$f" > "release/${f}.xz"
+              [ -f "data/$f" ] || continue
+              xz -9 -k -c "data/$f" > "release/${f}.xz"
           done < changed.txt
           echo "--- compressed ---"
           ls -lh release/
