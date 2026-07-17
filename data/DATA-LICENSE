@@ -1,0 +1,64 @@
+DATA LICENSE — CC BY 4.0
+
+The files in this directory (data/) are derivative works aggregating
+data from upstream public datasets. They are licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+You may obtain a copy of the License at
+
+    https://creativecommons.org/licenses/by/4.0/
+
+You are free to:
+  - Share — copy and redistribute the material in any medium
+  - Adapt — remix, transform, and build upon the material
+            for any purpose, even commercially
+
+Under the following terms:
+  - Attribution — You must give appropriate credit, provide a link
+    to the license, and indicate if changes were made. You may do
+    so in any reasonable manner, but not in any way that suggests
+    the licensor endorses you or your use.
+
+
+UPSTREAM SOURCES — REQUIRED ATTRIBUTION
+════════════════════════════════════════════════════════════════════════════
+
+This directory aggregates two upstream public datasets. Downstream
+users MUST retain the following attribution in any copy, fork, or
+derivative work.
+
+────────────────────────────────────────────────────────────────────────
+CVE records — data/cve-YYYY.tsv, data/cve.report.tsv, data/cve.report.md
+────────────────────────────────────────────────────────────────────────
+
+  Source:   CVEProject / cvelistV5
+  URL:      https://github.com/CVEProject/cvelistV5
+  License:  CC BY 4.0 — https://creativecommons.org/licenses/by/4.0
+  Mirrored by: x-cmd/cve — https://github.com/x-cmd/cve
+
+────────────────────────────────────────────────────────────────────────
+CWE catalog — data/cwe.tsv, data/cwe.slim.tsv
+────────────────────────────────────────────────────────────────────────
+
+  Source:   MITRE — Common Weakness Enumeration
+  URL:      https://cwe.mitre.org/data/csv/2000.csv.zip
+  License:  CC BY 4.0 — https://creativecommons.org/licenses/by/4.0
+  Mirrored by: x-cmd/cve — https://github.com/x-cmd/cve
+
+
+CANONICAL ATTRIBUTION STRING
+════════════════════════════════════════════════════════════════════════════
+
+When redistributing any data file from this directory, include
+both upstream sources:
+
+    "Contains CVE data from CVEProject/cvelistV5 (CC BY 4.0)
+     and CWE data from MITRE (CC BY 4.0), mirrored by
+     x-cmd/cve (https://github.com/x-cmd/cve)."
+
+
+SPDX
+════════════════════════════════════════════════════════════════════════════
+
+This product includes data from CVEProject/cvelistV5, used under
+CC BY 4.0, and from MITRE CWE, used under CC BY 4.0.
