@@ -68,6 +68,15 @@ jobs:
       # data/. The markdown file is what gets inlined into the README
       # on the next step.
       # ----------------------------------------------------------------
+      - name: Generate CWE catalog TSV
+        # Fetch MITRE 2000.csv.zip, parse, write data/cwe.tsv.
+        # 30-day TTL — the CWE catalog changes slowly. The x-cwe
+        # module reads the upstream catalog on its own at runtime;
+        # this file gives the cve repo a stable, snapshot-able copy
+        # for linking CWE ids to names in our docs / report.
+        run: |
+          python3 .x-cmd/cwe.py
+
       - name: Generate year stats report
         run: |
           python3 .x-cmd/report.py
