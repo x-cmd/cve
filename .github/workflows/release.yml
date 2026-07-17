@@ -110,6 +110,24 @@ jobs:
           ls -lh release/
 
       # ----------------------------------------------------------------
+      # Build a single cve-all.tar.xz that bundles every per-year TSV
+      # (not the .xz — plain TSVs inside the tar, then tar gets xz'd).
+      # Consumers can fetch this one file and have the full mirror,
+      # vs. fetching each cve-YYYY.tsv.xz individually.
+      #
+      # We rebuild it on every run regardless of changed_count — the
+      # bundle is a snapshot, not an incremental artefact.
+      # ----------------------------------------------------------------
+      - name: Build cve-all.tar.xz
+        run: |
+          mkdir -p release
+          # Tar every data/cve-*.tsv into a plain tar, then xz it.
+          # Strip the data/ prefix so the bundle expands to cve-YYYY.tsv
+          # rather than data/cve-YYYY.tsv.
+          tar -C data -cf - cve-*.tsv | xz -9 -e > release/cve-all.tar.xz
+          ls -lh release/cve-all.tar.xz
+
+      # ----------------------------------------------------------------
       # Ensure the `data` release exists (first run creates it), then
       # for each changed file: delete the existing asset (if any) and
       # upload the new .xz. The release URL for each asset is stable,
@@ -142,6 +160,21 @@ jobs:
               echo "Uploading ${f}.xz"
               gh release upload data "release/${f}.xz" --clobber
           done < changed.txt
+
+      - name: Upload cve-all.tar.xz
+        # Always re-upload the bundle — it's a snapshot of the entire
+        # data/ tree, so any change in any year file means a stale
+        # bundle. Delete-first-then-upload so we replace atomically.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          [ -f release/cve-all.tar.xz ] || {
+              echo "release/cve-all.tar.xz missing — skipping"
+              exit 0
+          }
+          gh release delete-asset data cve-all.tar.xz --yes 2>/dev/null || true
+          echo "Uploading cve-all.tar.xz"
+          gh release upload data release/cve-all.tar.xz --clobber
 
       - name: Publish the release
         if: steps.changed.outputs.changed_count != '0'
