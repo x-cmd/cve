@@ -14,7 +14,7 @@ The README's "Stats" section is regenerated from data/cve.report.md on
 every release, so the table in the README always reflects the latest
 data.
 
-Stdlib-only. Run from the repo root after delta_update / tsv.py:
+Stdlib-only. Run from the repo root after tsv.py:
     python3 .x-cmd/report.py
 """
 
