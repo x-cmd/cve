@@ -1,35 +1,35 @@
-_33,668 CVEs across 518 distinct CWEs since 2026-07-18._
+_99,617 CVEs across 664 distinct CWEs since 2024._
 
-### What mistake do engineers keep making most often since 2026-07-18?
+### What mistake do engineers keep making most often since 2024?
 
 _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 3,105 | 6.16 |
-| 2 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 1,733 | 6.11 |
-| 3 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 1,649 | 7.54 |
-| 4 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 1,166 | 7.24 |
-| 5 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 1,111 | 6.93 |
-| 6 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 1,067 | 7.83 |
-| 7 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 910 | 8.23 |
-| 8 | [918](https://cwe.mitre.org/data/definitions/918.html) | Server-Side Request Forgery (SSRF) | 880 | 6.80 |
-| 9 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 843 | 7.08 |
-| 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 835 | 7.03 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 15,907 | 6.15 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,079 | 7.44 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,338 | 5.84 |
+| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 3,966 | 7.01 |
+| 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,087 | 5.77 |
+| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,656 | 7.18 |
+| 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,407 | 6.60 |
+| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,038 | 8.04 |
+| 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,022 | 7.65 |
+| 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 1,915 | 6.97 |
 
-### When that mistake is made, how bad is it since 2026-07-18?
+### When that mistake is made, how bad is it since 2024?
 
 _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 
 | Rank | CWE | Name | CVEs | Avg score | Max |
 | ---: | :-: | :--- | ---: | ---:      | ---: |
-| 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 12 | 9.62 | 10.0 |
-| 2 | [1392](https://cwe.mitre.org/data/definitions/1392.html) | Use of Default Credentials | 23 | 8.87 | 9.9 |
-| 3 | [913](https://cwe.mitre.org/data/definitions/913.html) | Improper Control of Dynamically-Managed Code Resources | 17 | 8.82 | 10.0 |
-| 4 | [912](https://cwe.mitre.org/data/definitions/912.html) | Hidden Functionality | 10 | 8.53 | 10.0 |
-| 5 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 17 | 8.47 | 10.0 |
-| 6 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 256 | 8.41 | 10.0 |
-| 7 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 480 | 8.32 | 10.0 |
-| 8 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 40 | 8.32 | 9.9 |
-| 9 | [648](https://cwe.mitre.org/data/definitions/648.html) | Incorrect Use of Privileged APIs | 14 | 8.28 | 9.9 |
-| 10 | [494](https://cwe.mitre.org/data/definitions/494.html) | Download of Code Without Integrity Check | 25 | 8.28 | 9.8 |
+| 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 34 | 8.95 | 10.0 |
+| 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 94 | 8.39 | 10.0 |
+| 3 | [288](https://cwe.mitre.org/data/definitions/288.html) | Authentication Bypass Using an Alternate Path or Channel | 401 | 8.33 | 10.0 |
+| 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,523 | 8.29 | 10.0 |
+| 5 | [565](https://cwe.mitre.org/data/definitions/565.html) | Reliance on Cookies without Validation and Integrity Checking | 16 | 8.29 | 9.8 |
+| 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 28 | 8.18 | 10.0 |
+| 7 | [470](https://cwe.mitre.org/data/definitions/470.html) | Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection') | 38 | 8.13 | 10.0 |
+| 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,048 | 8.13 | 10.0 |
+| 9 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,596 | 8.12 | 10.0 |
+| 10 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 49 | 8.11 | 9.9 |

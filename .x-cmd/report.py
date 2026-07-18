@@ -20,6 +20,7 @@ Stdlib-only. Run from the repo root after tsv.py:
 
 from __future__ import annotations
 
+import datetime as _dt
 import sys
 from pathlib import Path
 
@@ -31,6 +32,12 @@ DEFAULT_REPORT = Path(__file__).resolve().parent.parent / "report"
 COL_SCORE = 5  # 0-based: 6th column = $6 in awk terms
 
 CVE_ID_RE_PREFIX = "CVE-"
+
+# Today's ISO date (e.g. "2026-07-18"). Used to label the current-year
+# row in the per-year markdown table as "2026 (YTD as of 2026-07-18)"
+# so readers know the partial year isn't a full count. The TSV stays
+# raw (just the year) so machine consumers don't see the annotation.
+TODAY_ISO = _dt.date.today().isoformat()
 
 
 def collect_year_stats(data_dir: Path) -> list[tuple[str, int, int, float, float]]:
@@ -97,13 +104,24 @@ def write_report_md(rows: list[tuple[str, int, int, float, float]],
     The output is a bare markdown table — no BEGIN/END markers — so
     `cve.report.md` is also human-readable on its own. The README's
     inline step wraps this body with the BEGIN/END markers.
+
+    The first row (year descending) is the current YTD year — its
+    counts are partial. Tag the year cell with a YTD annotation so
+    readers know to take it with a grain of salt. The English
+    version is emitted here; release.yml's Chinese-localization
+    pass translates it for README.cn.md. The TSV stays raw
+    (year + counts) so machine consumers see only the data.
     """
+    current_year = str(_dt.date.today().year)
     with out.open("w", encoding="utf-8") as fh:
         fh.write("| Year | CVEs | Scored | Avg score | Max score |\n")
         fh.write("| ---: | ---: | ---:   | ---:      | ---:      |\n")
-        for year, count, scored, avg, mx in rows:
+        for i, (year, count, scored, avg, mx) in enumerate(rows):
             avg_str = f"{avg:.2f}" if scored else "—"
-            fh.write(f"| {year} | {count:,} | {scored:,} | {avg_str} | {mx:.1f} |\n")
+            year_label = year
+            if i == 0 and year == current_year:
+                year_label = f"{year} _(YTD as of {TODAY_ISO})_"
+            fh.write(f"| {year_label} | {count:,} | {scored:,} | {avg_str} | {mx:.1f} |\n")
         # Totals row — useful at-a-glance summary. Total avg is the
         # weighted average across all scored CVEs (each year weighted
         # by its own scored_count, not by total_count).
