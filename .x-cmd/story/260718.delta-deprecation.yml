@@ -1,0 +1,38 @@
+# 260718 — drop delta-update workflow
+#
+# Issue: https://github.com/x-cmd/cve/issues/1
+#
+# 现状:
+#   - .github/workflows/delta.yml 每 4 小时跑一次 delta_update.py（增量合并）
+#   - .github/workflows/release.yml 每天 02:37 UTC 跑一次 + workflow_run
+#     跟着 delta.yml 触发，每天实际 7 次
+#   - release.yml 第一步永远是 tsv.py --rebuild（**全量重算** 350k 记录）
+#   - 也就是说 delta.yml 的增量成果被 release.yml 的全量重建覆盖掉
+#
+# 时间浪费:
+#   - delta.yml 每次 30 秒（每天 6 次 = 3 分钟）
+#   - release.yml 每次 4 分钟（每天 7 次 = 28 分钟）
+#   - 合计 ~31 分钟/天
+#   - 杀掉 delta、把 release cron 改成 */4 之后 ~28 分钟/天
+#   - 实际省下来的就是那 3 分钟的 delta 跑时间 —— 不大
+#
+# 结论:
+#   - delta 优化有，但不大（~10% 的 CI 时间）
+#   - 换来的是双 workflow 的维护负担
+#   - 应该简化成一个 workflow
+#
+# 计划（issue #1）:
+#   1. 删 .github/workflows/delta.yml
+#   2. release.yml cron: "37 2 * * *" → "37 */4 * * *"
+#   3. release.yml 删掉 workflow_run: [delta-update] 块
+#   4. 可选: 删 .x-cmd/delta_update.py（已无人引用）
+#   5. 更新 README.md 的 CI 段（9 步 → 5 步）
+#
+# 不变的:
+#   - 数据时效性: 仍是最多 4 小时延迟（和现在等价）
+#   - release asset 更新频率: 反而更密（现在 7 次/天，提议也是 7 次/天，
+#     但没有任何一次被 delta 的"伪增量"浪费）
+#
+# 风险:
+#   - release asset 上传次数维持 7 次/天，GitHub 完全撑得住
+#   - 唯一缺点: 单次 release.yml 仍然 ~4 分钟（GitHub 单 job 6h 上限的 0.7%）
