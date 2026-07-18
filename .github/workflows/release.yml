@@ -5,8 +5,14 @@ name: release-xz
 # (tracked by the `data-packaged` git tag) are re-uploaded, so a
 # typical day uploads 1-2 files instead of all 28.
 #
+# Schedule: every 4h (was daily before #1 closed; the old delta.yml
+# ran the same 4h cadence but its incremental work was discarded by
+# this workflow's `tsv.py --rebuild` step, so killing it costs us
+# nothing while removing the second-workbook complexity).
+#
 # Repo layout:
-#   .x-cmd/tsv.py, _cve_index.py, delta_update.py   ← scripts (this dir)
+#   .x-cmd/tsv.py, _cve_index.py, cwe.py, cwe_report.py, report.py
+#                                                  ← scripts (this dir)
 #   data/cve-YYYY.tsv, index.tsv, cve.tsv.state.json ← per-year TSVs
 #
 # NB: NO .xz files are committed to the main branch — binaries belong
@@ -15,11 +21,8 @@ name: release-xz
 
 on:
   schedule:
-    - cron: "37 2 * * *"   # 02:37 UTC daily; off-the-hour to spread load
+    - cron: "37 */4 * * *"   # every 4h, 17min past the hour; off-the-hour to spread load
   workflow_dispatch:
-  workflow_run:
-    workflows: ["delta-update"]
-    types: [completed]
 
 permissions:
   contents: write

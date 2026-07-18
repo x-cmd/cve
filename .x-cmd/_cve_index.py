@@ -1,6 +1,6 @@
 """
-_cve_index.py — shared helpers used by both tsv.py (full rebuild) and
-delta_update.py (incremental, deltaLog-driven).
+_cve_index.py — shared helpers used by tsv.py (the producer's full
+rebuild from a local cvelistV5 clone).
 
 It exposes:
     parse_record(path_or_payload, *, is_path=True) -> tuple | None

@@ -130,15 +130,16 @@ shell module backed by the per-year TSVs this repo publishes daily.
 .
 ├── .x-cmd/
 │   ├── tsv.py              # full rebuild from a local cvelistV5 clone
-│   ├── delta_update.py     # incremental update (network, deltaLog-driven)
+│   ├── cwe.py              # MITRE CWE catalog mirror → data/cwe.tsv + .slim.tsv
+│   ├── cwe_report.py       # aggregate data/cve-*.tsv ∩ data/cwe.slim.tsv → top-10
+│   ├── report.py           # per-year stats → data/cve.report.{tsv,md}
 │   └── _cve_index.py       # shared parse / IO helpers
 ├── data/                   # regenerated on every CI run — NOT in git
 │   ├── cve-YYYY.tsv        # one TSV per year (rows in DESCENDING cve-id order)
 │   ├── index.tsv           # year \t rows \t file
-│   ├── cve.tsv.state.json       # per-file mtimes (for tsv.py incremental)
-│   └── cve.tsv.watermark.json   # last-consumed deltaLog fetchTime
+│   └── cve.tsv.state.json  # per-file mtimes (for tsv.py incremental)
 └── .github/workflows/
-    └── release.yml         # daily 02:37 UTC: run delta_update → xz → upload
+    └── release.yml         # every 4h: tsv.py --rebuild → reports → xz → upload
 ```
 
 `data/` is regenerated from scratch on every CI run, so the working
@@ -201,12 +202,6 @@ python3 .x-cmd/tsv.py
 # Force re-parse every file (ignore mtime state)
 python3 .x-cmd/tsv.py --rebuild
 
-# Incremental update via the upstream deltaLog (network only — fast)
-python3 .x-cmd/delta_update.py
-python3 .x-cmd/delta_update.py --no-proxy          # ignore HTTP_PROXY env
-python3 .x-cmd/delta_update.py --since 2026-07-01  # backfill a date range
-python3 .x-cmd/delta_update.py --dry-run           # just show what would change
-
 # Fetch MITRE CWE catalog → data/cwe.tsv (full 21 columns) +
 # data/cwe.slim.tsv (id+name only, used for joins).
 python3 .x-cmd/cwe.py
@@ -242,32 +237,38 @@ this repo's release instead, but that's not wired up yet.
 
 ## CI
 
-`.github/workflows/release.yml` runs daily at **02:37 UTC** (off-the-hour
-to spread load), and on manual dispatch. Each run:
+`.github/workflows/release.yml` runs every 4 hours (37 minutes past
+the hour, off-the-hour to spread load), plus on manual dispatch.
+Each run:
 
-1. Runs `delta_update.py` to refresh `data/cve-*.tsv`.
+1. Clones CVEProject/cvelistV5 (depth 1) and runs
+   `.x-cmd/tsv.py --rebuild` to refresh `data/cve-*.tsv`.
 2. Regenerates `data/cwe.tsv` + `data/cwe.slim.tsv` from MITRE
    (`.x-cmd/cwe.py`) and the CWE cross-reference report
    (`.x-cmd/cwe_report.py` → `data/cwe.report.{tsv,md}`).
 3. Regenerates the year-stats report (`.x-cmd/report.py` →
    `data/cve.report.{tsv,md}`).
 4. Inlines both report markdown files into `README.md` as the first
-   section (idempotent — BEGIN/END markers round-trip).
-5. Commits the regenerated `README.md` + the four `*.report.{md,tsv}`
-   files back to `main` (skipped if nothing changed), so the README
-   on github.com always tracks the latest data.
-6. Compares the working tree against the `data-packaged` git tag — only
-   changed year files + index are repackaged.
-7. xz-compresses each changed file (`xz -9`, ~85% size reduction).
-8. Deletes the existing release asset and uploads the new `.xz`.
-9. Force-moves the `data-packaged` tag to the current commit so the
-   next run's diff is correct.
+   section (idempotent — BEGIN/END markers round-trip), then commits
+   `README.md` + the four `*.report.{md,tsv}` back to `main` (skip if
+   nothing changed), so the README on github.com always tracks the
+   latest data.
+5. xz-compresses each changed per-year file (`xz -9`, ~85% reduction),
+   replaces the matching release asset, force-moves the
+   `data-packaged` git tag so the next run's diff is correct.
 
 No `.xz` files are committed to `main` — binaries live in release
 assets, not source. The per-year `data/cve-*.tsv` and the CWE catalog
 (`data/cwe.tsv`, `data/cwe.slim.tsv`) likewise stay out of git under
 this flow; only the derived reports and the README are committed back,
 keeping the git history focused on real code changes.
+
+The workflow used to have a separate `delta-update` workflow that ran
+on the same 4-hour cadence and produced an incremental `data/cve.tsv`;
+its output was overwritten by step 1's full rebuild every time
+release.yml followed via `workflow_run`, so the incremental work was
+dead weight. See [issue #1](https://github.com/x-cmd/cve/issues/1)
+for the numbers.
 
 ## License
 

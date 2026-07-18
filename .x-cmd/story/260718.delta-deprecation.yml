@@ -1,6 +1,7 @@
-# 260718 — drop delta-update workflow
+# 260718 — drop delta-update workflow  ✅ DONE via #1
 #
 # Issue: https://github.com/x-cmd/cve/issues/1
+# Closed by: <commit hash pending>
 #
 # 现状:
 #   - .github/workflows/delta.yml 每 4 小时跑一次 delta_update.py（增量合并）
@@ -21,12 +22,13 @@
 #   - 换来的是双 workflow 的维护负担
 #   - 应该简化成一个 workflow
 #
-# 计划（issue #1）:
-#   1. 删 .github/workflows/delta.yml
-#   2. release.yml cron: "37 2 * * *" → "37 */4 * * *"
-#   3. release.yml 删掉 workflow_run: [delta-update] 块
-#   4. 可选: 删 .x-cmd/delta_update.py（已无人引用）
-#   5. 更新 README.md 的 CI 段（9 步 → 5 步）
+# 实施（issue #1）:
+#   1. ✅ 删 .github/workflows/delta.yml
+#   2. ✅ release.yml cron: "37 2 * * *" → "37 */4 * * *"
+#   3. ✅ release.yml 删掉 workflow_run: [delta-update] 块
+#   4. ✅ 删 .x-cmd/delta_update.py（已无人引用）
+#   5. ✅ 更新 README.md 的 CI 段（9 步 → 5 步） + layout block + Scripts 段
+#   6. ✅ 清掉 _cve_index.py / tsv.py / report.py 文档注释里残留的 delta_update 引用
 #
 # 不变的:
 #   - 数据时效性: 仍是最多 4 小时延迟（和现在等价）

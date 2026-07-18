@@ -15,8 +15,8 @@ TSV columns (tab-separated):
     score   the highest CVSS base score across all containers (CNA + ADP); empty if none
     desc    the English description from the CNA container (single-line); empty if none
 
-For the delta-driven (incremental, network-fetching) update path against the
-upstream deltaLog, use delta_update.py instead.
+For incremental updates between full rebuilds, re-run with `--rebuild`
+against a freshly-cloned cvelistV5 — see .github/workflows/release.yml.
 
 Usage:
     python3 tsv.py                 # incremental update against the source
