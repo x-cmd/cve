@@ -118,26 +118,27 @@ jobs:
           ANCHOR = "## Reports"
 
           # Per-file intros — the cve block carries a ## heading (the
-          # "story" title), the cwe block doesn't (its heading lives
-          # inside the markdown file as a question). Headings +
-          # attribution differ per language so the rendered README
-          # reads naturally in either locale.
+          # "story" title), the cwe block has no intro at all (the H1
+          # tagline at the top of the README already covers the
+          # "refreshed daily" promise, and the cwe block content
+          # speaks for itself). This keeps the front-matter tight:
+          # H1 tagline → cwe tables → cve section → Reports link table.
           INTRO_CVE = {
               Path("README.md"): (
                   "## How fast is CVE growing?\n\n"
-                  "_Per-year CVE volume and severity, refreshed daily "
-                  "from upstream cvelistV5. Pull this page tomorrow and "
-                  "the totals will have moved._"
+                  "_Per-year CVE volume and severity._"
               ),
               Path("README.cn.md"): (
                   "## CVE 增长得有多快？\n\n"
-                  "_逐年 CVE 数量与严重程度，每日从上游 cvelistV5 更新。_"
+                  "_逐年 CVE 数量与严重程度。_"
               ),
           }
-          INTRO_CWE = {
-              Path("README.md"): "_Refreshed daily from upstream cvelistV5 — pull tomorrow and the rankings will have moved._",
-              Path("README.cn.md"): "_每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化。_",
-          }
+          # INTRO_CWE intentionally empty — the H1 tagline under
+          # `# What CVEs keep teaching us` is the single source of
+          # the "refreshed daily" promise. Repeating it at the top
+          # of every block was duplication. To restore the line, just
+          # populate INTRO_CWE[Path(...)] = "..." with the desired
+          # first line of the cwe block.
 
           # Chinese localizations applied to README.cn.md AFTER the
           # English blocks have been stitched in. The CWE data
@@ -167,10 +168,6 @@ jobs:
                   "_Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._",
                   "_Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE 极端值的影响。_",
               ),
-              (
-                  "Refreshed daily from upstream cvelistV5 — pull tomorrow and the rankings will have moved.",
-                  "每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化。",
-              ),
               # YTD annotation on the current-year row in the per-year
               # stats table. The label uses today's ISO date so it
               # stays accurate without further code changes.
@@ -183,7 +180,14 @@ jobs:
           def stitch(readme: str, md_path: Path, begin: str, end: str,
                      intro: str) -> str:
               body = md_path.read_text(encoding="utf-8").rstrip() + "\n"
-              block = f"{begin}\n\n{intro}\n\n{body}{end}\n"
+              # If `intro` is empty, the block starts directly with the
+              # BEGIN marker + body (no extra attribution line).
+              # Otherwise intro sits between BEGIN and body as a
+              # short attribution paragraph.
+              if intro:
+                  block = f"{begin}\n\n{intro}\n\n{body}{end}\n"
+              else:
+                  block = f"{begin}\n\n{body}{end}\n"
               if begin in readme and end in readme:
                   # Replace in place. Strip trailing blank lines from
                   # the surrounding tail so successive runs don't pile
