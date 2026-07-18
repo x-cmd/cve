@@ -251,23 +251,27 @@ def write_report_md(out: Path,
     )[:TOP_N]
 
     with out.open("w", encoding="utf-8") as fh:
+        # Headline numbers — the "refreshed daily" emphasis is added
+        # by the README's inline-step intro (release.yml), not here,
+        # so we don't end up with the same line twice in the rendered
+        # README.
         fh.write(f"_{since_cve:,} CVEs across {since_cwe:,} distinct CWEs "
                  f"since {SINCE_YEAR}._\n\n")
 
-        # The blockquote carries the question (the WHY); the heading
-        # carries the answer-shaped name (the WHAT). Putting the
-        # question first reads more naturally and signals that the
-        # table exists to answer it.
-        fh.write("> What mistake do engineers keep making most often since "
-                 f"{SINCE_YEAR}?\n\n")
-        fh.write(f"### Top {TOP_N} CWE by CVE count\n\n")
+        # The heading carries the QUESTION (the WHY) and the smaller
+        # text below carries the WHAT-shaped label. Inverting the
+        # usual "table-name first" pattern reads more like prose and
+        # gives the document a story-driven feel.
+        fh.write("### What mistake do engineers keep making most often "
+                 f"since {SINCE_YEAR}?\n\n")
+        fh.write(f"_Top {TOP_N} CWE by CVE count._\n\n")
         _emit_topn_count_table(fh, by_count)
 
-        fh.write("\n> When that mistake is made, how bad is it since "
-                 f"{SINCE_YEAR}?\n")
-        fh.write(f"> _Min {MIN_CVE_FOR_SCORE_RANK} CVEs to suppress "
-                 "single-CWE outliers._\n\n")
-        fh.write(f"### Top {TOP_N} CWE by average CVSS score\n\n")
+        fh.write(f"\n### When that mistake is made, how bad is it since "
+                 f"{SINCE_YEAR}?\n\n")
+        fh.write(f"_Top {TOP_N} CWE by average CVSS score. Min "
+                 f"{MIN_CVE_FOR_SCORE_RANK} CVEs to suppress single-CWE "
+                 "outliers._\n\n")
         _emit_topn_score_table(fh, by_score)
 
 
