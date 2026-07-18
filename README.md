@@ -5,8 +5,6 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_Refreshed daily from upstream cvelistV5 — pull tomorrow and the rankings will have moved._
-
 _99,617 CVEs across 664 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
@@ -48,7 +46,7 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 
 ## How fast is CVE growing?
 
-_Per-year CVE volume and severity, refreshed daily from upstream cvelistV5. Pull this page tomorrow and the totals will have moved._
+_Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
