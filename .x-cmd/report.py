@@ -6,16 +6,16 @@ table for the README.
 Reads every data/cve-YYYY.tsv and computes:
     year, count, scored_count, avg_score, max_score
 
-Writes:
-    data/cve.report.tsv     — machine-readable
-    data/cve.report.md      — markdown table (auto-included in README)
+Writes (under report/, sibling of data/):
+    cve.report.tsv     — machine-readable, one row per year (all years
+                         that have any CVEs), plus a Total row
+    cve.report.md      — markdown table (auto-inlined into README)
 
-The README's "Stats" section is regenerated from data/cve.report.md on
-every release, so the table in the README always reflects the latest
-data.
+The README's "Stats" section is regenerated from cve.report.md on every
+release, so the table in the README always reflects the latest data.
 
 Stdlib-only. Run from the repo root after tsv.py:
-    python3 .x-cmd/report.py
+    python3 .x-cmd/report.py [data_dir] [report_dir]
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ import sys
 from pathlib import Path
 
 DEFAULT_DATA = Path(__file__).resolve().parent.parent / "data"
+DEFAULT_REPORT = Path(__file__).resolve().parent.parent / "report"
 
 # CVE ID column is $1, score is $6. Same layout as produced by
 # _cve_index.py: cve  year  no  vp  ghsa  score  patched  cwe  desc.
@@ -121,6 +122,7 @@ def write_report_md(rows: list[tuple[str, int, int, float, float]],
 
 def main(argv: list[str]) -> int:
     data_dir = Path(argv[1]) if len(argv) > 1 else DEFAULT_DATA
+    report_dir = Path(argv[2]) if len(argv) > 2 else DEFAULT_REPORT
     if not data_dir.is_dir():
         print(f"error: data directory not found: {data_dir}", file=sys.stderr)
         return 1
@@ -130,8 +132,8 @@ def main(argv: list[str]) -> int:
         print(f"warn: no cve-*.tsv found under {data_dir}", file=sys.stderr)
         return 1
 
-    tsv_out = data_dir / "cve.report.tsv"
-    md_out = data_dir / "cve.report.md"
+    tsv_out = report_dir / "cve.report.tsv"
+    md_out = report_dir / "cve.report.md"
     write_report_tsv(rows, tsv_out)
     write_report_md(rows, md_out)
 
