@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-cwe_report.py — derive cwe.report.tsv from data/cwe.tsv + data/cve-*.tsv.
+cwe_report.py — derive cwe.report.tsv + cwe.report.md from
+data/cwe.slim.tsv + data/cve-*.tsv.
 
 For every CWE in the catalog, compute:
     cwe_id, name, cve_count, scored_count, avg_score, max_score
@@ -13,7 +14,11 @@ Where:
     avg_score   = mean score across the scored ones.
     max_score   = highest score seen.
 
-Output: data/cwe.report.tsv (tab-separated, sorted by cve_count desc).
+Outputs (under data/):
+    cwe.report.tsv   — machine-readable, sorted by cve_count desc
+    cwe.report.md    — markdown with two top-10 tables
+                       (most CVEs, most severe avg score),
+                       ready to be inlined into the README
 
 We deliberately do NOT publish a copy of MITRE's 2000.csv — cve repo
 only ships derived aggregates. Users wanting the full CWE catalog
@@ -31,6 +36,12 @@ DEFAULT_DATA = Path(__file__).resolve().parent.parent / "data"
 #   $1 cve  $2 year  $3 no  $4 vp  $5 ghsa  $6 score  $7 patched  $8 cwe  $9 desc
 COL_CWE = 7   # 0-based → $8
 COL_SCORE = 5  # 0-based → $6
+
+# Cutoff for "by avg score" ranking. Below this, a single outlier score
+# can dominate the mean and the ranking is noise. 10 CVEs is the floor
+# we use elsewhere for similar cutoffs (see report.py totals, etc.).
+MIN_CVE_FOR_SCORE_RANK = 10
+TOP_N = 10
 
 
 def collect_cve_scores_by_cwe(data_dir: Path) -> dict[str, list[float]]:
@@ -101,6 +112,53 @@ def write_report(out: Path, rows: list[tuple[str, str, int, float, float]]) -> N
             fh.write(f"{cid}\t{name}\t{count}\t{avg_str}\t{mx_str}\n")
 
 
+def write_report_md(out: Path,
+                    rows: list[tuple[str, str, int, float, float]]) -> None:
+    """Write the markdown snippet the README inlines.
+
+    Two top-10 tables:
+      1. CWEs with the most CVEs (already sorted by cve_count desc).
+      2. CWEs with the highest average CVSS score, among those with at
+         least MIN_CVE_FOR_SCORE_RANK CVEs (avoid single-CWE outliers).
+
+    Output is a bare markdown document — no BEGIN/END markers — so the
+    file is also readable on its own. release.yml wraps it with
+    BEGIN/END when stitching into README.md.
+    """
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    # Headline numbers used in the preamble.
+    total_cve = sum(r[2] for r in rows)
+    total_cwe = sum(1 for r in rows if r[2] > 0)
+
+    # By avg score: filter to CWEs that have enough samples to make the
+    # mean meaningful, then sort. Tiebreak on cve_count desc so ties
+    # favor the better-attested CWE.
+    by_score = sorted(
+        (r for r in rows if r[2] >= MIN_CVE_FOR_SCORE_RANK),
+        key=lambda r: (-r[3], -r[2], r[0]),
+    )
+
+    with out.open("w", encoding="utf-8") as fh:
+        fh.write(f"_{total_cve:,} CVEs across {total_cwe:,} distinct CWEs._\n\n")
+        fh.write(f"### Top {TOP_N} CWE by CVE count\n\n")
+        fh.write("| Rank | CWE | Name | CVEs | Avg score |\n")
+        fh.write("| ---: | :-: | :--- | ---: | ---:      |\n")
+        for i, (cid, name, count, avg, _mx) in enumerate(rows[:TOP_N], 1):
+            if count <= 0:
+                continue
+            fh.write(f"| {i} | [{cid}](https://cwe.mitre.org/data/definitions/{cid}.html) "
+                     f"| {name} | {count:,} | {avg:.2f} |\n")
+
+        fh.write(f"\n### Top {TOP_N} CWE by average CVSS score "
+                 f"(min {MIN_CVE_FOR_SCORE_RANK} CVEs)\n\n")
+        fh.write("| Rank | CWE | Name | CVEs | Avg score | Max |\n")
+        fh.write("| ---: | :-: | :--- | ---: | ---:      | ---: |\n")
+        for i, (cid, name, count, avg, mx) in enumerate(by_score[:TOP_N], 1):
+            fh.write(f"| {i} | [{cid}](https://cwe.mitre.org/data/definitions/{cid}.html) "
+                     f"| {name} | {count:,} | {avg:.2f} | {mx:.1f} |\n")
+
+
 def main(argv: list[str]) -> int:
     data_dir = Path(argv[1]) if len(argv) > 1 else DEFAULT_DATA
     if not data_dir.is_dir():
@@ -130,9 +188,11 @@ def main(argv: list[str]) -> int:
     rows.sort(key=lambda r: (-r[2], -r[4], r[0]))
 
     write_report(data_dir / "cwe.report.tsv", rows)
+    write_report_md(data_dir / "cwe.report.md", rows)
 
     print(f"wrote {data_dir / 'cwe.report.tsv'} ({len(rows)} CWE rows)",
           file=sys.stderr)
+    print(f"wrote {data_dir / 'cwe.report.md'}", file=sys.stderr)
     return 0
 
 
