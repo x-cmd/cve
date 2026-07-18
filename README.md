@@ -1,4 +1,4 @@
-# x-cmd/cve
+# Data and insight from CVE
 
 <!-- BEGIN cve.report.md -->
 
@@ -43,9 +43,9 @@
 
 _99,617 CVEs across 664 distinct CWEs since 2024._
 
-### Top 10 CWE by CVE count since 2024
+> What mistake do engineers keep making most often since 2024?
 
-> What mistake do engineers keep making most often?
+### Top 10 CWE by CVE count
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
@@ -60,10 +60,10 @@ _99,617 CVEs across 664 distinct CWEs since 2024._
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,022 | 7.65 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 1,915 | 6.97 |
 
-### Top 10 CWE by average CVSS score since 2024
-
-> When that mistake is made, how bad is it?
+> When that mistake is made, how bad is it since 2024?
 > _Min 10 CVEs to suppress single-CWE outliers._
+
+### Top 10 CWE by average CVSS score
 
 | Rank | CWE | Name | CVEs | Avg score | Max |
 | ---: | :-: | :--- | ---: | ---:      | ---: |
@@ -81,19 +81,34 @@ _99,617 CVEs across 664 distinct CWEs since 2024._
 
 ## Reports
 
-The two tables above are sliced from the four derived reports in
+The two tables above are sliced from the seven derived reports in
 [`report/`](./report/) (sibling of `data/`) — see
 [`report/README.md`](./report/README.md) for methodology, the SINCE_YEAR
 cutoff, and how the top-10 markdown is sliced from the top-100 TSV.
 
-| File | Format | Top-N | Source pool |
-| ---  | ---    | ---:  | ---         |
-| [`report/cve.report.md`](./report/cve.report.md)   | Markdown table | all years | `data/cve-*.tsv` |
-| [`report/cve.report.tsv`](./report/cve.report.tsv) | TSV            | all years | same |
-| [`report/cwe.report.md`](./report/cwe.report.md)   | Markdown, two top-10 tables | top 10 since 2024 | `data/cve-*.tsv` ∩ `data/cwe.slim.tsv` |
-| [`report/cwe.report.tsv`](./report/cwe.report.tsv) | TSV            | top 100 since 2024 | same |
+### Per-year CVE stats
 
-## x-cmd/cve
+| File | Format | Window |
+| ---  | ---    | ---    |
+| [`report/cve.report.md`](./report/cve.report.md)   | Markdown table | all years |
+| [`report/cve.report.tsv`](./report/cve.report.tsv) | TSV            | all years |
+
+### CWE rankings — top 100 TSVs (one per axis × window)
+
+| File | Axis | Window |
+| ---  | ---  | ---    |
+| [`report/cwe.top100.by-cve-count.report.tsv`](./report/cwe.top100.by-cve-count.report.tsv)               | CVE count  | all years |
+| [`report/cwe.top100.by-cve-score.report.tsv`](./report/cwe.top100.by-cve-score.report.tsv)               | avg score  | all years |
+| [`report/cwe.top100.by-cve-count.since-2024.report.tsv`](./report/cwe.top100.by-cve-count.since-2024.report.tsv) | CVE count  | since 2024 |
+| [`report/cwe.top100.by-cve-score.since-2024.report.tsv`](./report/cwe.top100.by-cve-score.since-2024.report.tsv) | avg score  | since 2024 |
+
+### CWE rankings — markdown (top 10 per axis, since 2024)
+
+| File | Format |
+| ---  | ---    |
+| [`report/cwe.report.md`](./report/cwe.report.md) | Markdown, two top-10 tables — the top-10 markdown is sliced from the two since-2024 TSVs above |
+
+## About x-cmd/cve
 
 A daily-updated, per-year CVE index built on top of
 [`CVEProject/cvelistV5`](https://github.com/CVEProject/cvelistV5).
@@ -158,9 +173,14 @@ shell module backed by the per-year TSVs this repo publishes daily.
 │   ├── index.tsv           # year \t rows \t file
 │   └── cve.tsv.state.json  # per-file mtimes (for tsv.py incremental)
 └── report/                 # regenerated on every CI run — committed to main
-    ├── README.md           # docks the four files + methodology
+    ├── README.md           # docks the seven files + methodology
     ├── cve.report.{tsv,md} # per-year stats
-    └── cwe.report.{tsv,md} # CWE rankings (TSV = top 100 since 2024, MD = top 10)
+    ├── cwe.top100.by-cve-count.report.tsv               # all years, by count
+    ├── cwe.top100.by-cve-score.report.tsv               # all years, by score
+    ├── cwe.top100.by-cve-count.since-2024.report.tsv   # since 2024, by count
+    ├── cwe.top100.by-cve-score.since-2024.report.tsv   # since 2024, by score
+    └── cwe.report.md       # since 2024, top-10 markdown (sliced from the TSVs)
+├── README.cn.md            # Chinese version of README.md (auto-updated)
 └── .github/workflows/
     └── release.yml         # every 4h: tsv.py --rebuild → reports → xz → upload
 ```
@@ -236,14 +256,19 @@ python3 .x-cmd/cwe_report.py
 
 ### CWE data — what we publish vs what we derive
 
-This repo emits four different CWE-related files:
+This repo emits six different CWE-related files (the four TSVs cover
+every combination of `count`/`score` × `all-years`/`since-2024`; see
+[`report/README.md`](./report/README.md) for the full schema):
 
 | File | Shape | Source | Purpose |
 | ---  | ---   | ---    | ---     |
 | `data/cwe.tsv`        | 21-column TSV (~3 MB), all MITRE fields preserved | Verbatim mirror of MITRE 2000.csv (header row, spaces in column names replaced with `_`) | x-cwe module and any consumer that wants the full CWE catalog without hitting MITRE directly |
 | `data/cwe.slim.tsv`   | 2-column TSV (~50 KB), `CWE-ID\tName` only        | Derived from `data/cwe.tsv` (same row order) | Joined against `data/cve-*.tsv` for cwe_report.py |
-| `report/cwe.report.tsv` | 5-column TSV (~6 KB), `cwe_id\tname\tcve_count\tavg_score\tmax_score`, **top 100 since 2024** | Aggregated from `data/cve-*.tsv` ∩ `data/cwe.slim.tsv`, year >= 2024 | Machine-readable top-N ranking — feeds `report/cwe.report.md` |
-| `report/cwe.report.md`  | Markdown with two top-10 tables (by CVE count, by avg score, both since 2024) | Same as above, sliced to top 10 | Stitches into the README front-matter via release.yml's inline step |
+| `report/cwe.top100.by-cve-count.report.tsv`              | 5-column TSV (~6 KB), top 100 by CVE count, all years | Aggregated from `data/cve-*.tsv` ∩ `data/cwe.slim.tsv` | Machine-readable top-N ranking |
+| `report/cwe.top100.by-cve-score.report.tsv`              | 5-column TSV (~6 KB), top 100 by avg CVSS, all years | same | same |
+| `report/cwe.top100.by-cve-count.since-2024.report.tsv`  | 5-column TSV (~6 KB), top 100 by CVE count, since 2024 | same, year >= 2024 | same |
+| `report/cwe.top100.by-cve-score.since-2024.report.tsv`  | 5-column TSV (~6 KB), top 100 by avg CVSS, since 2024 | same, year >= 2024 | same |
+| `report/cwe.report.md`  | Markdown with two top-10 tables (since 2024) | Sliced from the two since-2024 TSVs | Stitches into the README + README.cn front-matter via release.yml's inline step |
 
 **Why we mirror the catalog**: the upstream MITRE 2000.csv.zip is
 644 KB and the unzipped csv is ~3 MB. xz-compressed to ~150 KB.

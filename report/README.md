@@ -1,15 +1,26 @@
 # Reports
 
-Derived aggregates from this repo's per-year CVE TSVs. All four files
-are regenerated on every CI run (`.github/workflows/release.yml`,
-every 4h) and committed back to main.
+Derived aggregates from this repo's per-year CVE TSVs. All files are
+regenerated on every CI run (`.github/workflows/release.yml`, every
+4h) and committed back to main.
 
-| File | Shape | Source | What it answers |
-| ---  | ---   | ---    | ---             |
-| [`cve.report.md`](cve.report.md)   | Markdown table | `data/cve-*.tsv` | "How has CVE volume and severity changed year over year?" |
-| [`cve.report.tsv`](cve.report.tsv) | TSV (one row per year, plus a Total row) | same | machine-readable form of the above |
-| [`cwe.report.md`](cwe.report.md)   | Markdown, two top-10 tables | `data/cve-*.tsv` ∩ `data/cwe.slim.tsv` | "What mistakes are engineers making **now** and which hurt the most?" |
-| [`cwe.report.tsv`](cwe.report.tsv) | TSV (top 100 CWEs since 2024) | same | machine-readable form; the markdown slices its top-10 from this pool |
+## Files
+
+| File | Format | Top-N | Time window | Source |
+| ---  | ---    | ---:  | ---         | ---    |
+| [`cve.report.md`](cve.report.md)   | Markdown table | all years | all | `data/cve-*.tsv` |
+| [`cve.report.tsv`](cve.report.tsv) | TSV            | all years | all | same |
+| [`cwe.report.md`](cwe.report.md)   | Markdown, two top-10 tables | top 10 | since 2024 | `data/cve-*.tsv` ∩ `data/cwe.slim.tsv` |
+| [`cwe.top100.by-cve-count.report.tsv`](cwe.top100.by-cve-count.report.tsv)               | TSV | top 100 | all years | same |
+| [`cwe.top100.by-cve-score.report.tsv`](cwe.top100.by-cve-score.report.tsv)               | TSV | top 100 | all years | same |
+| [`cwe.top100.by-cve-count.since-2024.report.tsv`](cwe.top100.by-cve-count.since-2024.report.tsv) | TSV | top 100 | since 2024 | same |
+| [`cwe.top100.by-cve-score.since-2024.report.tsv`](cwe.top100.by-cve-score.since-2024.report.tsv) | TSV | top 100 | since 2024 | same |
+
+Two ranking axes (CVE count vs. mean CVSS score) × two time windows
+(all years vs. since 2024) = four TSVs, one for every combination.
+The markdown is a single file because the README only needs one view
+(the since-2024 view) — the markdown's two top-10 tables are sliced
+from the same top-100 pools that the two since-2024 TSVs hold.
 
 ## Methodology
 
@@ -21,15 +32,13 @@ year's CVE count, how many had a scored CVSS, the mean score across
 the scored ones, and the highest score seen. Source-of-truth:
 `data/cve-*.tsv`.
 
-### CWE rankings (`cwe.report.*`)
+### CWE rankings (`cwe.*.report.tsv` + `cwe.report.md`)
 
-Restricted to CVEs whose `year` column parses to ≥ **2024** (the
-"SINCE_YEAR" constant in `.x-cmd/cwe_report.py`). This keeps the
-ranking focused on what's actually being discovered today — an
-all-years view overweighted CVEs from 2010-2018 when CNA coverage was
-much thinner and the score distribution was different.
+Restricted to CVEs whose `year` column parses to ≥ **2024** for the
+`since-2024` files (the `SINCE_YEAR` constant in `.x-cmd/cwe_report.py`).
+All-years files use the full history.
 
-Two slices ship:
+Two ranking axes:
 
 1. **By CVE count** — which engineering mistakes keep getting made
    most often?
@@ -37,10 +46,9 @@ Two slices ship:
    suppress single-CWE outliers) — when that mistake is made, how
    bad is it on average?
 
-The TSV holds the top **100** CWEs by raw CVE count. The markdown
-top-10 is sliced from the same pool (top 10 by count for table 1;
-same pool re-sorted by mean score for table 2), so the markdown is
-a strict subset of the TSV.
+Filenames are self-describing: `by-cve-{count|score}` is the ranking
+axis, `since-YYYY` (when present) is the time window. The four files
+together cover every (axis, window) combination.
 
 ## Regeneration
 
@@ -48,7 +56,8 @@ Every CI run on `.github/workflows/release.yml`:
 
 1. `tsv.py --rebuild` writes fresh `data/cve-*.tsv`.
 2. `report.py` writes `report/cve.report.{tsv,md}`.
-3. `cwe_report.py` writes `report/cwe.report.{tsv,md}`.
+3. `cwe_report.py` writes `report/cwe.report.md` plus the four
+   `report/cwe.top100.by-*.report.tsv` files.
 4. The inline step stitches both `.md` files into `README.md`
    (BEGIN/END markers, idempotent).
 5. The commit step pushes `README.md` + the four `report/*` files
@@ -61,5 +70,5 @@ python3 .x-cmd/report.py
 python3 .x-cmd/cwe_report.py
 ```
 
-Both scripts are stdlib-only and take optional `[data_dir]` /
+Both scripts are stdlib-only and take optional `[data_dir]`
 `[report_dir]` arguments.

@@ -1,8 +1,8 @@
 _99,617 CVEs across 664 distinct CWEs since 2024._
 
-### Top 10 CWE by CVE count since 2024
+> What mistake do engineers keep making most often since 2024?
 
-> What mistake do engineers keep making most often?
+### Top 10 CWE by CVE count
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
@@ -17,10 +17,10 @@ _99,617 CVEs across 664 distinct CWEs since 2024._
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,022 | 7.65 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 1,915 | 6.97 |
 
-### Top 10 CWE by average CVSS score since 2024
-
-> When that mistake is made, how bad is it?
+> When that mistake is made, how bad is it since 2024?
 > _Min 10 CVEs to suppress single-CWE outliers._
+
+### Top 10 CWE by average CVSS score
 
 | Rank | CWE | Name | CVEs | Avg score | Max |
 | ---: | :-: | :--- | ---: | ---:      | ---: |

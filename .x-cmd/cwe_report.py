@@ -14,19 +14,21 @@ Where:
     avg_score   = mean score across the scored ones.
     max_score   = highest score seen.
 
-Outputs (under report/, sibling of data/):
-    cwe.report.tsv   — machine-readable, top TOP_N_TSV CWEs by CVE count
-                       (filtered to year >= SINCE_YEAR), tab-separated.
-                       Feeds any tooling that wants the top-100 list as
-                       data, not markdown.
-    cwe.report.md    — markdown with two top-10 tables, both restricted
-                       to CVEs whose year >= SINCE_YEAR (so the README
-                       answers "what mistakes are engineers making NOW
-                       and which hurt the most"):
-                         1. most CVEs (since SINCE_YEAR)
-                         2. highest avg CVSS score (since SINCE_YEAR)
-                       Sliced from the same top-100 pool as the TSV.
-                       Ready to be inlined into the README.
+Outputs (under report/, sibling of data/) — four TSVs and one MD,
+all named to make their ranking axis and time window self-describing:
+
+    cwe.top100.by-cve-count.report.tsv           all years, top 100 by CVE count
+    cwe.top100.by-cve-score.report.tsv           all years, top 100 by avg CVSS score
+    cwe.top100.by-cve-count.since-2024.report.tsv    SINCE_YEAR window, top 100 by CVE count
+    cwe.top100.by-cve-score.since-2024.report.tsv    SINCE_YEAR window, top 100 by avg CVSS score
+    cwe.report.md                                single markdown, SINCE_YEAR window,
+                                                  two top-10 tables (count + score),
+                                                  ready to be inlined into the README
+
+The "since-SINCE_YEAR" views answer the only question most readers
+actually have: "what are engineers getting wrong NOW and which hurts
+the most?" All-years views overweight CVEs from 2010-2018 when CNA
+coverage was much thinner and the score distribution was different.
 
 We deliberately do NOT publish a copy of MITRE's 2000.csv — cve repo
 only ships derived aggregates. Users wanting the full CWE catalog
@@ -154,15 +156,35 @@ def aggregate(
     return rows
 
 
-def write_report(out: Path, rows: list[tuple[str, str, int, float, float]]) -> None:
-    """Write the top TOP_N_TSV CWEs (by cve_count desc, since SINCE_YEAR)
-    as a tab-separated file. The header row is fixed so downstream
-    tooling can rely on the schema.
+def write_report(out: Path,
+                 rows: list[tuple[str, str, int, float, float]],
+                 *,
+                 rank_by: str) -> None:
+    """Write the top TOP_N_TSV CWEs as a tab-separated file.
+
+    `rank_by` selects the ranking axis ("count" or "score"). The header
+    row is fixed so downstream tooling can rely on the schema; rows are
+    sorted according to `rank_by` before truncation.
     """
+    if rank_by == "count":
+        # Stable sort: most-referenced CWEs first, then by max score
+        # desc, then by cwe_id ascending.
+        sorted_rows = sorted(rows, key=lambda r: (-r[2], -r[4], r[0]))
+    elif rank_by == "score":
+        # Stable sort: highest avg score first (min MIN_CVE_FOR_SCORE_RANK
+        # so single-CWE outliers don't dominate), tiebreak on count desc
+        # so ties favor the better-attested CWE.
+        sorted_rows = sorted(
+            (r for r in rows if r[2] >= MIN_CVE_FOR_SCORE_RANK),
+            key=lambda r: (-r[3], -r[2], r[0]),
+        )
+    else:
+        raise ValueError(f"rank_by must be 'count' or 'score', got {rank_by!r}")
+
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", encoding="utf-8", newline="") as fh:
         fh.write("cwe_id\tname\tcve_count\tavg_score\tmax_score\n")
-        for cid, name, count, avg, mx in rows[:TOP_N_TSV]:
+        for cid, name, count, avg, mx in sorted_rows[:TOP_N_TSV]:
             if count <= 0:
                 continue
             avg_str = f"{avg:.2f}"
@@ -196,16 +218,12 @@ def write_report_md(out: Path,
                     rows_since: list[tuple[str, str, int, float, float]]) -> None:
     """Write the markdown snippet the README inlines.
 
-    Both top-10 tables are restricted to CVEs whose year >= SINCE_YEAR,
-    so the README answers the only question most readers actually have:
-    "what are engineers getting wrong *now*, and which of those mistakes
-    cause the most damage?" All-years aggregates are noise for that
-    purpose — they overweight CVEs from 2010-2018 when the CNA coverage
-    was thinner and the score distribution was different.
-
-    The first table ranks by raw CVE count (which engineering mistake
-    keeps getting made most often?), the second by mean CVSS score
-    (which mistake, when made, hurts the most?).
+    Single markdown file, SINCE_YEAR window, two top-10 tables: one by
+    CVE count (which engineering mistake keeps getting made most
+    often?) and one by mean CVSS score (which mistake, when made,
+    hurts the most?). Both top-10s are sliced from the same top-100
+    pools that the TSVs hold, so the markdown is a strict subset of
+    the published data.
 
     Output is a bare markdown document — no BEGIN/END markers — so the
     file is also readable on its own. release.yml wraps it with
@@ -217,33 +235,53 @@ def write_report_md(out: Path,
     since_cve = sum(r[2] for r in rows_since)
     since_cwe = sum(1 for r in rows_since if r[2] > 0)
 
-    # The markdown top-10 is sliced from the same top-100 pool the TSV
-    # holds — by_count is the first TOP_N of `rows_since` (already
-    # sorted by cve_count desc), by_score is the same pool re-sorted
-    # by mean CVSS score with the standard tiebreak.
-    by_count = [r for r in rows_since if r[2] > 0][:TOP_N]
+    # by-count: first TOP_N of rows_since sorted by cve_count desc
+    # (matches the cwe.top100.by-cve-count.since-2024.report.tsv head).
+    by_count = sorted(
+        (r for r in rows_since if r[2] > 0),
+        key=lambda r: (-r[2], -r[4], r[0]),
+    )[:TOP_N]
+
+    # by-score: top TOP_N by mean CVSS score, restricted to CWEs with
+    # enough samples (matches the cwe.top100.by-cve-score.since-2024
+    # .report.tsv head).
     by_score = sorted(
-        rows_since,
-        key=lambda r: (-r[3] if r[2] >= MIN_CVE_FOR_SCORE_RANK else 1,
-                       -r[2] if r[2] >= MIN_CVE_FOR_SCORE_RANK else 0,
-                       r[0]),
-    )
-    # Drop rows that didn't meet MIN_CVE_FOR_SCORE_RANK, then take top N.
-    by_score = [r for r in by_score if r[2] >= MIN_CVE_FOR_SCORE_RANK][:TOP_N]
+        (r for r in rows_since if r[2] >= MIN_CVE_FOR_SCORE_RANK),
+        key=lambda r: (-r[3], -r[2], r[0]),
+    )[:TOP_N]
 
     with out.open("w", encoding="utf-8") as fh:
         fh.write(f"_{since_cve:,} CVEs across {since_cwe:,} distinct CWEs "
                  f"since {SINCE_YEAR}._\n\n")
 
-        fh.write(f"### Top {TOP_N} CWE by CVE count since {SINCE_YEAR}\n\n")
-        fh.write("> What mistake do engineers keep making most often?\n\n")
+        # The blockquote carries the question (the WHY); the heading
+        # carries the answer-shaped name (the WHAT). Putting the
+        # question first reads more naturally and signals that the
+        # table exists to answer it.
+        fh.write("> What mistake do engineers keep making most often since "
+                 f"{SINCE_YEAR}?\n\n")
+        fh.write(f"### Top {TOP_N} CWE by CVE count\n\n")
         _emit_topn_count_table(fh, by_count)
 
-        fh.write(f"\n### Top {TOP_N} CWE by average CVSS score "
-                 f"since {SINCE_YEAR}\n\n")
-        fh.write("> When that mistake is made, how bad is it?\n")
-        fh.write(f"> _Min {MIN_CVE_FOR_SCORE_RANK} CVEs to suppress single-CWE outliers._\n\n")
+        fh.write("\n> When that mistake is made, how bad is it since "
+                 f"{SINCE_YEAR}?\n")
+        fh.write(f"> _Min {MIN_CVE_FOR_SCORE_RANK} CVEs to suppress "
+                 "single-CWE outliers._\n\n")
+        fh.write(f"### Top {TOP_N} CWE by average CVSS score\n\n")
         _emit_topn_score_table(fh, by_score)
+
+
+def _report_filename(rank_by: str, since: int | None) -> str:
+    """Build a self-describing filename for one of the four TSV outputs.
+
+    `rank_by` is "count" or "score"; `since` is the SINCE_YEAR value
+    (or None for the all-years view).
+    """
+    parts = [f"cwe.top{TOP_N_TSV}.by-cve-{rank_by}"]
+    if since is not None:
+        parts.append(f"since-{since}")
+    parts.append("report.tsv")
+    return ".".join(parts)
 
 
 def main(argv: list[str]) -> int:
@@ -265,21 +303,30 @@ def main(argv: list[str]) -> int:
         print("warn: data/cwe.slim.tsv missing — run .x-cmd/cwe.py first",
               file=sys.stderr)
 
-    # Only the since-SINCE_YEAR pool is surfaced (TSV top 100 + MD top 10).
+    # All-years pool — drives the two all-years TSVs.
+    scores_by_cwe_all = collect_cve_scores_by_cwe(data_dir)
+    rows_all = aggregate(catalog, scores_by_cwe_all)
+
+    # Since-SINCE_YEAR pool — drives the two since-YYYY TSVs + the MD.
     scores_by_cwe_since = collect_cve_scores_by_cwe(data_dir, min_year=SINCE_YEAR)
     rows_since = aggregate(catalog, scores_by_cwe_since)
 
-    # Sort: most-referenced CWEs first, then by max score desc, then
-    # by cwe_id ascending for stability.
-    rows_since.sort(key=lambda r: (-r[2], -r[4], r[0]))
+    # Four TSV outputs, two ranking axes × two time windows.
+    outputs = [
+        (report_dir / _report_filename("count", None),    rows_all,    "count"),
+        (report_dir / _report_filename("score", None),    rows_all,    "score"),
+        (report_dir / _report_filename("count", SINCE_YEAR), rows_since, "count"),
+        (report_dir / _report_filename("score", SINCE_YEAR), rows_since, "score"),
+    ]
+    for path, rows, rank_by in outputs:
+        write_report(path, rows, rank_by=rank_by)
+        n_written = min(TOP_N_TSV, sum(1 for r in rows if r[2] > 0))
+        print(f"wrote {path} ({n_written} CWE rows)", file=sys.stderr)
 
-    write_report(report_dir / "cwe.report.tsv", rows_since)
+    # Single markdown output — SINCE_YEAR window, two top-10 tables.
     write_report_md(report_dir / "cwe.report.md", rows_since)
-
-    n_tsv = min(TOP_N_TSV, sum(1 for r in rows_since if r[2] > 0))
-    print(f"wrote {report_dir / 'cwe.report.tsv'} ({n_tsv} CWE rows)",
-          file=sys.stderr)
     print(f"wrote {report_dir / 'cwe.report.md'}", file=sys.stderr)
+
     return 0
 
 
