@@ -109,6 +109,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           # Both blocks share one anchor — they stack at the same
           # insertion point in the order they're called below. Insert
@@ -137,6 +138,47 @@ jobs:
               Path("README.md"): "_Refreshed daily from upstream cvelistV5 — pull tomorrow and the rankings will have moved._",
               Path("README.cn.md"): "_每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化。_",
           }
+
+          # Chinese localizations applied to README.cn.md AFTER the
+          # English blocks have been stitched in. The CWE data
+          # (cwe.report.md) is English-only by design (MITRE names are
+          # technical terms); we only localize the framing prose —
+          # the question headings, their subtitles, and the headline
+          # numbers line (which uses numbers that change every run,
+          # so it's a regex).
+          ZH_REPLACEMENTS = [
+              (
+                  re.compile(r"_([\d,]+) CVEs across ([\d,]+) distinct CWEs since (\d{4})\._"),
+                  r"自 \3 年以来，共 \1 个 CVE，涉及 \2 个不同的 CWE。",
+              ),
+              (
+                  "### What mistake do engineers keep making most often since 2024?",
+                  "### 2024 年以来，工程师们最常犯的错误是什么？",
+              ),
+              (
+                  "_Top 10 CWE by CVE count._",
+                  "_Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_",
+              ),
+              (
+                  "### When that mistake is made, how bad is it since 2024?",
+                  "### 2024 年以来，犯下这些错误后果有多严重？",
+              ),
+              (
+                  "_Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._",
+                  "_Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE 极端值的影响。_",
+              ),
+              (
+                  "Refreshed daily from upstream cvelistV5 — pull tomorrow and the rankings will have moved.",
+                  "每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化。",
+              ),
+              # YTD annotation on the current-year row in the per-year
+              # stats table. The label uses today's ISO date so it
+              # stays accurate without further code changes.
+              (
+                  re.compile(r"(\d{4}) _\(YTD as of (\d{4}-\d{2}-\d{2})\)_"),
+                  r"\1 _（截至 \2）_",
+              ),
+          ]
 
           def stitch(readme: str, md_path: Path, begin: str, end: str,
                      intro: str) -> str:
@@ -177,6 +219,16 @@ jobs:
                   "<!-- END cve.report.md -->",
                   INTRO_CVE[readme_path],
               )
+              # Chinese-only pass: replace the English framing prose
+              # with Chinese so README.cn.md reads naturally. Done
+              # AFTER the English blocks have been stitched in so the
+              # regex matches the exact English text emitted by
+              # cwe_report.py.
+              if readme_path.name == "README.cn.md":
+                  for pattern, replacement in ZH_REPLACEMENTS:
+                      text = pattern.sub(replacement, text) \
+                          if hasattr(pattern, "sub") \
+                          else text.replace(pattern, replacement)
               readme_path.write_text(text, encoding="utf-8")
               print(f"inlined report/cwe.report.md and report/cve.report.md into {readme_path}")
           PY
@@ -208,8 +260,8 @@ jobs:
               report/cwe.report.md \
               report/cwe.top100.by-cve-count.report.tsv \
               report/cwe.top100.by-cve-score.report.tsv \
-              report/cwe.top100.by-cve-count.since-2026-07-18.report.tsv \
-              report/cwe.top100.by-cve-score.since-2026-07-18.report.tsv
+              report/cwe.top100.by-cve-count.since-2024.report.tsv \
+              report/cwe.top100.by-cve-score.since-2024.report.tsv
           if git diff --cached --quiet; then
               echo "no report/README changes — skipping commit"
               exit 0

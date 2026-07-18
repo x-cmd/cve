@@ -1,0 +1,101 @@
+cwe_id	name	cve_count	avg_score	max_score
+79	Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')	15907	6.15	10.0
+89	Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')	7079	7.44	10.0
+862	Missing Authorization	5338	5.84	10.0
+74	Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')	3966	7.01	10.0
+352	Cross-Site Request Forgery (CSRF)	3087	5.77	10.0
+22	Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')	2656	7.18	10.0
+94	Improper Control of Generation of Code ('Code Injection')	2407	6.60	10.0
+78	Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')	2038	8.04	10.0
+416	Use After Free	2022	7.65	10.0
+20	Improper Input Validation	1915	6.97	10.0
+119	Improper Restriction of Operations within the Bounds of a Memory Buffer	1871	7.92	10.0
+284	Improper Access Control	1871	6.59	10.0
+125	Out-of-bounds Read	1786	6.29	10.0
+200	Exposure of Sensitive Information to an Unauthorized Actor	1764	5.93	10.0
+918	Server-Side Request Forgery (SSRF)	1610	6.62	10.0
+121	Stack-based Buffer Overflow	1596	8.12	10.0
+434	Unrestricted Upload of File with Dangerous Type	1579	7.90	10.0
+502	Deserialization of Untrusted Data	1523	8.29	10.0
+122	Heap-based Buffer Overflow	1494	7.55	10.0
+863	Incorrect Authorization	1341	6.34	10.0
+787	Out-of-bounds Write	1331	7.45	10.0
+77	Improper Neutralization of Special Elements used in a Command ('Command Injection')	1277	7.48	10.0
+639	Authorization Bypass Through User-Controlled Key	1276	6.36	10.0
+98	Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')	1188	7.98	10.0
+120	Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')	1048	8.13	10.0
+306	Missing Authentication for Critical Function	957	8.08	10.0
+770	Allocation of Resources Without Limits or Throttling	867	6.64	10.0
+266	Incorrect Privilege Assignment	830	6.98	10.0
+400	Uncontrolled Resource Consumption	822	6.59	10.0
+287	Improper Authentication	815	7.63	10.0
+285	Improper Authorization	772	6.45	10.0
+476	NULL Pointer Dereference	752	5.86	10.0
+269	Improper Privilege Management	633	7.69	10.0
+190	Integer Overflow or Wraparound	590	7.07	10.0
+601	URL Redirection to Untrusted Site ('Open Redirect')	509	5.47	9.6
+362	Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')	480	6.74	10.0
+427	Uncontrolled Search Path Element	454	7.31	10.0
+288	Authentication Bypass Using an Alternate Path or Channel	401	8.33	10.0
+532	Insertion of Sensitive Information into Log File	389	5.86	10.0
+404	Improper Resource Shutdown or Release	386	5.62	8.7
+59	Improper Link Resolution Before File Access ('Link Following')	385	7.09	10.0
+73	External Control of File Name or Path	361	7.27	10.0
+798	Use of Hard-coded Credentials	345	7.88	10.0
+295	Improper Certificate Validation	338	6.81	10.0
+732	Incorrect Permission Assignment for Critical Resource	319	7.04	10.0
+276	Incorrect Default Permissions	317	6.79	9.9
+367	Time-of-check Time-of-use (TOCTOU) Race Condition	316	6.62	10.0
+80	Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)	310	5.92	9.7
+497	Exposure of Sensitive System Information to an Unauthorized Control Sphere	290	5.72	10.0
+201	Insertion of Sensitive Information Into Sent Data	287	6.09	10.0
+843	Access of Resource Using Incompatible Type ('Type Confusion')	281	7.58	9.8
+23	Relative Path Traversal	277	7.00	10.0
+347	Improper Verification of Cryptographic Signature	269	7.39	10.0
+126	Buffer Over-read	258	6.77	9.6
+522	Insufficiently Protected Credentials	249	6.78	10.0
+693	Protection Mechanism Failure	244	6.73	10.0
+613	Insufficient Session Expiration	238	6.29	10.0
+307	Improper Restriction of Excessive Authentication Attempts	229	6.93	9.8
+290	Authentication Bypass by Spoofing	225	7.41	10.0
+611	Improper Restriction of XML External Entity Reference	225	6.86	9.9
+345	Insufficient Verification of Data Authenticity	216	6.99	10.0
+754	Improper Check for Unusual or Exceptional Conditions	207	6.41	10.0
+319	Cleartext Transmission of Sensitive Information	201	6.51	10.0
+1333	Inefficient Regular Expression Complexity	199	6.45	9.8
+191	Integer Underflow (Wrap or Wraparound)	197	6.80	9.8
+346	Origin Validation Error	196	6.87	10.0
+209	Generation of Error Message Containing Sensitive Information	195	5.35	10.0
+250	Execution with Unnecessary Privileges	194	7.65	10.0
+116	Improper Encoding or Escaping of Output	193	6.54	10.0
+327	Use of a Broken or Risky Cryptographic Algorithm	192	6.20	10.0
+426	Untrusted Search Path	176	7.29	9.6
+835	Loop with Unreachable Exit Condition ('Infinite Loop')	175	6.66	10.0
+321	Use of Hard-coded Cryptographic Key	171	7.03	10.0
+674	Uncontrolled Recursion	171	6.33	9.4
+312	Cleartext Storage of Sensitive Information	169	6.22	10.0
+88	Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')	156	7.69	10.0
+401	Missing Release of Memory after Effective Lifetime	156	5.97	8.7
+1284	Improper Validation of Specified Quantity in Input	155	6.39	10.0
+617	Reachable Assertion	150	6.51	10.0
+1321	Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')	148	7.38	10.0
+457	Use of Uninitialized Variable	145	6.41	9.8
+1336	Improper Neutralization of Special Elements Used in a Template Engine	142	7.74	10.0
+552	Files or Directories Accessible to External Parties	139	7.19	10.0
+822	Untrusted Pointer Dereference	139	7.58	9.8
+248	Uncaught Exception	138	6.77	10.0
+35	Path Traversal: '.../...//'	136	7.12	10.0
+829	Inclusion of Functionality from Untrusted Control Sphere	132	7.83	10.0
+415	Double Free	127	7.15	9.8
+789	Memory Allocation with Excessive Size Value	124	6.57	9.8
+444	Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')	122	6.71	10.0
+93	Improper Neutralization of CRLF Sequences ('CRLF Injection')	121	6.60	10.0
+472	External Control of Assumed-Immutable Web Parameter	116	7.24	9.8
+1188	Initialization of a Resource with an Insecure Default	115	7.51	10.0
+184	Incomplete List of Disallowed Inputs	115	7.27	10.0
+129	Improper Validation of Array Index	110	7.24	9.8
+204	Observable Response Discrepancy	110	5.71	9.1
+1287	Improper Validation of Specified Type of Input	107	6.90	10.0
+61	UNIX Symbolic Link (Symlink) Following	107	6.81	10.0
+908	Use of Uninitialized Resource	107	6.57	10.0
+640	Weak Password Recovery Mechanism for Forgotten Password	103	7.67	10.0
