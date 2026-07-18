@@ -208,8 +208,8 @@ jobs:
               report/cwe.report.md \
               report/cwe.top100.by-cve-count.report.tsv \
               report/cwe.top100.by-cve-score.report.tsv \
-              report/cwe.top100.by-cve-count.since-2024.report.tsv \
-              report/cwe.top100.by-cve-score.since-2024.report.tsv
+              report/cwe.top100.by-cve-count.since-2026-07-18.report.tsv \
+              report/cwe.top100.by-cve-score.since-2026-07-18.report.tsv
           if git diff --cached --quiet; then
               echo "no report/README changes — skipping commit"
               exit 0

@@ -58,12 +58,14 @@ TOP_N_TSV = 100    # rows written to the TSV — the markdown slices its
                    # top-10 from the same pool so the TSV is a strict
                    # superset of what's inlined.
 
-# Cutoff for the "since YYYY" tables. CWEs that show up only in older
-# CVEs and have dropped off the radar stay out of the recent view —
-# useful because it surfaces what attackers actually exploit TODAY
-# rather than what's accumulated historically. 2024 keeps the tables
-# focused on the last ~2.5 years of activity as of writing (2026).
-SINCE_YEAR = 2024
+# Cutoff for the "since YYYY-MM-DD" tables. CWEs that show up only in
+# older CVEs and have dropped off the radar stay out of the recent
+# view — useful because it surfaces what attackers actually exploit
+# TODAY rather than what's accumulated historically. The default is
+# today's date (set at write time), giving a "the last year of CVE
+# activity" window. Override via --since CLI flag for backfill.
+import datetime as _dt
+SINCE_DATE = _dt.date.today().isoformat()  # e.g. "2026-07-18"
 
 
 def collect_cve_scores_by_cwe(
@@ -76,8 +78,8 @@ def collect_cve_scores_by_cwe(
     119.
 
     `min_year` (optional) drops rows whose `year` column parses below
-    the cutoff — used to build the "since YYYY" view alongside the
-    all-years view.
+    the cutoff — used to build the "since YYYY-MM-DD" view alongside
+    the all-years view.
     """
     scores: dict[str, list[float]] = {}
 
@@ -256,29 +258,29 @@ def write_report_md(out: Path,
         # so we don't end up with the same line twice in the rendered
         # README.
         fh.write(f"_{since_cve:,} CVEs across {since_cwe:,} distinct CWEs "
-                 f"since {SINCE_YEAR}._\n\n")
+                 f"since {SINCE_DATE}._\n\n")
 
         # The heading carries the QUESTION (the WHY) and the smaller
         # text below carries the WHAT-shaped label. Inverting the
         # usual "table-name first" pattern reads more like prose and
         # gives the document a story-driven feel.
         fh.write("### What mistake do engineers keep making most often "
-                 f"since {SINCE_YEAR}?\n\n")
+                 f"since {SINCE_DATE}?\n\n")
         fh.write(f"_Top {TOP_N} CWE by CVE count._\n\n")
         _emit_topn_count_table(fh, by_count)
 
         fh.write(f"\n### When that mistake is made, how bad is it since "
-                 f"{SINCE_YEAR}?\n\n")
+                 f"{SINCE_DATE}?\n\n")
         fh.write(f"_Top {TOP_N} CWE by average CVSS score. Min "
                  f"{MIN_CVE_FOR_SCORE_RANK} CVEs to suppress single-CWE "
                  "outliers._\n\n")
         _emit_topn_score_table(fh, by_score)
 
 
-def _report_filename(rank_by: str, since: int | None) -> str:
+def _report_filename(rank_by: str, since: str | None) -> str:
     """Build a self-describing filename for one of the four TSV outputs.
 
-    `rank_by` is "count" or "score"; `since` is the SINCE_YEAR value
+    `rank_by` is "count" or "score"; `since` is the SINCE_DATE value
     (or None for the all-years view).
     """
     parts = [f"cwe.top{TOP_N_TSV}.by-cve-{rank_by}"]
@@ -307,27 +309,34 @@ def main(argv: list[str]) -> int:
         print("warn: data/cwe.slim.tsv missing — run .x-cmd/cwe.py first",
               file=sys.stderr)
 
+    # Filter uses SINCE_DATE's year (the most-recent calendar year that
+    # has full coverage) so the "since YYYY-MM-DD" label in the markdown
+    # matches what the filter actually includes. If SINCE_DATE = today,
+    # SINCE_DATE.year = the current year, and we get ~7 months of YTD
+    # data.
+    since_year = int(SINCE_DATE.split("-")[0])
+
     # All-years pool — drives the two all-years TSVs.
     scores_by_cwe_all = collect_cve_scores_by_cwe(data_dir)
     rows_all = aggregate(catalog, scores_by_cwe_all)
 
-    # Since-SINCE_YEAR pool — drives the two since-YYYY TSVs + the MD.
-    scores_by_cwe_since = collect_cve_scores_by_cwe(data_dir, min_year=SINCE_YEAR)
+    # Since-SINCE_DATE pool — drives the two since-TSVs + the MD.
+    scores_by_cwe_since = collect_cve_scores_by_cwe(data_dir, min_year=since_year)
     rows_since = aggregate(catalog, scores_by_cwe_since)
 
     # Four TSV outputs, two ranking axes × two time windows.
     outputs = [
         (report_dir / _report_filename("count", None),    rows_all,    "count"),
         (report_dir / _report_filename("score", None),    rows_all,    "score"),
-        (report_dir / _report_filename("count", SINCE_YEAR), rows_since, "count"),
-        (report_dir / _report_filename("score", SINCE_YEAR), rows_since, "score"),
+        (report_dir / _report_filename("count", SINCE_DATE), rows_since, "count"),
+        (report_dir / _report_filename("score", SINCE_DATE), rows_since, "score"),
     ]
     for path, rows, rank_by in outputs:
         write_report(path, rows, rank_by=rank_by)
         n_written = min(TOP_N_TSV, sum(1 for r in rows if r[2] > 0))
         print(f"wrote {path} ({n_written} CWE rows)", file=sys.stderr)
 
-    # Single markdown output — SINCE_YEAR window, two top-10 tables.
+    # Single markdown output — SINCE_DATE window, two top-10 tables.
     write_report_md(report_dir / "cwe.report.md", rows_since)
     print(f"wrote {report_dir / 'cwe.report.md'}", file=sys.stderr)
 
