@@ -110,11 +110,7 @@ _逐年 CVE 数量与严重程度。_
 
 本仓库基于 [`CVEProject/cvelistV5`](https://github.com/CVEProject/cvelistV5) 构建每日更新的、按年份索引的 CVE 数据库。
 
-**生产端**：本仓库读取上游的 CVE JSON 树，每年抽取为一份精简的 9 列 TSV，xz 压缩后作为 GitHub Release 资源发布，URL 形如 `https://github.com/x-cmd/cve/releases/download/data/<name>.xz`。
-
-**消费端**：x-cmd shell 模块 [`x cve`](https://x-cmd.com/mod/cve) 按需下载所需年份的 TSV，用 `xz -d` 现场解压，运行时不必访问上游 `cvelistV5`。
-
-**姊妹模块** [`x cwe`](https://x-cmd.com/mod/cwe) 用于浏览 CWE 目录；TSV 的第 8 列（即 `cwe` 列，前缀已剥离为纯数字如 `787`）让跨模块链接成为可能。
+本仓库即**生产端**：读取 [`CVEProject/cvelistV5`](https://github.com/CVEProject/cvelistV5)，按年抽取为一份精简的 9 列 TSV，xz 压缩后发布为 [GitHub Release 资源](https://github.com/x-cmd/cve/releases/tag/data)（`https://github.com/x-cmd/cve/releases/download/data/<name>.xz`）。**消费端**是 [`x cve`](https://x-cmd.com/mod/cve) shell 模块，按需下载、xz 解压、运行时无需联网访问上游。姊妹模块 [`x cwe`](https://x-cmd.com/mod/cwe) 用于浏览 CWE 目录。
 
 ### 用户如何获取 CVE 数据（4 条命令）
 
@@ -229,7 +225,14 @@ python3 .x-cmd/cwe_report.py
 
 ### CWE 数据 —— 我们发布什么、衍生什么
 
-本仓库输出四份不同的 CWE 相关文件：
+四份 `report/cwe.*.report.tsv` 文件已在上面的 [Reports](#报表reports) 段列出。本节只描述另外两份上游衍生的 MITRE CWE 目录文件：
+
+| 文件 | 形态 | 来源 | 用途 |
+| ---  | ---   | ---    | ---     |
+| `data/cwe.tsv`        | 21 列 TSV (~3 MB)，包含 MITRE 所有字段 | MITRE 2000.csv 的字面镜像 | x-cwe 模块 + 任何想拿完整 CWE 目录、不愿访问 MITRE 的消费者 |
+| `data/cwe.slim.tsv`   | 2 列 TSV (~50 KB)，仅 `CWE-ID` + `Name` | 从 `data/cwe.tsv` 派生 | 在 cwe_report.py 中与 `data/cve-*.tsv` 做 join |
+
+
 
 | 文件 | 形态 | 来源 | 用途 |
 | ---  | ---   | ---    | ---     |

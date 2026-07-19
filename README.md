@@ -112,22 +112,15 @@ cutoff, and how the top-10 markdown is sliced from the top-100 TSV.
 
 ## About x-cmd/cve
 
-A daily-updated, per-year CVE index built on top of
-[`CVEProject/cvelistV5`](https://github.com/CVEProject/cvelistV5).
-
-This repo is the **producer**. It reads the upstream CVE JSON tree,
-extracts a slim 9-column TSV per calendar year, xz-compresses each
-file, and publishes them as GitHub Release assets at the stable URL
-`https://github.com/x-cmd/cve/releases/download/data/<name>.xz`.
-
-The consumer is the x-cmd shell module
-[`x cve`](https://x-cmd.com/mod/cve). It downloads whatever it needs,
-decompresses on the fly with `xz -d`, and never has to talk to the
-upstream `cvelistV5` repo at runtime.
-
-A companion module [`x cwe`](https://x-cmd.com/mod/cwe) browses CWE
-catalog entries; the `cwe` column in our TSV (column 8, prefix-stripped
-numbers like `787`) is what makes cross-module linking possible.
+This repo is the **producer**: it reads
+[`CVEProject/cvelistV5`](https://github.com/CVEProject/cvelistV5),
+extracts a slim 9-column TSV per year, xz-compresses it, and publishes
+the artifacts as [GitHub Release assets](https://github.com/x-cmd/cve/releases/tag/data)
+(`https://github.com/x-cmd/cve/releases/download/data/<name>.xz`).
+The consumer is the [`x cve`](https://x-cmd.com/mod/cve) shell module,
+which downloads on demand and never touches the upstream tree at runtime.
+Companion module [`x cwe`](https://x-cmd.com/mod/cwe) browses the CWE
+catalog.
 
 ### How users get CVE data (the 4 commands)
 
@@ -188,7 +181,7 @@ shell module backed by the per-year TSVs this repo publishes daily.
 ```
 
 `data/` is regenerated from scratch on every CI run, so the working
-tree on `main` stays small (just the 3 scripts and the workflow).
+tree on `main` stays small.
 
 ## Row order — newest first
 
@@ -258,9 +251,16 @@ python3 .x-cmd/cwe_report.py
 
 ### CWE data — what we publish vs what we derive
 
-This repo emits six different CWE-related files (the four TSVs cover
-every combination of `count`/`score` × `all-years`/`since-2024`; see
-[`report/README.md`](./report/README.md) for the full schema):
+The four `report/cwe.*.report.tsv` files are listed in the
+[Reports](#reports) section above. Below are the two upstream CWE
+catalog files this repo derives from MITRE:
+
+| File | Shape | Source | Purpose |
+| ---  | ---   | ---    | ---     |
+| `data/cwe.tsv`        | 21-column TSV (~3 MB), all MITRE fields | Verbatim mirror of MITRE 2000.csv | x-cwe module + any consumer that wants the full CWE catalog without hitting MITRE directly |
+| `data/cwe.slim.tsv`   | 2-column TSV (~50 KB), `CWE-ID` + `Name` only | Derived from `data/cwe.tsv` | Joined against `data/cve-*.tsv` for cwe_report.py |
+
+
 
 | File | Shape | Source | Purpose |
 | ---  | ---   | ---    | ---     |
