@@ -138,7 +138,13 @@ jobs:
           # the "refreshed daily" promise. Repeating it at the top
           # of every block was duplication. To restore the line, just
           # populate INTRO_CWE[Path(...)] = "..." with the desired
-          # first line of the cwe block.
+          # first line of the cwe block. (Must be defined so the
+          # inline loop's INTRO_CWE[readme_path] lookup doesn't
+          # NameError.)
+          INTRO_CWE = {
+              Path("README.md"): "",
+              Path("README.cn.md"): "",
+          }
 
           # Chinese localizations applied to README.cn.md AFTER the
           # English blocks have been stitched in. The CWE data
