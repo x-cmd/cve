@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_100,952 CVEs across 664 distinct CWEs since 2024._
+_100,961 CVEs across 664 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -13,7 +13,7 @@ _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 15,984 | 6.15 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 15,986 | 6.15 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,124 | 7.43 |
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,423 | 5.86 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 3,986 | 7.01 |
@@ -50,7 +50,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-07-22)_ | 35,832 | 34,031 | 7.01 | 10.0 |
+| 2026 _(YTD as of 2026-07-22)_ | 35,839 | 34,037 | 7.01 | 10.0 |
 | 2025 | 43,212 | 40,846 | 6.76 | 10.0 |
 | 2024 | 38,420 | 36,184 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **351,662** | **178,866** | **6.82** | **10.0** |
+| **Total** | **351,669** | **178,872** | **6.82** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
