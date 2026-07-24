@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_101,520 CVEs across 666 distinct CWEs since 2024._
+_101,529 CVEs across 666 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -20,7 +20,7 @@ _Top 10 CWE by CVE count._
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,113 | 5.78 |
 | 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,746 | 7.18 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,462 | 6.64 |
-| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,085 | 8.03 |
+| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,086 | 8.03 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,042 | 7.65 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 1,954 | 6.98 |
 
@@ -39,7 +39,7 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 7 | [470](https://cwe.mitre.org/data/definitions/470.html) | Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection') | 43 | 8.20 | 10.0 |
 | 8 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 48 | 8.15 | 9.9 |
 | 9 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,049 | 8.13 | 10.0 |
-| 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,608 | 8.12 | 10.0 |
+| 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,609 | 8.12 | 10.0 |
 <!-- END cwe.report.md -->
 
 <!-- BEGIN cve.report.md -->
@@ -50,7 +50,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-07-24)_ | 36,396 | 34,647 | 7.02 | 10.0 |
+| 2026 _(YTD as of 2026-07-24)_ | 36,410 | 34,654 | 7.02 | 10.0 |
 | 2025 | 43,224 | 40,852 | 6.76 | 10.0 |
 | 2024 | 38,425 | 36,189 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **352,243** | **179,493** | **6.82** | **10.0** |
+| **Total** | **352,257** | **179,500** | **6.82** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
