@@ -4,7 +4,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 101,672 个 CVE，涉及 666 个不同的 CWE。
+自 2024 年以来，共 101,673 个 CVE，涉及 666 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -17,7 +17,7 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,489 | 5.86 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 3,987 | 7.01 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,115 | 5.78 |
-| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,751 | 7.18 |
+| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,752 | 7.18 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,465 | 6.64 |
 | 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,087 | 8.03 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,046 | 7.65 |
@@ -49,7 +49,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-07-25）_ | 36,573 | 34,801 | 7.02 | 10.0 |
+| 2026 _（截至 2026-07-25）_ | 36,574 | 34,802 | 7.02 | 10.0 |
 | 2025 | 43,225 | 40,861 | 6.76 | 10.0 |
 | 2024 | 38,425 | 36,189 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
@@ -77,7 +77,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **352,421** | **179,656** | **6.82** | **10.0** |
+| **Total** | **352,422** | **179,657** | **6.82** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
