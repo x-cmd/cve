@@ -1,4 +1,4 @@
-_101,704 CVEs across 667 distinct CWEs since 2024._
+_101,708 CVEs across 667 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
