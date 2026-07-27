@@ -4,7 +4,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 101,734 个 CVE，涉及 667 个不同的 CWE。
+自 2024 年以来，共 101,834 个 CVE，涉及 667 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -12,14 +12,14 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,095 | 6.15 |
-| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,152 | 7.44 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,490 | 5.86 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,110 | 6.15 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,163 | 7.44 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,504 | 5.86 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 3,987 | 7.01 |
-| 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,115 | 5.78 |
-| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,754 | 7.18 |
+| 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,117 | 5.77 |
+| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,759 | 7.18 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,466 | 6.64 |
-| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,088 | 8.03 |
+| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,092 | 8.04 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,046 | 7.65 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 1,957 | 6.98 |
 
@@ -30,14 +30,14 @@ _Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE �
 | Rank | CWE | Name | CVEs | Avg score | Max |
 | ---: | :-: | :--- | ---: | ---:      | ---: |
 | 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 35 | 8.98 | 10.0 |
-| 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 99 | 8.44 | 10.0 |
+| 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 100 | 8.45 | 10.0 |
 | 3 | [288](https://cwe.mitre.org/data/definitions/288.html) | Authentication Bypass Using an Alternate Path or Channel | 409 | 8.31 | 10.0 |
 | 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,541 | 8.30 | 10.0 |
 | 5 | [565](https://cwe.mitre.org/data/definitions/565.html) | Reliance on Cookies without Validation and Integrity Checking | 16 | 8.29 | 9.8 |
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 48 | 8.15 | 9.9 |
 | 8 | [470](https://cwe.mitre.org/data/definitions/470.html) | Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection') | 44 | 8.14 | 10.0 |
-| 9 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,050 | 8.13 | 10.0 |
+| 9 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,051 | 8.13 | 10.0 |
 | 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,612 | 8.12 | 10.0 |
 <!-- END cwe.report.md -->
 
@@ -49,9 +49,9 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-07-27）_ | 36,929 | 34,997 | 7.02 | 10.0 |
-| 2025 | 43,226 | 40,861 | 6.76 | 10.0 |
-| 2024 | 38,426 | 36,189 | 6.77 | 10.0 |
+| 2026 _（截至 2026-07-27）_ | 37,020 | 35,095 | 7.02 | 10.0 |
+| 2025 | 43,232 | 40,866 | 6.76 | 10.0 |
+| 2024 | 38,426 | 36,190 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
 | 2022 | 26,425 | 17,111 | 6.76 | 10.0 |
 | 2021 | 22,587 | 10,644 | 6.81 | 10.0 |
@@ -77,7 +77,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **352,779** | **179,852** | **6.82** | **10.0** |
+| **Total** | **352,876** | **179,956** | **6.82** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
