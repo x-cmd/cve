@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_101,940 CVEs across 667 distinct CWEs since 2024._
+_101,960 CVEs across 667 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -13,9 +13,9 @@ _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,123 | 6.16 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,134 | 6.16 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,164 | 7.44 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,505 | 5.86 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,507 | 5.86 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 3,987 | 7.01 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,121 | 5.78 |
 | 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,763 | 7.18 |
@@ -50,12 +50,12 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-07-27)_ | 37,283 | 35,225 | 7.02 | 10.0 |
-| 2025 | 43,232 | 40,868 | 6.76 | 10.0 |
+| 2026 _(YTD as of 2026-07-28)_ | 37,305 | 35,243 | 7.02 | 10.0 |
+| 2025 | 43,233 | 40,868 | 6.76 | 10.0 |
 | 2024 | 38,426 | 36,190 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
 | 2022 | 26,425 | 17,111 | 6.76 | 10.0 |
-| 2021 | 22,587 | 10,644 | 6.81 | 10.0 |
+| 2021 | 22,592 | 10,644 | 6.81 | 10.0 |
 | 2020 | 19,386 | 6,817 | 6.83 | 10.0 |
 | 2019 | 16,093 | 3,522 | 6.83 | 10.0 |
 | 2018 | 16,188 | 2,291 | 6.92 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **353,139** | **180,088** | **6.82** | **10.0** |
+| **Total** | **353,167** | **180,106** | **6.82** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
