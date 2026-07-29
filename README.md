@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_102,224 CVEs across 667 distinct CWEs since 2024._
+_102,225 CVEs across 667 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -30,7 +30,7 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 
 | Rank | CWE | Name | CVEs | Avg score | Max |
 | ---: | :-: | :--- | ---: | ---:      | ---: |
-| 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 35 | 8.98 | 10.0 |
+| 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 36 | 9.01 | 10.0 |
 | 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 102 | 8.44 | 10.0 |
 | 3 | [288](https://cwe.mitre.org/data/definitions/288.html) | Authentication Bypass Using an Alternate Path or Channel | 411 | 8.31 | 10.0 |
 | 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,547 | 8.30 | 10.0 |
@@ -50,7 +50,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-07-29)_ | 37,573 | 35,681 | 7.03 | 10.0 |
+| 2026 _(YTD as of 2026-07-29)_ | 37,599 | 35,698 | 7.03 | 10.0 |
 | 2025 | 43,233 | 40,869 | 6.76 | 10.0 |
 | 2024 | 38,427 | 36,191 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **353,436** | **180,551** | **6.82** | **10.0** |
+| **Total** | **353,462** | **180,568** | **6.82** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
