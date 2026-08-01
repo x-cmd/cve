@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_103,158 CVEs across 667 distinct CWEs since 2024._
+_103,163 CVEs across 667 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -32,7 +32,7 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | ---: | :-: | :--- | ---: | ---:      | ---: |
 | 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 37 | 9.01 | 10.0 |
 | 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 102 | 8.44 | 10.0 |
-| 3 | [288](https://cwe.mitre.org/data/definitions/288.html) | Authentication Bypass Using an Alternate Path or Channel | 414 | 8.31 | 10.0 |
+| 3 | [288](https://cwe.mitre.org/data/definitions/288.html) | Authentication Bypass Using an Alternate Path or Channel | 415 | 8.31 | 10.0 |
 | 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,553 | 8.30 | 10.0 |
 | 5 | [565](https://cwe.mitre.org/data/definitions/565.html) | Reliance on Cookies without Validation and Integrity Checking | 16 | 8.29 | 9.8 |
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
@@ -50,7 +50,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-08-01)_ | 38,743 | 36,819 | 7.02 | 10.0 |
+| 2026 _(YTD as of 2026-08-01)_ | 38,748 | 36,824 | 7.02 | 10.0 |
 | 2025 | 43,279 | 41,840 | 6.79 | 10.0 |
 | 2024 | 38,429 | 36,193 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **354,655** | **182,664** | **6.83** | **10.0** |
+| **Total** | **354,660** | **182,669** | **6.83** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
