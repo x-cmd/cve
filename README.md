@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_103,354 CVEs across 668 distinct CWEs since 2024._
+_103,465 CVEs across 668 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -13,16 +13,16 @@ _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,212 | 6.16 |
-| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,221 | 7.44 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,557 | 5.87 |
-| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,006 | 7.02 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,216 | 6.16 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,223 | 7.44 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,560 | 5.87 |
+| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,007 | 7.02 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,138 | 5.78 |
-| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,823 | 7.18 |
-| 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,492 | 6.66 |
-| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,126 | 8.05 |
-| 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,107 | 7.66 |
-| 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,052 | 6.98 |
+| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,828 | 7.18 |
+| 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,494 | 6.66 |
+| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,128 | 8.05 |
+| 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,109 | 7.66 |
+| 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,055 | 6.98 |
 
 ### When that mistake is made, how bad is it since 2024?
 
@@ -50,8 +50,8 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-08-03)_ | 39,004 | 37,033 | 7.03 | 10.0 |
-| 2025 | 43,292 | 41,854 | 6.79 | 10.0 |
+| 2026 _(YTD as of 2026-08-03)_ | 39,057 | 37,139 | 7.02 | 10.0 |
+| 2025 | 43,292 | 41,855 | 6.79 | 10.0 |
 | 2024 | 38,429 | 36,193 | 6.77 | 10.0 |
 | 2023 | 30,602 | 24,345 | 6.71 | 10.0 |
 | 2022 | 26,426 | 17,112 | 6.76 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **354,929** | **182,892** | **6.83** | **10.0** |
+| **Total** | **354,982** | **182,999** | **6.83** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
