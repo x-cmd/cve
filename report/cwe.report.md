@@ -1,4 +1,4 @@
-_104,896 CVEs across 669 distinct CWEs since 2024._
+_104,899 CVEs across 669 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -13,7 +13,7 @@ _Top 10 CWE by CVE count._
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,152 | 5.79 |
 | 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,896 | 7.18 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,539 | 6.68 |
-| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,167 | 8.05 |
+| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,168 | 8.05 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,142 | 7.67 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,091 | 6.98 |
 
@@ -30,6 +30,6 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 5 | [565](https://cwe.mitre.org/data/definitions/565.html) | Reliance on Cookies without Validation and Integrity Checking | 16 | 8.29 | 9.8 |
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 48 | 8.15 | 9.9 |
-| 8 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,644 | 8.12 | 10.0 |
-| 9 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,063 | 8.12 | 10.0 |
+| 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,065 | 8.12 | 10.0 |
+| 9 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,644 | 8.12 | 10.0 |
 | 10 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,046 | 8.11 | 10.0 |
