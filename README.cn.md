@@ -4,7 +4,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 104,880 个 CVE，涉及 669 个不同的 CWE。
+自 2024 年以来，共 104,896 个 CVE，涉及 669 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -17,9 +17,9 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,643 | 5.89 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,054 | 7.02 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,152 | 5.79 |
-| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,894 | 7.18 |
+| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,896 | 7.18 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,539 | 6.68 |
-| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,155 | 8.04 |
+| 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,167 | 8.05 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,142 | 7.67 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,091 | 6.98 |
 
@@ -49,7 +49,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-08-08）_ | 40,492 | 38,556 | 7.03 | 10.0 |
+| 2026 _（截至 2026-08-08）_ | 40,508 | 38,598 | 7.03 | 10.0 |
 | 2025 | 43,319 | 41,891 | 6.79 | 10.0 |
 | 2024 | 38,434 | 37,035 | 6.81 | 10.0 |
 | 2023 | 30,602 | 24,722 | 6.73 | 10.0 |
@@ -77,7 +77,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **356,452** | **186,190** | **6.85** | **10.0** |
+| **Total** | **356,468** | **186,232** | **6.85** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
