@@ -4,7 +4,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 106,277 个 CVE，涉及 671 个不同的 CWE。
+自 2024 年以来，共 106,285 个 CVE，涉及 671 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -14,10 +14,10 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | ---: | :-: | :--- | ---: | ---:      |
 | 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,369 | 6.16 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,315 | 7.44 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,696 | 5.90 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,697 | 5.90 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,069 | 7.02 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,159 | 5.79 |
-| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,950 | 7.17 |
+| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 2,951 | 7.17 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,563 | 6.70 |
 | 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,229 | 8.08 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,213 | 7.65 |
@@ -49,8 +49,8 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-08-12）_ | 42,209 | 39,924 | 7.03 | 10.0 |
-| 2025 | 43,347 | 41,919 | 6.79 | 10.0 |
+| 2026 _（截至 2026-08-12）_ | 42,215 | 39,930 | 7.03 | 10.0 |
+| 2025 | 43,348 | 41,920 | 6.79 | 10.0 |
 | 2024 | 38,437 | 37,038 | 6.81 | 10.0 |
 | 2023 | 30,602 | 24,722 | 6.73 | 10.0 |
 | 2022 | 26,428 | 17,451 | 6.79 | 10.0 |
@@ -77,7 +77,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **358,201** | **187,592** | **6.85** | **10.0** |
+| **Total** | **358,208** | **187,599** | **6.85** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
