@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_107,557 CVEs across 672 distinct CWEs since 2024._
+_107,571 CVEs across 672 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -38,7 +38,7 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 48 | 8.15 | 9.9 |
 | 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,073 | 8.12 | 10.0 |
-| 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,097 | 8.12 | 10.0 |
+| 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,099 | 8.11 | 10.0 |
 | 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,694 | 8.11 | 10.0 |
 <!-- END cwe.report.md -->
 
@@ -50,7 +50,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-08-14)_ | 43,372 | 41,281 | 7.04 | 10.0 |
+| 2026 _(YTD as of 2026-08-15)_ | 43,386 | 41,295 | 7.04 | 10.0 |
 | 2025 | 43,367 | 41,938 | 6.79 | 10.0 |
 | 2024 | 38,430 | 37,031 | 6.81 | 10.0 |
 | 2023 | 30,602 | 24,722 | 6.73 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **359,379** | **188,963** | **6.85** | **10.0** |
+| **Total** | **359,393** | **188,977** | **6.85** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
