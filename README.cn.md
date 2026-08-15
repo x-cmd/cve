@@ -4,7 +4,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 107,597 个 CVE，涉及 672 个不同的 CWE。
+自 2024 年以来，共 107,604 个 CVE，涉及 672 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -13,9 +13,9 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
 | 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,447 | 6.16 |
-| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,380 | 7.45 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,382 | 7.45 |
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,801 | 5.91 |
-| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,077 | 7.02 |
+| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,078 | 7.02 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,178 | 5.79 |
 | 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,008 | 7.17 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,587 | 6.72 |
@@ -49,11 +49,11 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-08-15）_ | 44,128 | 41,321 | 7.04 | 10.0 |
+| 2026 _（截至 2026-08-15）_ | 44,277 | 41,326 | 7.04 | 10.0 |
 | 2025 | 43,367 | 41,938 | 6.79 | 10.0 |
 | 2024 | 38,430 | 37,031 | 6.81 | 10.0 |
 | 2023 | 30,602 | 24,722 | 6.73 | 10.0 |
-| 2022 | 26,429 | 17,452 | 6.79 | 10.0 |
+| 2022 | 26,428 | 17,452 | 6.79 | 10.0 |
 | 2021 | 22,591 | 10,823 | 6.83 | 10.0 |
 | 2020 | 19,386 | 6,821 | 6.83 | 10.0 |
 | 2019 | 16,094 | 3,525 | 6.84 | 10.0 |
@@ -77,7 +77,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **360,135** | **189,003** | **6.85** | **10.0** |
+| **Total** | **360,283** | **189,008** | **6.85** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
