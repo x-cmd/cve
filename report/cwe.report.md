@@ -1,4 +1,4 @@
-_107,557 CVEs across 672 distinct CWEs since 2024._
+_107,571 CVEs across 672 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -31,5 +31,5 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 48 | 8.15 | 9.9 |
 | 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,073 | 8.12 | 10.0 |
-| 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,097 | 8.12 | 10.0 |
+| 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,099 | 8.11 | 10.0 |
 | 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,694 | 8.11 | 10.0 |
