@@ -1,4 +1,4 @@
-_110,050 CVEs across 674 distinct CWEs since 2024._
+_110,054 CVEs across 674 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -8,7 +8,7 @@ _Top 10 CWE by CVE count._
 | ---: | :-: | :--- | ---: | ---:      |
 | 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,657 | 6.17 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,487 | 7.45 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,934 | 5.93 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,937 | 5.93 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,152 | 7.02 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,208 | 5.79 |
 | 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,102 | 7.17 |
