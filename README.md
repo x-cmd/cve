@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_110,121 CVEs across 674 distinct CWEs since 2024._
+_110,122 CVEs across 674 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -50,7 +50,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-08-22)_ | 47,752 | 45,098 | 7.08 | 10.0 |
+| 2026 _(YTD as of 2026-08-22)_ | 47,753 | 45,099 | 7.07 | 10.0 |
 | 2025 | 43,392 | 41,963 | 6.79 | 10.0 |
 | 2024 | 38,436 | 37,037 | 6.81 | 10.0 |
 | 2023 | 30,602 | 24,722 | 6.73 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **363,795** | **192,906** | **6.86** | **10.0** |
+| **Total** | **363,796** | **192,907** | **6.86** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
