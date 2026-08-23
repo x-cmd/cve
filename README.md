@@ -5,7 +5,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_110,157 CVEs across 674 distinct CWEs since 2024._
+_110,168 CVEs across 674 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -13,7 +13,7 @@ _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,665 | 6.17 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,671 | 6.17 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,492 | 7.45 |
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 5,940 | 5.93 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,158 | 7.02 |
@@ -22,7 +22,7 @@ _Top 10 CWE by CVE count._
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,658 | 6.75 |
 | 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,334 | 8.08 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,240 | 7.65 |
-| 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,168 | 6.98 |
+| 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,170 | 6.98 |
 
 ### When that mistake is made, how bad is it since 2024?
 
@@ -50,7 +50,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-08-23)_ | 47,780 | 45,121 | 7.08 | 10.0 |
+| 2026 _(YTD as of 2026-08-23)_ | 47,791 | 45,149 | 7.07 | 10.0 |
 | 2025 | 43,392 | 41,963 | 6.79 | 10.0 |
 | 2024 | 38,436 | 37,037 | 6.81 | 10.0 |
 | 2023 | 30,602 | 24,722 | 6.73 | 10.0 |
@@ -78,7 +78,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **363,823** | **192,929** | **6.86** | **10.0** |
+| **Total** | **363,834** | **192,957** | **6.86** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
