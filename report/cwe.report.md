@@ -1,4 +1,4 @@
-_112,259 CVEs across 678 distinct CWEs since 2024._
+_112,272 CVEs across 678 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -6,7 +6,7 @@ _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,795 | 6.17 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,796 | 6.17 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,570 | 7.46 |
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,056 | 5.95 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,191 | 7.02 |
@@ -32,4 +32,4 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 7 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 8 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 49 | 8.16 | 9.9 |
 | 9 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,757 | 8.13 | 10.0 |
-| 10 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,175 | 8.12 | 10.0 |
+| 10 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,176 | 8.12 | 10.0 |
