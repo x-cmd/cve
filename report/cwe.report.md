@@ -1,4 +1,4 @@
-_112,394 CVEs across 678 distinct CWEs since 2024._
+_112,401 CVEs across 678 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -11,7 +11,7 @@ _Top 10 CWE by CVE count._
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,059 | 5.95 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,199 | 7.02 |
 | 5 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,225 | 5.80 |
-| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,184 | 7.18 |
+| 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,185 | 7.18 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,710 | 6.77 |
 | 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,409 | 8.09 |
 | 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,302 | 7.69 |
