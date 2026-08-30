@@ -4,7 +4,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 112,299 个 CVE，涉及 678 个不同的 CWE。
+自 2024 年以来，共 112,313 个 CVE，涉及 678 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -37,7 +37,7 @@ _Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE �
 | 6 | [603](https://cwe.mitre.org/data/definitions/603.html) | Use of Client-Side Authentication | 16 | 8.21 | 9.8 |
 | 7 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 8 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 49 | 8.16 | 9.9 |
-| 9 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,757 | 8.13 | 10.0 |
+| 9 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,758 | 8.13 | 10.0 |
 | 10 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,178 | 8.12 | 10.0 |
 <!-- END cwe.report.md -->
 
@@ -49,7 +49,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-08-29）_ | 50,241 | 47,497 | 7.09 | 10.0 |
+| 2026 _（截至 2026-08-30）_ | 50,252 | 47,533 | 7.09 | 10.0 |
 | 2025 | 43,425 | 41,994 | 6.79 | 10.0 |
 | 2024 | 38,438 | 37,039 | 6.81 | 10.0 |
 | 2023 | 30,603 | 24,725 | 6.73 | 10.0 |
@@ -77,7 +77,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **366,329** | **195,351** | **6.87** | **10.0** |
+| **Total** | **366,340** | **195,387** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
