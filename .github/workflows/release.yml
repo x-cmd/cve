@@ -109,14 +109,26 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import datetime
           import re
 
-          # Today's ISO date — used to refresh the "Data as of:" /
-          # "数据截至：" timestamp at the top of each README. Updated
-          # by every CI run so the page always reflects when the
-          # data was last regenerated.
-          TODAY_ISO = datetime.date.today().isoformat()
+          # The "Data as of: YYYY-MM-DD" line at the top of each README
+          # must match the "截至 YYYY-MM-DD" YTD label that report.py
+          # embeds in the per-year stats table. We extract the date
+          # from report/cve.report.md (just emitted by report.py in
+          # the previous step) so the two labels are guaranteed to
+          # match — using datetime.date.today() here would risk
+          # drifting by a day if the workflow re-runs the inline
+          # step without re-running report.py.
+          cve_report = Path("report/cve.report.md").read_text(encoding="utf-8")
+          date_match = re.search(
+              r"(\d{4}) _\(YTD as of (\d{4}-\d{2}-\d{2})\)_", cve_report
+          )
+          if not date_match:
+              raise SystemExit(
+                  "ERROR: could not find YTD 'as of' date in report/cve.report.md"
+                  " — has report.py's TODAY_ISO format changed?"
+              )
+          YTD_YEAR, DATA_AS_OF = date_match.groups()
 
           # Per-language "data as of" line. Each README has a
           # `<!-- cve-data-as-of:START --> ... <!-- cve-data-as-of:END -->`
@@ -125,11 +137,11 @@ jobs:
           # on the same day produces no diff.
           DATE_LINES = {
               Path("README.md"):
-                  f"**Data as of: {TODAY_ISO}** _(refreshed daily from "
+                  f"**Data as of: {DATA_AS_OF}** _(refreshed daily from "
                   f"upstream cvelistV5 — pull this page tomorrow and the "
                   f"rankings will have moved)._",
               Path("README.cn.md"):
-                  f"**数据截至：{TODAY_ISO}** _（每日从上游 cvelistV5 更新 "
+                  f"**数据截至：{DATA_AS_OF}** _（每日从上游 cvelistV5 更新 "
                   f"—— 明天再看，榜单就会有变化）。_",
           }
 
