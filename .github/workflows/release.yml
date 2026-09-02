@@ -1,23 +1,49 @@
 name: release-xz
 
-# Repackage the per-year TSV + index.tsv as xz-compressed release
-# assets. Only files that have changed since the last packaged commit
-# (tracked by the `data-packaged` git tag) are re-uploaded, so a
-# typical day uploads 1-2 files instead of all 28.
+# Producer pipeline for https://github.com/x-cmd/cve — keeps the
+# per-year CVE TSV data and the matching release assets in sync with
+# upstream CVEProject/cvelistV5.
 #
-# Schedule: every 4h (was daily before #1 closed; the old delta.yml
-# ran the same 4h cadence but its incremental work was discarded by
-# this workflow's `tsv.py --rebuild` step, so killing it costs us
-# nothing while removing the second-workbook complexity).
+# The pipeline runs in three steps, matching the daily schedule:
+#
+#   1. REBUILD + COMMIT DATA
+#      Pull upstream cvelistV5, run `tsv.py --rebuild` to write
+#      fresh data/cve-YYYY.tsv, then `git commit` + `git push` so
+#      the source-of-truth lives in git history (one commit per
+#      CI run that actually saw upstream churn).
+#
+#   2. DIFF VS LAST RELEASE ASSET
+#      Download the previous `cve-all.tar.xz` from the `data`
+#      release into a temp dir, then compare each year-by-year
+#      against the freshly-built data/cve-YYYY.tsv. The release
+#      asset — not a git tag — is the comparison source because
+#      the asset is what consumers actually see, so a byte-level
+#      diff against it is the most honest signal for "do consumers
+#      need to refresh?". Any year whose bytes differ is added to
+#      `changed.txt`.
+#
+#   3. CONDITIONALLY REPACK + UPLOAD
+#      For each year in `changed.txt`, xz-compress + re-upload the
+#      per-year .xz asset. ALSO re-pack `cve-all.tar.xz` and
+#      re-upload — but ONLY if at least one year changed. If
+#      nothing changed, leave the existing bundle alone (its
+#      sha256 is what consumers have cached, and re-uploading the
+#      same bytes would invalidate their cache for no reason).
+#
+# Schedule: every 4h, off-the-hour (`37 */4 * * *`).
 #
 # Repo layout:
-#   .x-cmd/tsv.py, _cve_index.py, cwe.py, cwe_report.py, report.py
-#                                                  ← scripts (this dir)
-#   data/cve-YYYY.tsv, index.tsv, cve.tsv.state.json ← per-year TSVs
+#   .x-cmd/tsv.py, cwe.py, cwe_report.py, report.py
+#                                       ← scripts (this dir)
+#   data/cve-YYYY.tsv                   ← per-year TSVs, tracked
+#   data/cwe.tsv, data/cwe.slim.tsv     ← MITRE CWE catalog, tracked
+#   data/index.tsv                      ← manifest, NOT tracked (.gitignore)
+#   data/cve.tsv.state.json             ← rebuild cache, NOT tracked (.gitignore)
 #
 # NB: NO .xz files are committed to the main branch — binaries belong
-# in release assets, not source. data/cve-*.tsv is also untracked
-# (regenerated on every CI run).
+# in release assets, not source. data/cve-*.tsv IS tracked and IS
+# committed on every CI run that sees changes, so the upstream
+# dataset is reproducible from git alone.
 
 on:
   schedule:
@@ -38,8 +64,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Need the full history so `git diff <prev>..HEAD` can compare
-          # against the previous packaged commit.
+          # Full history so commits land cleanly on main.
           fetch-depth: 0
 
       - name: Install xz
@@ -52,11 +77,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      # ----------------------------------------------------------------
-      # Run the producer so data/cve-YYYY.tsv + data/index.tsv are
-      # up-to-date before we package them. The script writes into
-      # ./data/ by default and is dependency-free (Python stdlib only).
-      # ----------------------------------------------------------------
+      # =================================================================
+      # STEP 1 — Rebuild per-year TSVs from upstream cvelistV5 and
+      # commit + push the result so git history mirrors what consumers
+      # see. Idempotent: when the rebuild produces no diff against
+      # HEAD (no upstream churn today) the commit step exits cleanly
+      # without making an empty commit.
+      # =================================================================
       - name: Build TSVs from upstream cvelistV5
         # Shallow clone of cvelistV5 (--depth 1) is enough — we only
         # need HEAD, not history. Runs `tsv.py --rebuild` against
@@ -71,32 +98,132 @@ jobs:
               --rebuild 2>&1 | tail -5
           rm -rf /tmp/cvelistV5
 
-      # ----------------------------------------------------------------
-      # Build cve.report.tsv + cve.report.md from the freshly-updated
-      # data/. The markdown file is what gets inlined into the README
-      # on the next step.
-      # ----------------------------------------------------------------
-      - name: Generate CWE catalog TSV
-        # Fetch MITRE 2000.csv.zip, parse, write data/cwe.tsv.
-        # 30-day TTL — the CWE catalog changes slowly. The x-cwe
-        # module reads the upstream catalog on its own at runtime;
-        # this file gives the cve repo a stable, snapshot-able copy
-        # for linking CWE ids to names in our docs / report.
+      - name: Commit refreshed data/
+        # Commit only the per-year TSVs that actually changed against
+        # HEAD. `git add data/cve-*.tsv` matches all years (1999..2099
+        # range) but `git diff --cached --quiet` short-circuits when
+        # nothing changed, so a no-op day produces no commit. The
+        # cwe.tsv catalog lives in a separate commit (see below).
         run: |
-          python3 .x-cmd/cwe.py
+          git add data/cve-*.tsv
+          if git diff --cached --quiet; then
+              echo "no per-year TSV changes — skipping data commit"
+              exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "data: refresh cve-*.tsv ($(date -u +%Y-%m-%d))"
+          git push
+
+      # =================================================================
+      # STEP 2 — Diff freshly-built data/ against the previous
+      # cve-all.tar.xz from the `data` release. The release asset is
+      # the source of truth for consumers, so comparing against IT
+      # (rather than a git tag) answers the right question: "do
+      # consumers need a fresh download?".
+      # =================================================================
+      - name: Fetch previous cve-all.tar.xz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/prev_data
+          rm -f /tmp/prev_data/*.tsv
+          if gh release view data >/dev/null 2>&1; then
+              echo "Fetching previous cve-all.tar.xz from release..."
+              if curl -fsSL -o /tmp/prev_all.tar.xz \
+                  https://github.com/x-cmd/cve/releases/download/data/cve-all.tar.xz; then
+                  tar -xJ -C /tmp/prev_data -f /tmp/prev_all.tar.xz
+                  n=$(ls /tmp/prev_data/ 2>/dev/null | wc -l | tr -d ' ')
+                  echo "Extracted ${n} files from previous release"
+              else
+                  echo "cve-all.tar.xz fetch failed — treating as first run"
+              fi
+          else
+              echo "No 'data' release yet — treating as first run"
+          fi
+
+      - name: Detect changed TSV files (vs previous release)
+        id: changed
+        run: |
+          # Compare every shipped TSV (per-year CVE files + the
+          # MITRE CWE catalog) byte-for-byte against the previous
+          # release. A missing previous file (new year, or first run)
+          # is treated as a change. The output `changed.txt` lists
+          # the basenames whose .xz asset needs re-uploading; if
+          # it's empty we also skip the cve-all.tar.xz rebuild (Step
+          # 3) and skip every upload step.
+          #
+          # We package four kinds of files:
+          #   data/cve-YYYY.tsv    ← per-year CVE rows
+          #   data/cwe.tsv         ← full MITRE catalog (rare changes)
+          #   data/cwe.slim.tsv    ← slim subset, used in x cwe
+          # `index.tsv` and `cve.tsv.state.json` stay local — no
+          # consumer fetches them from the release.
+          : > changed.txt
+          for f in data/cve-*.tsv data/cwe.tsv data/cwe.slim.tsv; do
+              [ -f "$f" ] || continue
+              base=$(basename "$f")
+              prev="/tmp/prev_data/$base"
+              if [ ! -f "$prev" ] || ! cmp -s "$f" "$prev"; then
+                  echo "$base" >> changed.txt
+              fi
+          done
+          count=$(wc -l < changed.txt | tr -d ' ')
+          echo "Files changed vs previous release:"
+          if [ -s changed.txt ]; then
+              cat changed.txt
+          else
+              echo "(none)"
+          fi
+          echo "changed_count=${count}" >> "$GITHUB_OUTPUT"
+
+      # =================================================================
+      # STEP 3 — Conditionally rebuild release assets:
+      #   * per-year .xz for every year in changed.txt
+      #   * cve-all.tar.xz ONLY if anything changed (skip when zero
+      #     so consumers' cached sha256 stays valid for no-op days)
+      # =================================================================
+      - name: Compress changed per-year TSVs
+        if: steps.changed.outputs.changed_count != '0'
+        # xz -9 = best compression; per-year TSV shrinks ~85%.
+        # -k keeps the .tsv on disk so the workflow doesn't accidentally
+        # delete source files.
+        run: |
+          mkdir -p release
+          while IFS= read -r f; do
+              [ -f "data/$f" ] || continue
+              xz -9 -k -c "data/$f" > "release/${f}.xz"
+          done < changed.txt
+          echo "--- compressed per-year ---"
+          ls -lh release/
+
+      - name: Build cve-all.tar.xz
+        if: steps.changed.outputs.changed_count != '0'
+        run: |
+          mkdir -p release
+          # Tar every data/cve-*.tsv into a plain tar, then xz it.
+          # We have to expand the glob BEFORE tar changes directory
+          # (otherwise `cve-*.tsv` resolves against the post-`-C`
+          # directory and finds nothing). Pass the explicit list of
+          # absolute paths to tar, which it then strips via the -C.
+          tar -C data -cf - $(cd data && echo cve-*.tsv) | xz -9 -e > release/cve-all.tar.xz
+          ls -lh release/cve-all.tar.xz
+
+      # =================================================================
+      # Reports — derived from the freshly-built data/. The cwe.tsv
+      # catalog is rebuilt too (cwe.py fetches MITRE's 2000.csv.zip
+      # with a 30-day TTL) so the cve/cwe cross-reference reports
+      # are emitted from the latest inputs.
+      # =================================================================
+      - name: Generate CWE catalog TSV
+        run: python3 .x-cmd/cwe.py
 
       - name: Generate CWE cross-reference report
-        # For every CWE in the catalog, count how many CVEs in our
-        # data/ reference it, plus avg / max score. Output goes into
-        # report/cwe.report.tsv (top 100) + report/cwe.report.md
-        # (top-10 slices) — derived aggregates only, never a copy of
-        # MITRE's catalog.
         run: |
           python3 .x-cmd/cwe_report.py
 
       - name: Generate year stats report
-        run: |
-          python3 .x-cmd/report.py
+        run: python3 .x-cmd/report.py
 
       - name: Inline reports into README + README.cn
         # Stitch both report/cve.report.md (per-year stats) and
@@ -288,19 +415,6 @@ jobs:
           PY
           git diff --stat README.md README.cn.md || true
 
-      # ----------------------------------------------------------------
-      # Commit the regenerated *reports* back to main — README.md
-      # (inlined blocks above) plus the four derived report files in
-      # report/. This is what makes the README on github.com track
-      # the latest data — without it, the inlined tables above would
-      # only ever exist on the CI runner's filesystem.
-      #
-      # We deliberately do NOT commit per-year cve-*.tsv or the
-      # cwe.tsv / cwe.slim.tsv catalog here. Those are the source of
-      # truth that the per-year TSV release assets mirror. Adding
-      # them to this commit would just turn every CI run into a
-      # giant "data refresh" commit that obscures real changes.
-      # ----------------------------------------------------------------
       - name: Commit regenerated reports + README
         # Skip when nothing changed — keeps the commit graph clean on
         # days where the upstream cvelistV5 returned no new CVEs.
@@ -330,88 +444,11 @@ jobs:
           git commit -m "data: refresh cve/cwe reports + inlined README (data ${data_date})"
           git push
 
-      # ----------------------------------------------------------------
-      # Detect which .tsv files have actually changed since the last
-      # packaged commit. Skipping unchanged files keeps the release
-      # workflow O(changes-per-day) instead of O(years).
-      # ----------------------------------------------------------------
-      - name: Find previous packaged commit
-        id: prev
-        run: |
-          PREV=$(git rev-list -n 1 data-packaged 2>/dev/null || echo "")
-          echo "prev=${PREV}" >> "$GITHUB_OUTPUT"
-
-      - name: Detect changed .tsv files
-        id: changed
-        run: |
-          # We package cve-YYYY.tsv + cwe.tsv + cwe.slim.tsv. Skip
-          # index.tsv (no consumer) and the *report.tsv files
-          # (regenerated by the workflow itself; they're not the
-          # source of truth — the per-year cve-*.tsv is).
-          #
-          # IMPORTANT: diff against the WORKING TREE, not against
-          # HEAD. `git diff <a>..HEAD` only sees committed changes,
-          # but `tsv.py --rebuild` writes the fresh files to disk
-          # without committing them — so a `..HEAD` diff misses
-          # every daily data update. `git diff <a>` (no `..HEAD`)
-          # compares the working tree against <a>, which is what
-          # we actually want: "did the rebuild change this file
-          # since we last packaged it?"
-          if [ -n "${{ steps.prev.outputs.prev }}" ]; then
-              git diff --name-only "${{ steps.prev.outputs.prev }}" \
-                  -- 'data/cve-*.tsv' 'data/cwe.tsv' 'data/cwe.slim.tsv' \
-                  | sed 's#^data/##' \
-                  | sort -u > changed.txt
-          else
-              # First run ever — upload everything.
-              ls data/cve-*.tsv data/cwe.tsv data/cwe.slim.tsv 2>/dev/null \
-                  | sed 's#^data/##' \
-                  | sort -u > changed.txt
-          fi
-          echo "Files changed since last release:"
-          cat changed.txt
-          echo "changed_count=$(wc -l < changed.txt)" >> "$GITHUB_OUTPUT"
-
-      - name: Compress changed files
-        if: steps.changed.outputs.changed_count != '0'
-        # xz -9 = best compression; per-year TSV shrinks ~85%.
-        # -k keeps the .tsv on disk so the workflow doesn't accidentally
-        # delete source files.
-        run: |
-          mkdir -p release
-          while IFS= read -r f; do
-              [ -f "data/$f" ] || continue
-              xz -9 -k -c "data/$f" > "release/${f}.xz"
-          done < changed.txt
-          echo "--- compressed ---"
-          ls -lh release/
-
-      # ----------------------------------------------------------------
-      # Build a single cve-all.tar.xz that bundles every per-year TSV
-      # (not the .xz — plain TSVs inside the tar, then tar gets xz'd).
-      # Consumers can fetch this one file and have the full mirror,
-      # vs. fetching each cve-YYYY.tsv.xz individually.
-      #
-      # We rebuild it on every run regardless of changed_count — the
-      # bundle is a snapshot, not an incremental artefact.
-      # ----------------------------------------------------------------
-      - name: Build cve-all.tar.xz
-        run: |
-          mkdir -p release
-          # Tar every data/cve-*.tsv into a plain tar, then xz it.
-          # We have to expand the glob BEFORE tar changes directory
-          # (otherwise `cve-*.tsv` resolves against the post-`-C`
-          # directory and finds nothing). Pass the explicit list of
-          # absolute paths to tar, which it then strips via the -C.
-          tar -C data -cf - $(cd data && echo cve-*.tsv) | xz -9 -e > release/cve-all.tar.xz
-          ls -lh release/cve-all.tar.xz
-
-      # ----------------------------------------------------------------
-      # Ensure the `data` release exists (first run creates it), then
-      # for each changed file: delete the existing asset (if any) and
-      # upload the new .xz. The release URL for each asset is stable,
-      # so consumers see no churn.
-      # ----------------------------------------------------------------
+      # =================================================================
+      # STEP 3 (cont.) — Upload the rebuilt assets to the `data`
+      # release. Skip every upload step when nothing changed, so
+      # consumers' cached sha256s stay valid for no-op days.
+      # =================================================================
       - name: Ensure 'data' release exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -427,7 +464,7 @@ jobs:
               # release.
           fi
 
-      - name: Replace changed assets
+      - name: Upload changed per-year .xz assets
         if: steps.changed.outputs.changed_count != '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -441,9 +478,7 @@ jobs:
           done < changed.txt
 
       - name: Upload cve-all.tar.xz
-        # Always re-upload the bundle — it's a snapshot of the entire
-        # data/ tree, so any change in any year file means a stale
-        # bundle. Delete-first-then-upload so we replace atomically.
+        if: steps.changed.outputs.changed_count != '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -463,19 +498,6 @@ jobs:
           # If it was created as a draft above, promote it. Idempotent.
           gh release edit data --draft=false || true
 
-      # ----------------------------------------------------------------
-      # Move the data-packaged tag to the current commit so the next
-      # run can diff against it. Force-push because tags are
-      # deliberately mutable here (that's the whole point).
-      # ----------------------------------------------------------------
-      - name: Move data-packaged tag to current commit
-        if: steps.changed.outputs.changed_count != '0'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -f data-packaged HEAD
-          git push origin data-packaged --force
-
       - name: Cleanup
         if: always()
-        run: rm -rf release changed.txt
+        run: rm -rf release changed.txt /tmp/prev_data /tmp/prev_all.tar.xz
