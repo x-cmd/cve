@@ -1,7 +1,7 @@
 # What CVEs keep teaching us
 
 <!-- cve-data-as-of:START -->
-**Data as of: 2026-09-03** _(refreshed daily from upstream cvelistV5 — pull this page tomorrow and the rankings will have moved)._
+**Data as of: 2026-09-02** _(refreshed daily from upstream cvelistV5 — pull this page tomorrow and the rankings will have moved)._
 <!-- cve-data-as-of:END -->
 
 > This page is a living mirror of the upstream CVE index. The tables
