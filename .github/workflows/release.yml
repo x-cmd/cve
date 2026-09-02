@@ -109,7 +109,29 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import datetime
           import re
+
+          # Today's ISO date — used to refresh the "Data as of:" /
+          # "数据截至：" timestamp at the top of each README. Updated
+          # by every CI run so the page always reflects when the
+          # data was last regenerated.
+          TODAY_ISO = datetime.date.today().isoformat()
+
+          # Per-language "data as of" line. Each README has a
+          # `<!-- cve-data-as-of:START --> ... <!-- cve-data-as-of:END -->`
+          # block at the top; we replace the body with the localized
+          # timestamp line. Idempotent — running the workflow twice
+          # on the same day produces no diff.
+          DATE_LINES = {
+              Path("README.md"):
+                  f"**Data as of: {TODAY_ISO}** _(refreshed daily from "
+                  f"upstream cvelistV5 — pull this page tomorrow and the "
+                  f"rankings will have moved)._",
+              Path("README.cn.md"):
+                  f"**数据截至：{TODAY_ISO}** _（每日从上游 cvelistV5 更新 "
+                  f"—— 明天再看，榜单就会有变化）。_",
+          }
 
           # Both blocks share one anchor — they stack at the same
           # insertion point in the order they're called below. Insert
@@ -212,6 +234,16 @@ jobs:
                   print(f"skip: {readme_path} does not exist yet")
                   continue
               text = readme_path.read_text(encoding="utf-8")
+              # Refresh the "Data as of: YYYY-MM-DD" / "数据截至：YYYY-MM-DD"
+              # timestamp at the top of each README. The block lives
+              # between <!-- cve-data-as-of:START --> and ...:END -->,
+              # which we replace with the localized line for today.
+              date_start = "<!-- cve-data-as-of:START -->"
+              date_end = "<!-- cve-data-as-of:END -->"
+              if date_start in text and date_end in text:
+                  i = text.index(date_start)
+                  j = text.index(date_end) + len(date_end)
+                  text = text[:i] + date_start + "\n" + DATE_LINES[readme_path] + "\n" + date_end + text[j:]
               # Stitch cwe FIRST so it lands in position #2 (no ## heading),
               # then stitch cve so it lands in position #3 with its own
               # `## CVE growth trend` (or `## CVE 增长趋势`) heading.
