@@ -1,6 +1,10 @@
 # CVE 教会我们什么
 
-> _每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化。_
+<!-- cve-data-as-of:START -->
+**数据截至：2026-09-03** _（每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化）。_
+<!-- cve-data-as-of:END -->
+
+> 本页是上游 CVE 索引的实时镜像。下方表格（逐年统计、CWE 错误 Top 10、按严重程度 Top 10）由每日 CI 自动生成，并非人工编排。
 
 <!-- BEGIN cwe.report.md -->
 
