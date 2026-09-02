@@ -4,7 +4,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 113,353 个 CVE，涉及 680 个不同的 CWE。
+自 2024 年以来，共 113,365 个 CVE，涉及 680 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -20,7 +20,7 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,224 | 7.17 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,727 | 6.77 |
 | 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,438 | 8.10 |
-| 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,311 | 7.68 |
+| 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,310 | 7.68 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,254 | 6.97 |
 
 ### 2024 年以来，犯下这些错误后果有多严重？
@@ -49,10 +49,10 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-09-02）_ | 51,438 | 48,846 | 7.08 | 10.0 |
+| 2026 _（截至 2026-09-02）_ | 51,449 | 48,855 | 7.08 | 10.0 |
 | 2025 | 43,436 | 42,008 | 6.79 | 10.0 |
 | 2024 | 38,443 | 37,044 | 6.81 | 10.0 |
-| 2023 | 30,608 | 24,731 | 6.73 | 10.0 |
+| 2023 | 30,610 | 24,733 | 6.73 | 10.0 |
 | 2022 | 26,433 | 17,458 | 6.79 | 10.0 |
 | 2021 | 22,595 | 10,827 | 6.83 | 10.0 |
 | 2020 | 19,391 | 6,915 | 6.84 | 10.0 |
@@ -77,7 +77,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **367,547** | **196,728** | **6.87** | **10.0** |
+| **Total** | **367,560** | **196,739** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
