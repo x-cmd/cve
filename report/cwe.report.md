@@ -1,4 +1,4 @@
-_113,353 CVEs across 680 distinct CWEs since 2024._
+_113,365 CVEs across 680 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -14,7 +14,7 @@ _Top 10 CWE by CVE count._
 | 6 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,224 | 7.17 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,727 | 6.77 |
 | 8 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,438 | 8.10 |
-| 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,311 | 7.68 |
+| 9 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,310 | 7.68 |
 | 10 | [20](https://cwe.mitre.org/data/definitions/20.html) | Improper Input Validation | 2,254 | 6.97 |
 
 ### When that mistake is made, how bad is it since 2024?
