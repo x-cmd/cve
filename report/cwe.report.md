@@ -1,4 +1,4 @@
-_114,181 CVEs across 681 distinct CWEs since 2024._
+_114,193 CVEs across 681 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -6,9 +6,9 @@ _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,957 | 6.17 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,959 | 6.17 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,645 | 7.46 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,164 | 5.96 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,165 | 5.96 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,240 | 7.02 |
 | 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,254 | 7.18 |
 | 6 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,245 | 5.80 |
