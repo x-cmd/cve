@@ -8,7 +8,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 114,618 个 CVE，涉及 682 个不同的 CWE。
+自 2024 年以来，共 114,631 个 CVE，涉及 682 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -18,7 +18,7 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | ---: | :-: | :--- | ---: | ---:      |
 | 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 16,976 | 6.17 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,686 | 7.46 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,189 | 5.96 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,191 | 5.96 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,283 | 7.02 |
 | 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,262 | 7.18 |
 | 6 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,248 | 5.80 |
@@ -53,7 +53,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-09-07）_ | 52,775 | 49,994 | 7.08 | 10.0 |
+| 2026 _（截至 2026-09-07）_ | 52,788 | 50,007 | 7.08 | 10.0 |
 | 2025 | 43,448 | 42,019 | 6.79 | 10.0 |
 | 2024 | 38,444 | 37,045 | 6.81 | 10.0 |
 | 2023 | 30,610 | 24,733 | 6.73 | 10.0 |
@@ -81,7 +81,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **368,921** | **197,909** | **6.87** | **10.0** |
+| **Total** | **368,934** | **197,922** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
