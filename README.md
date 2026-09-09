@@ -1,7 +1,7 @@
 # What CVEs keep teaching us
 
 <!-- cve-data-as-of:START -->
-**Data as of: 2026-09-08** _(refreshed daily from upstream cvelistV5 — pull this page tomorrow and the rankings will have moved)._
+**Data as of: 2026-09-09** _(refreshed daily from upstream cvelistV5 — pull this page tomorrow and the rankings will have moved)._
 <!-- cve-data-as-of:END -->
 
 > This page is a living mirror of the upstream CVE index. The tables
@@ -10,7 +10,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-_116,201 CVEs across 683 distinct CWEs since 2024._
+_116,267 CVEs across 683 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -18,16 +18,16 @@ _Top 10 CWE by CVE count._
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 17,109 | 6.17 |
-| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,701 | 7.46 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,229 | 5.97 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 17,118 | 6.17 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,704 | 7.46 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,236 | 5.97 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,288 | 7.02 |
-| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,278 | 7.18 |
+| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,282 | 7.18 |
 | 6 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,257 | 5.80 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,773 | 6.78 |
 | 8 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,520 | 7.66 |
-| 9 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,488 | 8.10 |
-| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | Out-of-bounds Read | 2,287 | 6.35 |
+| 9 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,489 | 8.10 |
+| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | Out-of-bounds Read | 2,292 | 6.34 |
 
 ### When that mistake is made, how bad is it since 2024?
 
@@ -38,7 +38,7 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 48 | 9.15 | 10.0 |
 | 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 135 | 8.55 | 10.0 |
 | 3 | [565](https://cwe.mitre.org/data/definitions/565.html) | Reliance on Cookies without Validation and Integrity Checking | 18 | 8.38 | 9.8 |
-| 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,734 | 8.34 | 10.0 |
+| 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,736 | 8.33 | 10.0 |
 | 5 | [288](https://cwe.mitre.org/data/definitions/288.html) | Authentication Bypass Using an Alternate Path or Channel | 459 | 8.28 | 10.0 |
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 49 | 8.16 | 9.9 |
@@ -55,7 +55,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-09-08)_ | 54,341 | 51,484 | 7.09 | 10.0 |
+| 2026 _(YTD as of 2026-09-09)_ | 54,669 | 51,582 | 7.09 | 10.0 |
 | 2025 | 43,459 | 42,031 | 6.79 | 10.0 |
 | 2024 | 38,444 | 37,045 | 6.81 | 10.0 |
 | 2023 | 30,609 | 24,732 | 6.73 | 10.0 |
@@ -83,7 +83,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **370,493** | **199,407** | **6.87** | **10.0** |
+| **Total** | **370,821** | **199,505** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports

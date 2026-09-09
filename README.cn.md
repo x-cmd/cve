@@ -1,14 +1,14 @@
 # CVE 教会我们什么
 
 <!-- cve-data-as-of:START -->
-**数据截至：2026-09-08** _（每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化）。_
+**数据截至：2026-09-09** _（每日从上游 cvelistV5 更新 —— 明天再看，榜单就会有变化）。_
 <!-- cve-data-as-of:END -->
 
 > 本页是上游 CVE 索引的实时镜像。下方表格（逐年统计、CWE 错误 Top 10、按严重程度 Top 10）由每日 CI 自动生成，并非人工编排。
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 116,201 个 CVE，涉及 683 个不同的 CWE。
+自 2024 年以来，共 116,267 个 CVE，涉及 683 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -16,16 +16,16 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 17,109 | 6.17 |
-| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,701 | 7.46 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,229 | 5.97 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 17,118 | 6.17 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,704 | 7.46 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,236 | 5.97 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,288 | 7.02 |
-| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,278 | 7.18 |
+| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') | 3,282 | 7.18 |
 | 6 | [352](https://cwe.mitre.org/data/definitions/352.html) | Cross-Site Request Forgery (CSRF) | 3,257 | 5.80 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,773 | 6.78 |
 | 8 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,520 | 7.66 |
-| 9 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,488 | 8.10 |
-| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | Out-of-bounds Read | 2,287 | 6.35 |
+| 9 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,489 | 8.10 |
+| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | Out-of-bounds Read | 2,292 | 6.34 |
 
 ### 2024 年以来，犯下这些错误后果有多严重？
 
@@ -36,7 +36,7 @@ _Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE �
 | 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | Embedded Malicious Code | 48 | 9.15 | 10.0 |
 | 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') | 135 | 8.55 | 10.0 |
 | 3 | [565](https://cwe.mitre.org/data/definitions/565.html) | Reliance on Cookies without Validation and Integrity Checking | 18 | 8.38 | 9.8 |
-| 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,734 | 8.34 | 10.0 |
+| 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | Deserialization of Untrusted Data | 1,736 | 8.33 | 10.0 |
 | 5 | [288](https://cwe.mitre.org/data/definitions/288.html) | Authentication Bypass Using an Alternate Path or Channel | 459 | 8.28 | 10.0 |
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') | 29 | 8.21 | 10.0 |
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 49 | 8.16 | 9.9 |
@@ -53,7 +53,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-09-08）_ | 54,341 | 51,484 | 7.09 | 10.0 |
+| 2026 _（截至 2026-09-09）_ | 54,669 | 51,582 | 7.09 | 10.0 |
 | 2025 | 43,459 | 42,031 | 6.79 | 10.0 |
 | 2024 | 38,444 | 37,045 | 6.81 | 10.0 |
 | 2023 | 30,609 | 24,732 | 6.73 | 10.0 |
@@ -81,7 +81,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **370,493** | **199,407** | **6.87** | **10.0** |
+| **Total** | **370,821** | **199,505** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
