@@ -8,7 +8,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 117,482 个 CVE，涉及 683 个不同的 CWE。
+自 2024 年以来，共 117,484 个 CVE，涉及 683 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -16,7 +16,7 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 17,203 | 6.17 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') | 17,204 | 6.17 |
 | 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') | 7,730 | 7.46 |
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | Missing Authorization | 6,335 | 5.97 |
 | 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') | 4,292 | 7.02 |
@@ -53,7 +53,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-09-12）_ | 56,142 | 52,885 | 7.08 | 10.0 |
+| 2026 _（截至 2026-09-12）_ | 56,144 | 52,923 | 7.08 | 10.0 |
 | 2025 | 43,470 | 42,041 | 6.79 | 10.0 |
 | 2024 | 38,447 | 37,048 | 6.81 | 10.0 |
 | 2023 | 30,616 | 24,739 | 6.73 | 10.0 |
@@ -81,7 +81,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **372,316** | **200,830** | **6.87** | **10.0** |
+| **Total** | **372,318** | **200,868** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
