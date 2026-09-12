@@ -8,7 +8,7 @@
 
 <!-- BEGIN cwe.report.md -->
 
-自 2024 年以来，共 117,484 个 CVE，涉及 683 个不同的 CWE。
+自 2024 年以来，共 117,489 个 CVE，涉及 683 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -25,7 +25,7 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | Improper Control of Generation of Code ('Code Injection') | 2,790 | 6.79 |
 | 8 | [416](https://cwe.mitre.org/data/definitions/416.html) | Use After Free | 2,570 | 7.67 |
 | 9 | [78](https://cwe.mitre.org/data/definitions/78.html) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 2,531 | 8.10 |
-| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | Out-of-bounds Read | 2,318 | 6.34 |
+| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | Out-of-bounds Read | 2,320 | 6.34 |
 
 ### 2024 年以来，犯下这些错误后果有多严重？
 
@@ -42,7 +42,7 @@ _Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE �
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | Path Traversal: '..filename' | 49 | 8.16 | 9.9 |
 | 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,117 | 8.12 | 10.0 |
 | 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,273 | 8.12 | 10.0 |
-| 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,834 | 8.12 | 10.0 |
+| 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,835 | 8.12 | 10.0 |
 <!-- END cwe.report.md -->
 
 <!-- BEGIN cve.report.md -->
@@ -53,7 +53,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-09-12）_ | 56,144 | 52,923 | 7.08 | 10.0 |
+| 2026 _（截至 2026-09-12）_ | 56,149 | 52,928 | 7.08 | 10.0 |
 | 2025 | 43,470 | 42,041 | 6.79 | 10.0 |
 | 2024 | 38,447 | 37,048 | 6.81 | 10.0 |
 | 2023 | 30,616 | 24,739 | 6.73 | 10.0 |
@@ -81,7 +81,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **372,318** | **200,868** | **6.87** | **10.0** |
+| **Total** | **372,323** | **200,873** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
