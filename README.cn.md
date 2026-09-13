@@ -6,6 +6,18 @@
 
 > 🌐 **English version: [README.md](./README.md)**.
 
+> **📑 目录**
+> - [CVE 增长得有多快？](#cve-增长得有多快)
+> - [报表（Reports）](#报表reports)
+> - [关于 x-cmd/cve](#关于-xcmdcve)
+> - [许可证（License）](#许可证license)
+> - [相关链接（Related）](#相关链接related)
+> - [常见问题（FAQ）](#常见问题faq)
+>
+> **开发者文档** —— 仓库结构、schema、脚本、CI：[`CONTRIBUTING.md`](./CONTRIBUTING.md)
+> **数据使用** —— `x cve` 命令、TSV 下载：[`SKILL.md`](./SKILL.md)
+
+
 <!-- BEGIN cve.latest-10.report.md -->
 
 **The 10 newest CVEs** (descending CVE id = newest published first).
@@ -177,134 +189,13 @@ x shodan cve CVE-2024-0001     # 等价写法，不需要管道
 
 无需 API key、无需 sudo、无需后台服务 —— `x cve` 是一个轻量的 shell 模块，背后依赖本仓库每日发布的 per-year TSV。
 
-## 仓库结构（Repository layout）
 
-```
-.
-├── .x-cmd/
-│   ├── tsv.py              # 从本地 cvelistV5 clone 完整重建
-│   ├── cwe.py              # MITRE CWE 目录镜像 → data/cwe.tsv + .slim.tsv
-│   ├── cwe_zh.py           # MITRE 中文镜像 (cwe.org.cn) → data/cwe.zh.tsv（issue #2）
-│   ├── cwe_report.py       # 聚合 data/cve-*.tsv ∩ data/cwe.slim.tsv (+ .zh.tsv) → report/cwe.report.{tsv,md,zh.md}
-│   ├── report.py           # 按年统计 → report/cve.report.{tsv,md}
-│   ├── latest.py           # 最新 N 条 → report/cve.latest-N.report.{tsv,md}
-│   └── _cve_index.py       # 共享的解析 / IO 帮助函数
-├── data/                   # 每次 CI 重建 —— 不入 git
-│   ├── cve-YYYY.tsv        # 每年一份 TSV（按 CVE id 降序排列）
-│   ├── index.tsv           # year \t rows \t file
-│   └── cve.tsv.state.json  # 每文件 mtime（tsv.py 增量用）
-├── report/                 # 每次 CI 重建 —— 入 git
-│   ├── README.md           # 报表索引 + 方法论
-│   ├── cve.report.{tsv,md} # 逐年统计
-│   ├── cve.latest-10.report.{tsv,md}  # 最新 10 条 CVE
-│   ├── cwe.top100.by-*.report.tsv  # CWE 排名 TSV（4 份）
-│   └── cwe.report.{md,zh.md}  # CWE 排名 Markdown（since 2024，Top 10；zh.md 是中文 README 用）
-└── .github/workflows/
-    └── release.yml         # 每 4 小时：tsv.py --rebuild → 报表 → xz → 上传
-```
+## 开发者文档
 
-`data/` 在每次 CI 运行时从零重建，所以 `main` 上的工作树保持小巧（脚本和 workflow 本身）。
+仓库结构、schema、脚本、CI 流水线详见
+[`CONTRIBUTING.md`](./CONTRIBUTING.md)。
 
-## 行序 —— 最新优先
-
-每份 `cve-YYYY.tsv` 按 **CVE id 降序** 排列：
-
-```
-CVE-2026-99999
-CVE-2026-99998
-CVE-2026-99997
-...
-CVE-2026-00002
-CVE-2026-00001
-CVE-2025-99999
-...
-CVE-1999-00001
-```
-
-`x cve` 消费端按反序遍历年份文件（`ls -r`），而每个文件本身就是反序的，所以直接 `cat` 就是「最新 CVE 在流的最前面」。不需要 `tac`，不需要对数据做二次扫描，没有任何惊喜。
-
-为什么要反序存储？`x cve ls` 和 `x cve fz` 的用户关心 *最新* 的 CVE —— 当天发布的、最新爆出的高危。生产端的 `save_year_files` 用 `sort(reverse=True)` 对每个桶排序，让磁盘顺序和显示顺序一致。
-
-## TSV 列（9 列）
-
-| # | 列名   | 含义                                                                       |
-| - | -------- | ----------------------------------------------------------------------------- |
-| 1 | `cve`    | 完整 CVE id，例如 `CVE-2024-0001`。                                            |
-| 2 | `year`   | 从 id 中解析出的年份段。                                                       |
-| 3 | `no`     | 从 id 中解析出的数字段。                                                       |
-| 4 | `vp`     | 来自 `containers.cna.affected[]` 的 `<vendor>/<product>;...`，用 `;` 连接。       |
-| 5 | `ghsa`   | `references` 中的 GitHub Security Advisory id，用 `;` 连接；没有则为空。         |
-| 6 | `score`  | 最高的 CVSS 基础分（v4.0 → v3.1 → v3.0 → v2.0，第一个命中即胜出）。              |
-| 7 | `patched`| 如果 `containers.cna.solutions[]` 非空则为 `1`，否则为 `0`。                    |
-| 8 | `cwe`    | CWE 编号（前缀已剥离），用 `;` 连接；没有则为空。                                |
-| 9 | `desc`   | 英文描述，只取第一句（≤240 字符）。                                            |
-
-第 9 列只保留第一句 —— Linux CNA 经常把完整的内核 slab dump（上千字节的 `fp=0x...` 十六进制）贴到描述字段。截断后每年的文件只有 ~1-9 MB，让 `x cve fz` 的列表更易扫读。
-
-## 脚本
-
-所有脚本零依赖（Python 3.8+ 标准库）。在仓库根目录运行：
-
-```sh
-# 从本地 cvelistV5 clone 完整重建（~350k 记录约 2 分钟）
-python3 .x-cmd/tsv.py
-
-# 强制重新解析每个文件（忽略 mtime 状态）
-python3 .x-cmd/tsv.py --rebuild
-
-# 拉取 MITRE CWE 目录 → data/cwe.tsv（完整 21 列）+
-# data/cwe.slim.tsv（仅 id+name，用于 join）。
-python3 .x-cmd/cwe.py
-
-# 从 MITRE 中文镜像 (cwe.org.cn) 拉取 CWE 中文名 → data/cwe.zh.tsv。
-# 30 天本地缓存；缺则 README.cn.md 自动回退英文。
-python3 .x-cmd/cwe_zh.py
-
-# 聚合交叉引用：每个 CWE 被多少 CVE 引用、平均分、最大分。
-# 读取 data/cve-*.tsv + data/cwe.slim.tsv + data/cwe.zh.tsv。
-python3 .x-cmd/cwe_report.py
-
-# 最新 N 条 CVE（默认 10）→ 报告顶部表格。
-# 只读每个 per-year TSV 的头部。
-python3 .x-cmd/latest.py
-
-# 逐年统计 → report/cve.report.{tsv,md}。
-python3 .x-cmd/report.py
-```
-
-### CWE 数据 —— 我们发布什么、衍生什么
-
-四份 `report/cwe.*.report.tsv` 文件已在上面的 [Reports](#报表reports) 段列出。本节只描述另外两份上游衍生的 MITRE CWE 目录文件：
-
-| 文件 | 形态 | 来源 | 用途 |
-| ---  | ---   | ---    | ---     |
-| `data/cwe.tsv`        | 21 列 TSV (~3 MB)，包含 MITRE 所有字段 | MITRE 2000.csv 的字面镜像 | x-cwe 模块 + 任何想拿完整 CWE 目录、不愿访问 MITRE 的消费者 |
-| `data/cwe.slim.tsv`   | 2 列 TSV (~50 KB)，仅 `CWE-ID` + `Name` | 从 `data/cwe.tsv` 派生 | 在 cwe_report.py 中与 `data/cve-*.tsv` 做 join |
-
-
-
-| 文件 | 形态 | 来源 | 用途 |
-| ---  | ---   | ---    | ---     |
-| `data/cwe.tsv`        | 21 列 TSV (~3 MB)，保留 MITRE 所有字段 | MITRE 2000.csv 的字面镜像（表头行，空格替换为 `_`） | x-cwe 模块，以及任何想要完整 CWE 目录、不想访问 MITRE 的消费者 |
-| `data/cwe.slim.tsv`   | 2 列 TSV (~50 KB)，`CWE-ID\tName` | 从 `data/cwe.tsv` 派生（行序一致） | 在 cwe_report.py 中与 `data/cve-*.tsv` join |
-| `report/cwe.top100.by-*.report.tsv` | 5 列 TSV (~6 KB)，`cwe_id\tname\tcve_count\tavg_score\tmax_score`，**Top 100**（共 4 份：by-count/by-score × all/since-2024） | 从 `data/cve-*.tsv` ∩ `data/cwe.slim.tsv` 聚合 | 给需要 top-N 数据的工具直接消费 |
-| `report/cwe.report.md`  | Markdown，含两张 Top-10 表（since 2024） | 同上，切片到 Top 10 | 由 release.yml 的 inline 步骤拼接到 README 顶部 |
-
-**为什么要镜像 CWE 目录**：上游 MITRE 2000.csv.zip 是 644 KB，解压后的 csv 约 3 MB。xz 压缩到约 150 KB。我们能负担得起一份完整镜像，且让离线消费者获得与 MITRE 完全相同的数据，不必再走一次网络。TSV 保留了 MITRE 的列名（只是空格 → 下划线），下游代码可以同时使用两种格式。
-
-**为什么现在还不把 per-CVE 目录作为 release asset 发布**：x-cwe 模块目前是从 MITRE 自己拉 2000.csv 并在本地缓存（`~/.x-cmd.root/local/data/cwe/`）。未来版本的 x-cwe 可以选择从本仓库的 release 中读 `data/cwe.tsv`，但目前还没接通。
-
-## 持续集成（CI）
-
-`.github/workflows/release.yml` 每 4 小时（每小时 37 分，避开整点高峰）跑一次，外加手动触发。每次运行：
-
-1. 克隆 CVEProject/cvelistV5（depth 1）并执行 `.x-cmd/tsv.py --rebuild` 以刷新 `data/cve-*.tsv`。
-2. 从 MITRE 重新生成 `data/cwe.tsv` + `data/cwe.slim.tsv`（`.x-cmd/cwe.py`），以及 CWE 交叉引用报表（`.x-cmd/cwe_report.py` → `report/cwe.*.report.tsv` 与 `report/cwe.report.md`）。
-3. 重新生成逐年统计报表（`.x-cmd/report.py` → `report/cve.report.{tsv,md}`）。
-4. 把两份报表 markdown 拼接到 `README.md`（以及本中文版 `README.cn.md`）的最前面（BEGIN/END 标记保证幂等），然后把 `README.md`、`README.cn.md` 加七份 `report/*` 文件一起 commit 回 `main`（若没有改动则跳过），让 github.com 上的 README 永远跟着最新数据走。
-5. 对每个有变动的 per-year 文件做 xz 压缩（`xz -9`，体积约缩 85%），替换对应的 release asset，强制移动 `data-packaged` git tag 让下次 diff 仍然正确。
-
-`.xz` 文件不入 `main` —— 二进制归 release asset，源码归源码。per-year `data/cve-*.tsv` 与 CWE 目录（`data/cwe.tsv`、`data/cwe.slim.tsv`）在这个流程下也不入 git；只有衍生报表和 README 会 commit 回去，让 git 历史聚焦在真正的代码改动上。
+数据使用方式 → [`SKILL.md`](./SKILL.md)。
 
 ## 许可证（License）
 
