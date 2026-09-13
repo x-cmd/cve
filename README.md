@@ -6,19 +6,14 @@
 
 > 🌐 **中文版：[README.cn.md](./README.cn.md)** —— same data, Chinese CWE names (MITRE 官方中文翻译, ~91% 覆盖；缺失自动回退英文).
 >
-> **📑 Contents**
-> - [The 10 newest CVEs](#the-10-newest-cves)
-> - [What CVEs keep teaching us](#what-cves-keep-teaching-us)
-> - [How fast is CVE growing?](#how-fast-is-cve-growing)
-> - [Reports](#reports)
-> - [About x-cmd/cve](#about-xcmdcve)
-> - [Developer docs](#developer-docs)
-> - [License](#license)
-> - [Related](#related)
-> - [FAQ](#faq)
+> - **[The 10 newest CVEs](#the-10-newest-cves)** — what landed in your stack this week.
+> - **[What CVEs keep teaching us](#what-cves-keep-teaching-us)** — the same bugs have been on top for 25 years; AI stacks still ship them.
+> - **[How fast is CVE growing?](#how-fast-is-cve-growing)** — volume doubles every 5 years; is your scanner keeping up?
+> - **[Reports](#reports)** — the raw TSVs behind the tables above (free, no API key).
+> - **[About x-cmd/cve](#about-xcmdcve)** — this repo is the producer, `x cve` is the consumer.
+> - **[FAQ](#faq)** — the questions people actually ask.
 >
-> **For end users** — `x cve` recipes, raw TSV downloads: see [`SKILL.md`](./SKILL.md).
-> **For developers** — schema, repo layout, scripts, CI pipeline: see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+> For end users: [`SKILL.md`](./SKILL.md) (raw TSV recipes). For developers: [`CONTRIBUTING.md`](./CONTRIBUTING.md) (pipeline).
 >
 > **📑 Contents**
 > - [The 10 newest CVEs](#the-10-newest-cves)
