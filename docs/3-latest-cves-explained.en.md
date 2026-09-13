@@ -33,19 +33,34 @@ Each row has 5 visible fields. Two of them are pointers
 ## CVSS in one minute
 
 CVSS (Common Vulnerability Scoring System) is a 0–10 severity
-score published by the CNA (CNA = CVE Numbering Authority, usually
-the vendor or a coordinator like MITRE). Three versions are in
-active use:
+score published by the CNA (CVE Numbering Authority, usually
+the vendor or a coordinator like MITRE).
 
-- **CVSS v4.0** — current spec (2023+), preferred.
-- **CVSS v3.1** — current de-facto standard before v4.0.
-- **CVSS v3.0** — older v3 variant.
-- **CVSS v2.0** — legacy; appears on records pre-2017.
+**Yes — there are four CVSS versions in active use**, all maintained
+by [FIRST.org](https://www.first.org/cvss/) (the Forum of Incident
+Response and Security Teams, the standards body behind CVSS).
+CNAs pick which version to publish per record; the rest of the
+ecosystem just consumes whatever the CNA chose:
 
-We store the highest available, in priority order v4 → v3.1 → v3.0 → v2.
-A blank score means the CNA never published one — not "low severity".
+- **CVSS v4.0** — current spec (2023+). New records from 2024+
+  typically use v4.
+- **CVSS v3.1** — current de-facto standard, used by most major
+  CNAs since 2019. Vast majority of 2019–2024 records.
+- **CVSS v3.0** — older v3 variant; superseded by v3.1 but still
+  in some records.
+- **CVSS v2.0** — legacy; appears on most pre-2017 records.
 
-For the underlying math, see the
+**Why multiple versions coexist:** FIRST treats each CVSS version
+as a stable, independently-maintained standard — older versions
+don't get retired when a new one ships, because tooling, scanners,
+and historical records all depend on stable parsing. CNAs pick the
+version that matches their scoring tooling and process. The
+ecosystem has to handle all of them.
+
+**In this repo:** `data/cve-YYYY.tsv` stores the single highest
+score across v4 → v3.1 → v3.0 → v2 (in that priority order).
+A blank score means the CNA never published one — not "low
+severity". For the underlying math, see the
 [CVSS v4.0 spec](https://www.first.org/cvss/v4.0/specification-document).
 For a quick lookup, [NVD's CVSS calculator](https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator)
 is the easiest interactive tool.

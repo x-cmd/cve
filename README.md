@@ -22,6 +22,8 @@ records on the index. If any of the products below are in your
 dependency tree (almost certainly), click through to the NVD page
 and check the affected-version range against your pinned versions.
 
+![The 10 newest CVEs — card view](docs/assets/cve-latest-10.svg)
+
 <!-- BEGIN cve.latest-10.report.md -->
 
 **The 10 newest CVEs** (descending CVE id = newest published first).
@@ -476,8 +478,13 @@ NVD and this repo's TSV preserve in the upstream JSON.
 
 ### CVSS v2 vs v3.0 vs v3.1 vs v4.0 — what's the difference?
 
-Three versions live side-by-side in `data/cve-YYYY.tsv`. We
-store the highest score across v4 → v3.1 → v3.0 → v2:
+**Yes, four CVSS versions coexist**, all maintained by
+[FIRST.org](https://www.first.org/cvss/) (the Forum of Incident
+Response and Security Teams, the standards body behind CVSS).
+CNAs pick which version to publish per record; the rest of
+the ecosystem just consumes whatever the CNA chose.
+
+The versions:
 
 - **v2.0** (2007) — base metrics only, no Scope. Legacy; appears
   on most pre-2017 records.
@@ -491,11 +498,22 @@ store the highest score across v4 → v3.1 → v3.0 → v2:
   environmental and supplemental metrics formally separated. Used
   on most new records from 2024 onward.
 
-For the math, see the
+**Why multiple versions coexist:** FIRST treats each CVSS version
+as a stable, independently-maintained standard — older versions
+don't get retired when a new one ships, because tooling, scanners,
+and historical records all depend on stable parsing. CNAs pick
+the version that matches their scoring tooling and process. The
+ecosystem has to handle all of them.
+
+In `data/cve-YYYY.tsv` we store the single highest score across
+v4 → v3.1 → v3.0 → v2 in that priority order. A blank score
+means MITRE has no published CVSS vector for that record — not
+"low severity".
+
+For the underlying math, see the
 [official spec](https://www.first.org/cvss/v4.0/specification-document).
-For practical purposes: a CVE's score is whichever version the
-CNA chose to publish; absent a v4.0 vector, fall back to v3.1,
-then v3.0, then v2.0.
+For a quick lookup, [NVD's CVSS calculator](https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator)
+is the easiest interactive tool.
 
 ### CVSS vs EPSS vs KEV — how do they relate?
 
