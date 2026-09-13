@@ -58,6 +58,8 @@ contribute zero scores.
 
 ## How fast is the catalog actually growing?
 
+![CVE records per year, 1999 → 2026](./assets/cve-growth.svg)
+
 Recent years:
 
 - 2018: 16,188 CVEs

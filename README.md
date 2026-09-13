@@ -100,6 +100,8 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 > 6-12 months behind the most recent year. Source:
 > [`report/cve.report.tsv`](./report/cve.report.tsv).
 
+![CVE records per year, 1999 → 2026](docs/assets/cve-growth.svg)
+
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
 | 2026 _(YTD as of 2026-09-13)_ | 56,168 | 52,947 | 7.08 | 10.0 |
