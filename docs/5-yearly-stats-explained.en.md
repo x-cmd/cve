@@ -76,6 +76,40 @@ behind on the most recent year's worth of disclosures. The 4-hour
 refresh cadence in this repo's CI is one answer; per-stream
 subscription (NVD RSS, vendor advisories) is another.
 
+## Why the CVE id range is bigger than the row count
+
+For each year the per-year TSV holds fewer rows than the maximum
+NNNN sequence value would suggest. Sample (computed from
+`data/cve-YYYY.tsv`):
+
+| Year | Rows | Max NNNN | Gap | Gap % |
+|---|---|---|---|---|
+| 2014 | 8,426 | 125,128 | 116,702 | 93% |
+| 2015 | 8,110 | 1,142,857 | 1,134,747 | 99% |
+| 2018 | 16,187 | 1,999,047 | 1,982,860 | 99% |
+| 2024 | 38,450 | 58,382 | 19,932 | 34% |
+| 2026 YTD | 56,167 | 90,679 | 34,512 | 38% |
+
+The 98-99% gaps for 2014-2019 are not bugs. In that era MITRE
+assigned **large reserved id blocks** to the big CNAs — Microsoft,
+Apple, Adobe, Google, Oracle each got whole 10000-id ranges and
+filled only a fraction. Once the CNA-based system matured around
+2020 the gap settled at 38-53%, which is the steady-state
+combination of:
+
+- **Reserved blocks** the CNAs hold but haven't yet assigned.
+- **REJECT** records — MITRE marks a CVE withdrawn; we drop the
+  row on the next rebuild but the id number is never reused.
+- **Duplicate merges** — multiple JSON files describing the same
+  CVE get deduped to a single row by `tsv.py`'s `cve_id` key.
+
+This is why [issue #3](https://github.com/x-cmd/cve/issues/3)
+matters: an older lexicographic sort would put `CVE-2026-99999`
+**before** `CVE-2026-10000` (because `'9' > '1'` in string compare),
+hiding the real highest id under a mountain of reserved-but-
+empty slots. Sorting by the NNNN integer makes the gap visible
+and the file browsable.
+
 ## What "scored" means
 
 A CVE is "scored" when the CNA published at least one CVSS
