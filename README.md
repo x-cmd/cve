@@ -7,15 +7,15 @@
 > 🌐 **中文版：[README.cn.md](./README.cn.md)** —— same data, Chinese CWE names (MITRE 官方中文翻译, ~91% 覆盖；缺失自动回退英文).
 >
 > **📑 Contents**
-> - [What landed in your stack this week](#what-landed-in-your-stack-this-week)
-> - [The same bugs have been on top for 25 years — and AI stacks still ship them](#the-same-bugs-have-been-on-top-for-25-years--and-ai-stacks-still-ship-them)
-> - [Volume doubles every 5 years — if your scanner is annual, you're 6-12 months behind](#volume-doubles-every-5-years--if-your-scanner-is-annual-youre-6-12-months-behind)
-> - [Want the raw numbers? They're TSVs, free, no API key](#want-the-raw-numbers-theyre-tsvs-free-no-api-key)
-> - [This repo is the producer; `x cve` is the consumer](#this-repo-is-the-producer-x-cve-is-the-consumer)
-> - [Want to change how the data is generated? Read this](#want-to-change-how-the-data-is-generated-read-this)
-> - [License — Apache 2.0, yes you can use this commercially](#license--apache-20-yes-you-can-use-this-commercially)
-> - [If this repo isn't enough, here's where to go next](#if-this-repo-isnt-enough-heres-where-to-go-next)
-> - [The questions people actually ask](#the-questions-people-actually-ask)
+> - [The 10 newest CVEs](#the-10-newest-cves)
+> - [What CVEs keep teaching us](#what-cves-keep-teaching-us)
+> - [How fast is CVE growing?](#how-fast-is-cve-growing)
+> - [Reports](#reports)
+> - [About x-cmd/cve](#about-xcmdcve)
+> - [Developer docs](#developer-docs)
+> - [License](#license)
+> - [Related](#related)
+> - [FAQ](#faq)
 >
 > **For end users** — `x cve` recipes, raw TSV downloads: see [`SKILL.md`](./SKILL.md).
 > **For developers** — schema, repo layout, scripts, CI pipeline: see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
@@ -34,7 +34,7 @@
 > **For end users** — `x cve` recipes, raw TSV downloads: see [`SKILL.md`](./SKILL.md).
 > **For developers** — schema, repo layout, scripts, CI pipeline: see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
-## What landed in your stack this week
+## The 10 newest CVEs
 
 The 10 newest CVEs published to MITRE — these are the freshest
 records on the index. If any of the products below are in your
@@ -61,11 +61,15 @@ and check the affected-version range against your pinned versions.
 _Click a CVE id for the full record on NVD._
 <!-- END cve.latest-10.report.md -->
 
-## The same bugs have been on top for 25 years — and AI stacks still ship them
+## What CVEs keep teaching us
 
 > The table below is regenerated on every CI run from
 > [`report/cwe.top100.by-cve-count.since-2024.report.tsv`](./report/cwe.top100.by-cve-count.since-2024.report.tsv).
-> Numbers shift; the rank ordering doesn't.
+> Numbers shift; the rank ordering doesn't — XSS, SQL Injection,
+> and Missing Authorization have topped this list every year since
+> 2024. If your AI app renders user-supplied content or talks to
+> a SQL backend, you're one unescaped interpolation away from
+> shipping these.
 
 <!-- BEGIN cwe.report.md -->
 
@@ -108,11 +112,11 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 
 <!-- BEGIN cve.report.md -->
 
-## Volume doubles every 5 years — if your scanner is annual, you're 6-12 months behind
+## How fast is CVE growing?
 
-> Source: [`report/cve.report.tsv`](./report/cve.report.tsv). Table
-> below shows the per-year count, scored count, average CVSS, and
-> max CVSS for every year since CVE-1999-0001.
+> Volume roughly doubles every five years — if your scanning cadence
+> is annual, you're 6-12 months behind the most recent year. Source:
+> [`report/cve.report.tsv`](./report/cve.report.tsv).
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
@@ -147,7 +151,7 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | **Total** | **372,348** | **200,917** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
-## Want the raw numbers? They're TSVs, free, no API key
+## Reports
 
 The tables above are sliced from the derived reports in
 [`report/`](./report/) (sibling of `data/`) — see
@@ -183,7 +187,7 @@ cutoff, and how the top-10 markdown is sliced from the top-100 TSV.
 | ---  | ---    |
 | [`report/cwe.report.md`](./report/cwe.report.md) | Markdown, two top-10 tables — the top-10 markdown is sliced from the two since-2024 TSVs above |
 
-## This repo is the producer; `x cve` is the consumer
+## About x-cmd/cve
 
 This repo is the **producer**: it reads
 [`CVEProject/cvelistV5`](https://github.com/CVEProject/cvelistV5),
@@ -227,14 +231,14 @@ No API keys, no sudo, no background services — `x cve` is a thin
 shell module backed by the per-year TSVs this repo publishes daily.
 
 
-## Want to change how the data is generated? Read this
+## Developer docs
 
 Repository layout, schema details, scripts, and CI pipeline live in
 [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 How to use the data → [`SKILL.md`](./SKILL.md).
 
-## License — Apache 2.0, yes you can use this commercially
+## License
 
 Apache License 2.0 — see [`LICENSE`](./LICENSE).
 
@@ -243,14 +247,14 @@ The underlying CVE records are derived from
 which is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 Downstream consumers of these TSVs must retain that attribution.
 
-## If this repo isn't enough, here's where to go next
+## Related
 
 - [x-cmd/cve module docs](https://x-cmd.com/mod/cve) — consumer (shell)
 - [x-cmd/cwe module docs](https://x-cmd.com/mod/cwe) — companion module
 - [x-cmd/x-cmd](https://github.com/x-cmd/x-cmd) — module source (`mod/cve/`)
 - [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5) — upstream data
 
-## The questions people actually ask
+## FAQ
 
 ### What is CVE?
 
