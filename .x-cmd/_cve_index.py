@@ -178,11 +178,21 @@ def _extract_vp(record: dict) -> str:
 
     Order matches the source JSON. Empty cells (missing vendor or product)
     are kept as empty strings so the field width is predictable.
+
+    We collapse internal whitespace (newlines / tabs / runs of spaces) to
+    single spaces on each side of the slash — upstream AMD-style
+    multi-product lists paste `\\n` between entries, which would otherwise
+    split a single TSV row into two (issue #3 follow-up: `load_year_files`
+    then treats the second half as a separate CVE id). See _extract_description
+    for the analogous rule on the desc field.
     """
+    def _flat(s: str) -> str:
+        return " ".join((s or "").split())
+
     pairs: list[str] = []
     for aff in record.get("containers", {}).get("cna", {}).get("affected", []) or []:
-        vendor = aff.get("vendor") or ""
-        product = aff.get("product") or ""
+        vendor = _flat(aff.get("vendor") or "")
+        product = _flat(aff.get("product") or "")
         # Always emit `<vendor>/<product>`, even if both are empty —
         # preserves the count of affected entries. `///` means "no data".
         pairs.append(f"{vendor}/{product}")
