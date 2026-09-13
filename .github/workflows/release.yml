@@ -369,10 +369,13 @@ jobs:
               # END that's NOT part of the report body. Strategy:
               #   1. if the block already has an H2, replace it with
               #      the latest H2 from INTRO_CVE
-              #   2. everything between the H2 and END is hand-written
-              #      (SVG, popularization, `<details>`-folded table)
-              #      and stays untouched
-              #   3. the latest report body is appended after the
+              #   2. strip stale body content from inside the block
+              #      (the previous run's per-year table — would
+              #      duplicate if left in place)
+              #   3. everything else between the H2 and END is
+              #      hand-written (SVG, popularization, `<details>`
+              #      fold) and stays untouched
+              #   4. the latest report body is appended after the
               #      hand-written section
               if begin in readme and end in readme:
                   i = readme.index(begin)
@@ -381,9 +384,54 @@ jobs:
                   h2_match = re.search(r'^## .+\n', inner, re.MULTILINE)
                   if h2_match and h2_line:
                       kept_prefix = inner[:h2_match.start()]
-                      hand_written = inner[h2_match.end():]
-                      # Ensure exactly one blank line between H2 and
-                      # the next thing (intro_rest or hand_written).
+                      # hand_written is everything from after the H2
+                      # to END. Strip any stale body tables that a
+                      # previous CI run left here so we don't
+                      # duplicate them. A stale table is a markdown
+                      # table block, recognisable as a sequence of
+                      # lines starting with '|'. We drop from the LAST
+                      # contiguous run of table lines that contains
+                      # the per-year report header "| Year | CVEs |"
+                      # back to its start, but keep hand-written
+                      # tables (like the "Scored %" fold content)
+                      # which are surrounded by non-table lines.
+                      hw_with_stripped_body = inner[h2_match.end():]
+                      # Find the LAST markdown table that contains
+                      # the report header. We do this by finding the
+                      # line that contains the report header and
+                      # walking backwards over consecutive table lines.
+                      report_header_re = re.compile(
+                          r'^\|\s*Year\s*\|\s*CVEs\s*\|', re.MULTILINE
+                      )
+                      matches = list(report_header_re.finditer(hw_with_stripped_body))
+                      if matches:
+                          last = matches[-1]
+                          # Walk backward over consecutive '|' lines
+                          start = last.start()
+                          line_start = hw_with_stripped_body.rfind('\n', 0, start) + 1
+                          # Walk forward over consecutive '|' lines
+                          pos = line_start
+                          while pos < len(hw_with_stripped_body) and hw_with_stripped_body[pos:pos+1] in '|\n \t':
+                              nl = hw_with_stripped_body.find('\n', pos)
+                              if nl < 0:
+                                  pos = len(hw_with_stripped_body)
+                                  break
+                              if hw_with_stripped_body[nl+1:nl+2] not in '|':
+                                  pos = nl + 1
+                                  break
+                              pos = nl + 1
+                          end = pos
+                          # Drop the table block (and one trailing
+                          # newline if present).
+                          if hw_with_stripped_body[end-1:end] == '\n':
+                              end -= 1
+                          hand_written = (
+                              hw_with_stripped_body[:line_start] +
+                              hw_with_stripped_body[end:]
+                          )
+                      else:
+                          hand_written = hw_with_stripped_body
+
                       hw_stripped = hand_written.lstrip("\n")
                       # Stitch: BEGIN + kept_prefix + H2 + intro_rest + hand_written + body + END
                       middle = f"{intro_rest}" if intro_rest else ""
