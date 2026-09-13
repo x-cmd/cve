@@ -102,8 +102,8 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 
 ![CVE records per year, 1999 → 2026](docs/assets/cve-growth.svg)
 
-**CVSS scoring started going mainstream around 2021.** Look at the
-amber band (unscored) at the top of each bar:
+<details>
+<summary><strong>CVSS scoring went mainstream around 2021.</strong> Click for the breakdown by year.</summary>
 
 | Year | Scored % |
 |---|---|
@@ -123,13 +123,19 @@ the Linux CNA, Microsoft, and other big vendors — plus the
 NVD's stricter "no score = deprioritized" posture. By 2024
 it's basically universal.
 
+</details>
+
 <details>
-<summary>How is the per-year table built?</summary>
+<summary><strong>How is the per-year table built?</strong> Click for methodology.</summary>
 
 The table below is regenerated on every CI run from
 `report/cve.report.tsv`. It includes every year from 1999 to
-today, with a **Total** row at the bottom. Click to see the
-methodology footnote.
+today, with a **Total** row at the bottom. The columns are:
+**CVEs** (count of records), **Scored** (count with at least
+one published CVSS vector), **Avg score** (mean CVSS base across
+scored ones), **Max score** (highest CVSS seen in the year).
+For a deeper explanation of the scoring inflection see the
+fold above.
 
 </details>
 <!-- END cve.report.md -->
