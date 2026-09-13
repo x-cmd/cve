@@ -7,4 +7,8 @@ __pycache__/
 data/cve.tsv.state.json
 data/index.tsv
 
+# Per-id HTML cache for the Chinese CWE name fetcher (cwe_zh.py).
+# 30-day TTL keeps re-runs cheap; regenerated on demand.
+.x-cmd/.cwe_zh.cache/
+
 *.bak
