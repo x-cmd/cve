@@ -391,143 +391,162 @@ Downstream consumers of these TSVs must retain that attribution.
 
 ## FAQ
 
-### Where does the data come from?
+### What is CVE?
 
-The CVE rows come straight from
-[CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5),
-MITRE's official JSON repository of every published CVE. Our
-[`.x-cmd/tsv.py`](./.x-cmd/tsv.py) script clones that repo once per
-CI run, walks every `cves/YYYY/NNxxx/CVE-YYYY-NNNNN.json` file, and
-emits the 9-column slim TSVs in `data/`. No web scraping, no
-upstream API keys, no transforms on the descriptions or CWE lists
-beyond whitespace folding.
+**CVE** (Common Vulnerabilities and Exposures) is the public, free
+catalog of every publicly disclosed computer-security vulnerability,
+maintained by [MITRE](https://cve.mitre.org/) under funding from
+the U.S. Department of Homeland Security. Each entry gets a unique
+id (`CVE-YYYY-NNNN`) plus a short English description, a list of
+affected vendor/products, a CVSS base score, and the weakness class
+([CWE](https://cwe.mitre.org/)) the vuln maps to. As of 2026 the
+catalog holds ~370,000 records going back to CVE-1999-0001.
 
-### How fresh is the data?
+### What is CWE?
 
-The release workflow runs every 4 hours (`37 */4 * * *` UTC,
-see [`.github/workflows/release.yml`](./.github/workflows/release.yml))
-plus on every push to `main`. When MITRE publishes a new CVE, it
-shows up here within the next 4 hours at the latest. The
-"Data as of: YYYY-MM-DD" line at the top of this README is the
-ground-truth stamp — it is pulled from the freshly-stitched
-`report/cve.report.md` so it can never drift away from the data.
+**CWE** (Common Weakness Enumeration) is the taxonomy of software
+weakness *types* — categories like "Cross-Site Scripting",
+"Use After Free", "Path Traversal". A CVE points at one or more
+CWE ids in its `problemTypes[]` array; this repo joins the two so
+you can ask "how many XSS vulns shipped this year?" without
+scanning 370k records by hand. MITRE's full CWE catalog lives at
+[`data/cwe.tsv`](./data/cwe.tsv); the slim id→name join table is
+[`data/cwe.slim.tsv`](./data/cwe.slim.tsv).
 
-### Why isn't the table bigger / why only Top 10?
+### What is the difference between CVE and CWE?
 
-The Top-10 cutoff on the rankings is the smallest number that's
-still statistically defensible: each row aggregates hundreds to
-tens of thousands of CVEs, so the head of the table is stable
-across runs. Top-100 lives in
-[`report/cwe.top100.by-*.report.tsv`](./report/) for callers that
-need it (e.g. `x cve ls` uses the full TSV, not the markdown).
-The 9-column `data/cve-*.tsv` files carry the entire catalog with
-no truncation beyond the first sentence of each description.
+- **CVE** = a *specific instance* of a bug (e.g. CVE-2026-90616:
+  Flatpak before 1.18.1 has a sandbox-escape).
+- **CWE** = the *category* of bug (e.g. CWE-22: Path Traversal).
 
-### Why per-year TSVs instead of one big file?
+A single CVE typically references one or more CWE ids that
+describe the class of weakness. CWE counts across CVEs are how
+this repo ranks "which mistakes keep happening most".
 
-Per-year files match how the upstream `cvelistV5` is already laid
-out on disk (one directory per year), so the rebuild is a clean
-local walk — no full re-parse when only 2026 changes. They also let
-`x cve` consumers download just the year(s) they care about:
-xz-compressed `cve-2026.tsv` is ~5 MB, vs ~21 MB for the full
-`cve-all.tar.xz`. And per-year files are trivially diffable in git
-to see which year got new rows between CI runs.
+### What are the most common CWE weaknesses?
 
-### Why does the data say "9999 is the top id" when 2026 clearly has more?
+The **Top 10 CWE by CVE count** table at the top of this README
+shows what's getting shipped most since 2024. As of this run:
 
-That was a real bug — fixed in commit `46759ff`
-([issue #3](https://github.com/x-cmd/cve/issues/3)). MITRE began
-issuing 5-digit CVE sequence ids (`NNNN >= 10000`) around 2025; the
-old lexicographic sort put `9999` ahead of `10000`–`99999`, so
-`x cve | head` only ever showed `CVE-YYYY-9999`. We now sort by the
-NNNN integer and the real top ids (e.g. `CVE-2026-90616`) surface
-correctly.
+1. [CWE-79](https://cwe.mitre.org/data/definitions/79.html) — Cross-Site Scripting (XSS)
+2. [CWE-89](https://cwe.mitre.org/data/definitions/89.html) — SQL Injection
+3. [CWE-862](https://cwe.mitre.org/data/definitions/862.html) — Missing Authorization
+4. [CWE-22](https://cwe.mitre.org/data/definitions/22.html) — Path Traversal
+5. [CWE-94](https://cwe.mitre.org/data/definitions/94.html) — Code Injection
+6. [CWE-78](https://cwe.mitre.org/data/definitions/78.html) — OS Command Injection
+7. [CWE-416](https://cwe.mitre.org/data/definitions/416.html) — Use After Free
+8. [CWE-20](https://cwe.mitre.org/data/definitions/20.html) — Improper Input Validation
+9. [CWE-125](https://cwe.mitre.org/data/definitions/125.html) — Out-of-bounds Read
+10. [CWE-352](https://cwe.mitre.org/data/definitions/352.html) — CSRF
 
-### What does the "Top 10 CWE by CVE count" actually measure?
+XSS and SQLi have topped this list every year since CVE started.
+For the top-100 (all years and since-2024 windows), see
+[`report/cwe.top100.by-cve-count.report.tsv`](./report/cwe.top100.by-cve-count.report.tsv).
 
-Each CVE row can list one or more CWE ids (the weakness taxonomy
-it maps to). For every CWE in MITRE's catalog, we count how many
-CVEs in the time window reference it, and sort the catalog by that
-count descending. The "since 2024" window drops CVEs from before
-2024 so the ranking reflects what engineers are getting wrong
-*now* — adding 2008's SQL-injection pile-up would just re-rank
-[SQL Injection](https://cwe.mitre.org/data/definitions/89.html) at
-the top forever.
+### What are the most dangerous (highest CVSS) CWE classes?
 
-### What does "Top 10 CWE by avg CVSS score" measure?
+The **Top 10 CWE by average CVSS score** table ranks weakness
+*types* by the mean CVSS base score of the CVEs that reference
+them (with at least 10 samples to suppress single-CVE outliers).
+The head of this list tends to be dominated by:
 
-Same `cwe` join, but we take the **mean** CVSS base score across
-the CVEs that reference each CWE (with at least 10 samples, to
-suppress single-CWE outliers). This answers "which mistake, when
-made, hurts the most?" rather than "which mistake happens most
-often?". Embedded malicious code (CWE-506) and eval injection
-(CWE-95) top the list because their CVEs tend to score 9+.
+- [CWE-506](https://cwe.mitre.org/data/definitions/506.html) — Embedded Malicious Code
+- [CWE-95](https://cwe.mitre.org/data/definitions/95.html) — Eval Injection
+- [CWE-502](https://cwe.mitre.org/data/definitions/502.html) — Deserialization of Untrusted Data
+- [CWE-288](https://cwe.mitre.org/data/definitions/288.html) — Authentication Bypass via Alternate Channel
+- [CWE-121](https://cwe.mitre.org/data/definitions/121.html) — Stack-based Buffer Overflow
 
-### Where do the Chinese CWE names in `README.cn.md` come from?
+These are the classes that, when shipped, *hurt the most*. The
+table is regenerated on every CI run — see
+[`report/cwe.top100.by-cve-score.report.tsv`](./report/cwe.top100.by-cve-score.report.tsv)
+for the full top-100.
 
-We pull them from
-[cwe.org.cn](https://cwe.org.cn) — MITRE's official Chinese
-mirror. The fetcher lives in [`.x-cmd/cwe_zh.py`](./.x-cmd/cwe_zh.py)
-and writes
-[`data/cwe.zh.tsv`](./data/cwe.zh.tsv) (~91% coverage of the
-969-entry CWE catalog; the remaining 9% are mostly views and
-deprecated ids without a Chinese translation yet). CWE names
-missing from the Chinese catalog fall back to the English name in
-the rendered table, per
-[issue #2](https://github.com/x-cmd/cve/issues/2).
+### What are the latest published CVEs?
 
-### Can I consume the data without `x cve`?
+The **10 newest CVEs** table at the very top of this README is
+the front-of-page answer. It's regenerated every 4 hours directly
+from MITRE's feed, so the table you see is at most a few hours
+behind "right now". For the machine-readable top-N, see
+[`report/cve.latest-10.report.tsv`](./report/cve.latest-10.report.tsv)
+or run `python3 .x-cmd/latest.py N` for any other N.
 
-Yes. The release assets are plain xz-compressed TSVs:
+### How many CVEs are published per year?
+
+The "How fast is CVE growing?" table on this page answers that
+question year-by-year with totals, scored count, and average /
+max CVSS. The short answer: CVE volume has roughly doubled in
+the past five years, with 2026 already past 56,000 records in
+the first three quarters. Full per-year TSV lives at
+[`report/cve.report.tsv`](./report/cve.report.tsv).
+
+### How do I look up a single CVE?
+
+For one record by id (e.g. `CVE-2024-0001`), the upstream
+authority is the [NVD detail page](https://nvd.nist.gov/vuln/detail/CVE-2024-0001)
+(NIST). The repo's companion [`x cve`](https://x-cmd.com/mod/cve)
+shell module gives you the same answer offline:
 
 ```sh
-curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-2026.tsv.xz \
-    | xz -dc | head -5
+x cve info CVE-2024-0001
+x cve info 2024-0001            # YYYY-NNNN shorthand works too
+x cve detail CVE-2024-0001      # full upstream JSON
 ```
 
-…or pull the whole bundle:
+`x cve` reads the per-year TSVs in this repo, so it works
+air-gapped once the release asset has been fetched.
+
+### How do I download the full CVE database?
+
+Three options, all free and unauthenticated:
 
 ```sh
-curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-all.tar.xz \
-    | tar -xJ -C ./local-cve
+# 1. One specific year (smallest payload, ~5 MB xz)
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-2026.tsv.xz     | xz -dc > cve-2026.tsv
+
+# 2. Whole catalog as a tarball (~21 MB xz)
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-all.tar.xz     | tar -xJ
+
+# 3. Just the CWE catalog (~150 KB xz, ~3 MB raw)
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cwe.tsv.xz     | xz -dc > cwe.tsv
 ```
+
+Each asset is regenerated every 4 hours when upstream changes.
+Files are plain tab-separated TSVs — see
+[TSV columns](#tsv-columns-9) for the schema. No API key,
+no rate limit.
+
+### How do I query CVEs by CWE / vendor / CVSS?
 
 The TSV columns are documented under
-[TSV columns](#tsv-列9列) below — `cve`, `year`, `no`, `vp`,
-`ghsa`, `score`, `patched`, `cwe`, `desc`. No proprietary schema,
-no API key required.
-
-### How do I run the scripts locally?
-
-The four scripts in [`.x-cmd/`](./.x-cmd/) are zero-dependency
-Python 3.8+:
+[TSV columns](#tsv-columns-9). Because everything is plain
+text, standard Unix tooling is enough:
 
 ```sh
-python3 .x-cmd/tsv.py --src /path/to/cvelistV5/cves --out data --rebuild
-python3 .x-cmd/cwe.py                 # MITRE CWE catalog → data/cwe.tsv
-python3 .x-cmd/cwe_zh.py              # MITRE Chinese mirror → data/cwe.zh.tsv
-python3 .x-cmd/cwe_report.py          # Top-N CWE rankings → report/cwe.report.{tsv,md,zh.md}
-python3 .x-cmd/report.py              # Per-year stats → report/cve.report.{tsv,md}
-python3 .x-cmd/latest.py              # Latest-N CVEs → report/cve.latest-N.report.{tsv,md}
+# All XSS CVEs scored >= 7.0 since 2024
+xz -dc cve-2024.tsv xz -dc cve-2025.tsv xz -dc cve-2026.tsv 2>/dev/null     | awk -F'\t' '$8 ~ /(^|;)79(;|$)/ && $6+0 >= 7'
+
+# All CVEs affecting Apache HTTP Server in the current year
+xz -dc cve-2026.tsv     | awk -F'\t' '$4 ~ /Apache\/HTTP Server/ {print $1, $6, $9}'
+
+# Top vendors by CVE count since 2024
+xz -dc cve-2024.tsv xz -dc cve-2025.tsv xz -dc cve-2026.tsv 2>/dev/null     | awk -F'\t' { for (i=1;i<=split($4,p,";");i++) print p[i] }'     | sort | uniq -c | sort -rn | head -20
 ```
 
-All five read from `data/` and write to `report/`. `tsv.py` is the
-only one that needs a network clone of `cvelistV5`; the rest are
-purely local. The full pipeline that CI runs is described under
-[CI](#持续集成ci).
+The release includes pre-aggregated variants for the common
+queries — see [`report/`](./report/) for top-100 CWE rankings
+by count and by score.
 
-### What's the licence?
+### Where do the Chinese CWE names come from?
 
-Apache 2.0 for everything we wrote (scripts, this README, the
-derived `report/*` aggregates). See [`LICENSE`](./LICENSE).
-The underlying CVE records are CC BY 4.0 from CVEProject — keep
-that attribution when redistributing the per-year TSVs.
+The Chinese names surfaced in the CWE ranking tables come from
+[cwe.org.cn](https://cwe.org.cn) — MITRE's official Chinese
+mirror. The fetcher ([`.x-cmd/cwe_zh.py`](./.x-cmd/cwe_zh.py))
+runs on every CI cycle and writes
+[`data/cwe.zh.tsv`](./data/cwe.zh.tsv) (~91% coverage of the
+969-entry catalog). The remaining 9% (mostly views and deprecated
+ids) gracefully fall back to English names in the rendered
+table — see [issue #2](https://github.com/x-cmd/cve/issues/2).
+Force a re-fetch with `python3 .x-cmd/cwe_zh.py --force`.
 
-### I found a missing/wrong CWE name in the Chinese table.
+### Is there a CVE database in Chinese / 中文 CVE 数据库?
 
-The Chinese catalog is fetched fresh every CI run from cwe.org.cn
-and cached locally under `.x-cmd/.cwe_zh.cache/` for 30 days.
-If a name is wrong, the upstream source is `https://cwe.org.cn/data/definitions/<id>.html`
-— please open an issue there or here; we re-fetch on the next
-scheduled run after the upstream fix lands. To force a re-fetch
-right now, run `python3 .x-cmd/cwe_zh.py --force`.

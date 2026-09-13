@@ -58,6 +58,16 @@ DEFAULT_URL = "https://cwe.org.cn/data/definitions/{id}.html"
 SUCCESS_TTL_SECONDS = 30 * 24 * 3600
 FAILURE_TTL_SECONDS = 24 * 3600
 
+# Minimum percentage of CWE rows that must carry a Chinese name
+# before we atomically replace the on-disk catalog. Below this
+# threshold we keep the previous-good file in place and emit a
+# `kept existing ...` warning instead — protects against CI
+# runners that can't reach cwe.org.cn (e.g. egress-blocked
+# networks) overwriting a previously-good 91% catalog with a
+# 0% all-empty file. The threshold is intentionally generous
+# (50%) so a one-off upstream rate-limit doesn't wipe the file.
+MIN_COVERAGE_PCT = 50
+
 # Matches the canonical name line on every cwe.org.cn definition page:
 #   <h2 style="display:inline; ...">CWE-79: 网页生成过程中的输入中和不当（"跨站脚本"）</h2>
 # Capture group 1 = the Chinese name after the `CWE-<id>: ` prefix.
@@ -230,20 +240,56 @@ def load_ids(slim_tsv: Path) -> list[str]:
 def write_tsv(out: Path, rows: list[tuple[str, str | None]]) -> tuple[int, int]:
     """Write `CWE-ID\tName_Zh` lines. Empty Name_Zh -> empty column.
 
+    Writes to a sibling temp file first and only atomically renames
+    over the destination if the run met MIN_COVERAGE_PCT. When the
+    threshold isn't met (network blocked, upstream 5xx, HTML change,
+    rate-limit) we leave the previous good `data/cwe.zh.tsv` on disk
+    so the Chinese README keeps rendering. This matters most for CI
+    runners that can't reach cwe.org.cn — without this guard, every
+    failed CI would erase the previously-good file with an all-empty
+    replacement, which would force the Chinese README to fall back
+    to English permanently.
+
     Returns (total_rows, rows_with_zh). The split lets the CI step
     decide whether the catalog needs another attempt (e.g. warn when
     coverage is below 50%).
     """
     out.parent.mkdir(parents=True, exist_ok=True)
     n_zh = 0
+    lines = ["CWE-ID\tName_Zh\n"]
+    for cid, zh in rows:
+        zh_clean = (zh or "").replace("\t", " ").replace("\n", " ").strip()
+        if zh_clean:
+            n_zh += 1
+        lines.append(f"{cid}\t{zh_clean}\n")
+
+    total = len(rows)
+    pct = (n_zh * 100 / total) if total else 0
+
+    if total and pct < MIN_COVERAGE_PCT and out.is_file():
+        # Coverage below the bar AND we have a previous-good file —
+        # keep it. The fresh attempt's bytes go to a temp file the
+        # operator can inspect for debugging but never replace the
+        # catalog on disk.
+        tmp = out.with_suffix(out.suffix + ".staging")
+        try:
+            with tmp.open("w", encoding="utf-8", newline="") as fh:
+                fh.writelines(lines)
+        except OSError:
+            pass
+        print(
+            f"kept existing {out} (would have written only "
+            f"{n_zh}/{total} = {pct:.1f}%, below {MIN_COVERAGE_PCT}%); "
+            f"staged to {tmp} for debugging",
+            file=sys.stderr,
+        )
+        return total, n_zh, True  # kept_existing=True
+
+    # Either coverage is healthy, or there's no prior file to protect
+    # (first run, or the operator wiped the catalog). Atomic write.
     with out.open("w", encoding="utf-8", newline="") as fh:
-        fh.write("CWE-ID\tName_Zh\n")
-        for cid, zh in rows:
-            zh_clean = (zh or "").replace("\t", " ").replace("\n", " ").strip()
-            if zh_clean:
-                n_zh += 1
-            fh.write(f"{cid}\t{zh_clean}\n")
-    return len(rows), n_zh
+        fh.writelines(lines)
+    return total, n_zh, False  # kept_existing=False
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -282,13 +328,21 @@ def main(argv: list[str] | None = None) -> int:
         (1, r[0]) if not r[0].isdigit() else (0, f"{int(r[0]):09d}")
     ))
 
-    total, n_zh = write_tsv(args.out, rows)
+    total, n_zh, kept_existing = write_tsv(args.out, rows)
     pct = (n_zh * 100 / total) if total else 0
-    print(
-        f"wrote {args.out}: {n_zh}/{total} CWE rows have Chinese names "
-        f"({pct:.1f}%); the rest will fall back to English in README.cn.md",
-        file=sys.stderr,
-    )
+    if kept_existing:
+        # write_tsv already printed the "kept existing ..." line. We
+        # don't add another "wrote ..." sentence on top of it because
+        # the operator reading CI logs gets a clean
+        #   kept existing / staged to <file>
+        # signal that the disk file is unchanged.
+        pass
+    else:
+        print(
+            f"wrote {args.out}: {n_zh}/{total} CWE rows have Chinese names "
+            f"({pct:.1f}%); the rest will fall back to English in README.cn.md",
+            file=sys.stderr,
+        )
     # Non-fatal warning when coverage is low — gives the operator a
     # chance to investigate (network, MITRE URL change, etc.) without
     # failing the build outright (per issue #2's "if not, fall back

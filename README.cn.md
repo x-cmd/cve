@@ -321,116 +321,231 @@ Apache License 2.0 —— 见 [`LICENSE`](./LICENSE)。
 
 ## 常见问题（FAQ）
 
-### 数据从哪儿来？
+### 什么是 CVE？
 
-直接来自 [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5)——
-MITRE 官方的 JSON 仓库，存放每一份已发布的 CVE。仓库里的
-[`.x-cmd/tsv.py`](./.x-cmd/tsv.py) 在每次 CI 运行时克隆该仓库一次，
-遍历 `cves/YYYY/NNxxx/CVE-YYYY-NNNNN.json`，输出 `data/` 下 9 列的精简
-TSV。不抓网页、不要上游 API key，描述和 CWE 列表除折叠空白外不做任何变换。
+**CVE**（Common Vulnerabilities and Exposures，公共漏洞和暴露）
+是 MITRE 在美国国土安全部资助下维护的公开漏洞目录——每一份
+公开披露的计算机安全漏洞都会拿到一个唯一 id（`CVE-YYYY-NNNN`），
+加上英文简短描述、受影响的厂商/产品、CVSS 基础分、漏洞类别
+（[CWE](https://cwe.mitre.org/)）。截至 2026 年，目录里有
+约 37 万条记录，最早可追溯到 CVE-1999-0001。
+
+### 什么是 CWE？
+
+**CWE**（Common Weakness Enumeration，通用缺陷枚举）是软件
+弱点**类型**的分类体系——比如「跨站脚本」「释放后重用」「路径遍历」
+这类「错误模式」分类。每条 CVE 在 `problemTypes[]` 字段里引用
+一个或多个 CWE id；本仓库把两份目录 join 起来，让你不用扫 37 万
+条 CVE 也能回答「今年出了多少 XSS 漏洞？」。完整 CWE 目录在
+[`data/cwe.tsv`](./data/cwe.tsv)，精简 id→name 映射在
+[`data/cwe.slim.tsv`](./data/cwe.slim.tsv)。
+
+### CVE 和 CWE 有什么区别？
+
+- **CVE** = 某个**具体**漏洞（例如 CVE-2026-90616：Flatpak
+  在 1.18.1 之前存在沙箱逃逸）。
+- **CWE** = 该漏洞归属的**类别**（例如 CWE-22：路径遍历）。
+
+一条 CVE 通常引用一个或多个 CWE id 来描述弱点类别。本仓库
+按 CWE 聚合 CVE 数，排出「最常犯的错误」。
+
+### 最常见的 CWE 弱点是哪些？
+
+本页顶部 **Top 10 CWE by CVE count** 表给出 2024 年以来
+最常被引用的弱点类别。本仓库本次运行时头部大致是：
+
+1. [CWE-79](https://cwe.mitre.org/data/definitions/79.html) — 跨站脚本 (XSS)
+2. [CWE-89](https://cwe.mitre.org/data/definitions/89.html) — SQL 注入
+3. [CWE-862](https://cwe.mitre.org/data/definitions/862.html) — 缺少授权
+4. [CWE-22](https://cwe.mitre.org/data/definitions/22.html) — 路径遍历
+5. [CWE-94](https://cwe.mitre.org/data/definitions/94.html) — 代码注入
+6. [CWE-78](https://cwe.mitre.org/data/definitions/78.html) — OS 命令注入
+7. [CWE-416](https://cwe.mitre.org/data/definitions/416.html) — 释放后重用
+8. [CWE-20](https://cwe.mitre.org/data/definitions/20.html) — 输入验证不当
+9. [CWE-125](https://cwe.mitre.org/data/definitions/125.html) — 越界读取
+10. [CWE-352](https://cwe.mitre.org/data/definitions/352.html) — CSRF
+
+XSS 和 SQL 注入自 CVE 体系建立以来每年都在榜上。Top-100
+（全部年份 / since 2024 两个窗口）见
+[`report/cwe.top100.by-cve-count.report.tsv`](./report/cwe.top100.by-cve-count.report.tsv)。
+
+### 最危险的（CVSS 最高）CWE 类别是哪些？
+
+**Top 10 CWE by average CVSS score** 表按「引用该 CWE 的 CVE
+平均 CVSS 基础分」排序（至少 10 个样本，避免单 CVE 极值干扰）。
+头部通常被这些类别占据：
+
+- [CWE-506](https://cwe.mitre.org/data/definitions/506.html) — 嵌入式恶意代码
+- [CWE-95](https://cwe.mitre.org/data/definitions/95.html) — Eval 注入
+- [CWE-502](https://cwe.mitre.org/data/definitions/502.html) — 不受信任数据反序列化
+- [CWE-288](https://cwe.mitre.org/data/definitions/288.html) — 替代通道认证绕过
+- [CWE-121](https://cwe.mitre.org/data/definitions/121.html) — 栈缓冲区溢出
+
+这些是「一旦犯下后果最严重」的类别。每次 CI 都会重新生成——
+完整 Top-100 见
+[`report/cwe.top100.by-cve-score.report.tsv`](./report/cwe.top100.by-cve-score.report.tsv)。
+
+### 最新发布的 CVE 是哪些？
+
+页面最顶部 **「最近 10 个 CVE」** 表就是答案。每 4 小时直接从
+MITRE 源重新生成，与「当下」最多差几小时。机器可读版本：
+[`report/cve.latest-10.report.tsv`](./report/cve.latest-10.report.tsv)，
+或 `python3 .x-cmd/latest.py N` 拿任意 N。
+
+### 每年发布多少 CVE？
+
+页面里的「CVE 增长得有多快？」逐年表给出每年总量、已打分
+条目数、平均分、最高分。简要回答：过去五年 CVE 总量翻了将近
+一番，2026 年仅前三季度已经超过 5.6 万条。逐年 TSV：
+[`report/cve.report.tsv`](./report/cve.report.tsv)。
+
+### 怎么查单条 CVE？
+
+按 id 查（如 `CVE-2024-0001`）的话，上游权威是
+[NVD 详情页](https://nvd.nist.gov/vuln/detail/CVE-2024-0001)。
+本仓库的姊妹模块 [`x cve`](https://x-cmd.com/mod/cve)
+让你离线查：
+
+```sh
+x cve info CVE-2024-0001
+x cve info 2024-0001            # 也支持 YYYY-NNNN 简写
+x cve detail CVE-2024-0001      # 完整上游 JSON
+```
+
+`x cve` 读的就是本仓库 per-year TSV，下载一次 release asset
+即可离线用。
+
+### 怎么下载完整 CVE 数据库？
+
+三种方式，全部免费、无需鉴权：
+
+```sh
+# 1. 指定某一年（最小体积，约 5 MB xz）
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-2026.tsv.xz \
+    | xz -dc > cve-2026.tsv
+
+# 2. 整个目录一份 tarball（约 21 MB xz）
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-all.tar.xz \
+    | tar -xJ
+
+# 3. 仅 CWE 目录（约 150 KB xz，约 3 MB 原文）
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cwe.tsv.xz \
+    | xz -dc > cwe.tsv
+```
+
+每次上游变更后 4 小时内重打包。所有文件都是普通制表符分隔
+TSV——schema 见 [TSV 列（9 列）](#tsv-列9列)。无 API key，
+无限速。
+
+### 怎么按 CWE / 厂商 / CVSS 查 CVE？
+
+TSV 9 列含义见 [TSV 列（9 列）](#tsv-列9列)。因为是纯文本，
+标准 Unix 工具就够：
+
+```sh
+# 2024 年以来所有 score >= 7.0 的 XSS
+xz -dc cve-2024.tsv xz -dc cve-2025.tsv xz -dc cve-2026.tsv 2>/dev/null \
+    | awk -F'\t' '$8 ~ /(^|;)79(;|$)/ && $6+0 >= 7'
+
+# 当年所有影响 Apache HTTP Server 的 CVE
+xz -dc cve-2026.tsv \
+    | awk -F'\t' '$4 ~ /Apache\/HTTP Server/ {print $1, $6, $9}'
+
+# 2024 年以来按厂商统计 CVE 数
+xz -dc cve-2024.tsv xz -dc cve-2025.tsv xz -dc cve-2026.tsv 2>/dev/null \
+    | awk -F'\t' '{ for (i=1;i<=split($4,p,";");i++) print p[i] }' \
+    | sort | uniq -c | sort -rn | head -20
+```
+
+仓库 release 也预聚合了常见查询结果——见
+[`report/`](./report/) 下的 Top-100 CWE 排名。
+
+### 中文 CWE 名从哪儿来？
+
+CWE 排名表里的中文名来自 [cwe.org.cn](https://cwe.org.cn)——
+MITRE 官方中文镜像。抓取脚本
+[`.x-cmd/cwe_zh.py`](./.x-cmd/cwe_zh.py) 每次 CI 跑一次，
+输出 [`data/cwe.zh.tsv`](./data/cwe.zh.tsv)（覆盖 969 个 CWE
+中约 91%）。剩下的 9%（多数是 view 和已废弃 id）渲染时
+自动回退英文名——见
+[issue #2](https://github.com/x-cmd/cve/issues/2)。要强制
+重抓：`python3 .x-cmd/cwe_zh.py --force`。
+
+### 有中文 CVE 数据库 / 中文版吗？
+
+本仓库的中文版是 [`README.cn.md`](./README.cn.md)。同样的
+数据，中文呈现：
+
+- CWE 名来自 MITRE 官方中文镜像。
+- 顶部「最近 10 个 CVE」表。
+- 「工程师们最常犯的错误是什么？」CWE 排名表。
+- 「CVE 增长得有多快？」逐年统计表。
+- 末尾「常见问题（FAQ）」。
+
+中文名缺失自动回退英文——不丢任何数据。
 
 ### 数据多久更新一次？
 
-发布 workflow 每 4 小时跑一次（`37 */4 * * *` UTC，
-见 [`.github/workflows/release.yml`](./.github/workflows/release.yml)），
-另在每次 push 到 `main` 时也跑。MITRE 一有新 CVE 公布，最多 4 小时内就
-会出现在这里。README 顶部的「数据截至：YYYY-MM-DD」是真值时间戳——
-它从刚拼接的 `report/cve.report.md` 里抽，所以永远和数据本身一致。
+发布 workflow 每 4 小时跑一次（`37 */4 * * *` UTC，外加每次
+push 到 `main`）——见
+[`.github/workflows/release.yml`](./.github/workflows/release.yml)。
+MITRE 一有新 CVE 公布，最多 4 小时就出现在这里。README
+顶部「数据截至：YYYY-MM-DD」时间戳从刚拼接的
+`report/cve.report.md` 里抽出，永远跟数据一致。
 
-### 为什么不直接出 Top 100 / 全表？
+### 可以商用吗？
 
-Top 10 是「统计上仍然站得住脚」的最小数字：每行背后聚合几百到几万条
-CVE，列表头部跨日运行足够稳定。Top 100 在
-[`report/cwe.top100.by-*.report.tsv`](./report/) 里——`x cve ls` 等
-真正消费全表的工具读的是 TSV，不是 README 渲染的 markdown。
-`data/cve-*.tsv` 是 9 列全量，只截了描述首句。
+可以，但有一个署名要求。本仓库脚本、`report/*` 衍生报表、
+本 README 走 [Apache License 2.0](./LICENSE)。底层 CVE
+记录本身由 [CVEProject](https://github.com/CVEProject) 按
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+发布——商用没问题，只要保留署名并注明你做的修改。同样的
+要求适用于衍生品（漏洞扫描器、SBOM 工具、威胁情报仪表盘）。
 
-### 为什么要拆成 per-year 文件而不是一个大文件？
+### 怎么把数据集成进自己的脚本？
 
-per-year 切分正好对齐上游 `cvelistV5` 的目录布局（一年一个文件夹），
-rebuild 就是一次干净的本地遍历——只有 2026 变了的话不必重头解析。
-也让 `x cve` 消费端可以只下感兴趣的年份：`cve-2026.tsv.xz` 大约
-5 MB，整个 `cve-all.tar.xz` 大约 21 MB。git 里看 per-year diff 也很直观，
-一眼能看出今年新增了哪些行。
+三种套路：
 
-### 为什么之前「Top id 永远停在 9999」？
+1. **下载 asset 然后 grep/awk。** 纯 TSV，最简单：
+   `curl ... | xz -dc | awk ...`。无 SDK、无第三方库。
 
-真 bug，已修。提交 `46759ff`
-（[issue #3](https://github.com/x-cmd/cve/issues/3)）。MITRE 从 2025 年
-左右开始发 5 位序号（`NNNN >= 10000`）的 CVE，老的字典序排序把 `9999`
-排在 `10000`–`99999` 前面，导致 `x cve | head` 永远停在 `CVE-YYYY-9999`。
-现在按 NNNN 整数排序，真正的最高 id（例如 `CVE-2026-90616`）能正确显出来。
+2. **用 [`x cve`](https://x-cmd.com/mod/cve) shell 模块。**
+   它包了一层 TSV，提供 `x cve ls`、`x cve fz`、
+   `x cve info CVE-YYYY-NNNN`、`x cve detail CVE-YYYY-NNNN`、
+   `x cve cwe CWE-NN`。安装后跑 `x cve --help`。
 
-### 「Top 10 CWE by CVE count」到底在算什么？
+3. **直接读上游 [cvelistV5 仓库](https://github.com/CVEProject/cvelistV5)。**
+   本仓库用同一个源——见 [`.x-cmd/tsv.py`](./.x-cmd/tsv.py)
+   里的解析模式，自己接 JSON pipeline 时可以参考。
 
-每条 CVE 可以列出 1 个或多个 CWE id（它归属的弱点分类）。对 MITRE
-目录里的每个 CWE，统计时间窗口内有多少 CVE 引用它，按计数倒序排序。
-「since 2024」窗口剔除了 2024 年之前的 CVE，所以排名反映的是「工程师
-*现在* 还在犯哪些错」——加上 2008 年的 SQL 注入雪崩只会让
-[SQL 注入](https://cwe.mitre.org/data/definitions/89.html) 永远排第一。
+### 跟 NVD / OSV.dev / GHSA 有什么区别？
 
-### 「Top 10 CWE by avg CVSS score」呢？
+四份数据都派生自 CVE，但答的问题不同：
 
-同样的 `cwe` join，但每个 CWE 取其 CVE 的 CVSS base score **均值**（至少
-10 个样本，防止单 CVE 极值干扰）。回答的是「哪个错误一旦犯下后果最严重」，
-而不是「哪个错误最常犯」。榜单头部是 CWE-506（嵌入式恶意代码）和
-CWE-95（动态代码求值注入），因为这些 CVE 几乎都打 9+ 分。
+- **NVD (nvd.nist.gov)** — 权威 CVSS 分 + CPE 字典；REST API；
+  有速率限制。
+- **OSV.dev** — 漏洞数据关联到包生态（npm / PyPI / Maven
+  等）；做 SCA 工具很合适。
+- **GHSA (GitHub Security Advisories)** — 社区维护、生态感知
+  （Dependabot alerts）。
+- **本仓库** — 上游 cvelistV5 目录的精简镜像 + 衍生排名
+  （按 CVE 数 / 按评分 / 逐年体量）+ 预聚合统计。专为
+  「扫 / grep / awk」工作流优化，不是 REST API。
 
-### 中文 README 里的 CWE 中文名从哪来？
+看场景选。「现在最糟糕的 CWE 类别是什么？」「给我快速 top-N」
+走本仓库最快；做生产级漏洞管理用 NVD / OSV / GHSA，那边有
+正经 API 和生态关联。
 
-我们从 [cwe.org.cn](https://cwe.org.cn)——MITRE 官方中文镜像——抓。
-抓取脚本在 [`.x-cmd/cwe_zh.py`](./.x-cmd/cwe_zh.py)，输出
-[`data/cwe.zh.tsv`](./data/cwe.zh.tsv)（969 条 CWE 目录里覆盖约 91%，
-剩下的 9% 大多是 view 和已废弃 id，中文站暂未翻译）。中文表里缺失
-的中文名会自动回退到英文名，对应
-[issue #2](https://github.com/x-cmd/cve/issues/2) 的要求。
+### 发现 bug / 缺数据 / 中文名错了怎么办？
 
-### 不装 `x cve` 能用这些数据吗？
+按问题类型分三个地方：
 
-可以。release asset 就是普通的 xz 压缩 TSV：
-
-```sh
-curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-2026.tsv.xz \
-    | xz -dc | head -5
-```
-
-或者一次性拉整个 bundle：
-
-```sh
-curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-all.tar.xz \
-    | tar -xJ -C ./local-cve
-```
-
-列含义见下面 [TSV 列（9 列）](#tsv-列9列) —— 9 列全是公开 schema，
-不依赖任何 API key。
-
-### 本地怎么跑这些脚本？
-
-[`.x-cmd/`](./.x-cmd/) 下六个脚本零依赖（Python 3.8+ 标准库）：
-
-```sh
-python3 .x-cmd/tsv.py --src /path/to/cvelistV5/cves --out data --rebuild
-python3 .x-cmd/cwe.py                 # MITRE CWE 目录 → data/cwe.tsv
-python3 .x-cmd/cwe_zh.py              # MITRE 中文镜像 → data/cwe.zh.tsv
-python3 .x-cmd/cwe_report.py          # Top-N CWE 排名 → report/cwe.report.{tsv,md,zh.md}
-python3 .x-cmd/report.py              # 逐年统计 → report/cve.report.{tsv,md}
-python3 .x-cmd/latest.py              # 最新 N 条 → report/cve.latest-N.report.{tsv,md}
-```
-
-六个都从 `data/` 读、写到 `report/`。只有 `tsv.py` 需要联网 clone
-`cvelistV5`，其余纯本地。CI 跑的完整流水线见
-[持续集成（CI）](#持续集成ci)。
-
-### 许可证？
-
-我们自己写的（脚本、本 README、`report/*` 衍生报表）走 Apache 2.0，
-见 [`LICENSE`](./LICENSE)。底层 CVE 记录是 CVEProject 的 CC BY 4.0——
-分发 per-year TSV 时请保留该署名。
-
-### 中文表里某条 CWE 名错了 / 缺失怎么办？
-
-中文词典每次 CI 都从 cwe.org.cn 重新抓取，本地缓存放在
-`.x-cmd/.cwe_zh.cache/`，30 天过期。如果某个名字错了，上游源头是
-`https://cwe.org.cn/data/definitions/<id>.html`——在那里或这里开 issue
-即可，下一次定时任务跑完后会自动刷新。要立刻强制重新抓：
-`python3 .x-cmd/cwe_zh.py --force`。
+- **本仓库 pipeline 的 bug**（错排序、缺行、死链）：开
+  [issue](https://github.com/x-cmd/cve/issues)。
+- **缺或错的 CVE 记录**：数据直采自
+  [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5)，
+  权威修复在那里提交。
+- **中文 CWE 名错或缺**：上游是 MITRE 官方中文镜像的
+  `https://cwe.org.cn/data/definitions/<id>.html`。在那里或
+  这里开 issue 即可；上游修好后下一次定时任务会自动重抓。
+  立刻强制重抓：`python3 .x-cmd/cwe_zh.py --force`。
