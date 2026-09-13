@@ -7,7 +7,7 @@
 > 🌐 **中文版：[README.cn.md](./README.cn.md)** —— same data, Chinese CWE names (MITRE 官方中文翻译, ~91% 覆盖；缺失自动回退英文).
 >
 > - **[The 10 newest CVEs](#the-10-newest-cves)** — what landed in your stack this week.
-> - **[What CVEs keep teaching us](#what-cves-keep-teaching-us)** — the same bugs have been on top for 25 years; AI stacks still ship them.
+> - **[What CVEs keep teaching us](#what-cves-keep-teaching-us)** — top weakness classes since 2024; the same names show up again and again.
 > - **[How fast is CVE growing?](#how-fast-is-cve-growing)** — volume doubles every 5 years; is your scanner keeping up?
 > - **[Reports](#reports)** — the raw TSVs behind the tables above (free, no API key).
 > - **[About x-cmd/cve](#about-xcmdcve)** — this repo is the producer, `x cve` is the consumer.
@@ -60,11 +60,11 @@ _Click a CVE id for the full record on NVD._
 
 > The table below is regenerated on every CI run from
 > [`report/cwe.top100.by-cve-count.since-2024.report.tsv`](./report/cwe.top100.by-cve-count.since-2024.report.tsv).
-> Numbers shift; the rank ordering doesn't — XSS, SQL Injection,
-> and Missing Authorization have topped this list every year since
-> 2024. If your AI app renders user-supplied content or talks to
-> a SQL backend, you're one unescaped interpolation away from
-> shipping these.
+> Since 2024, XSS, SQL Injection, and Missing Authorization have
+> been the top three weakness classes — every year, with very
+> little reshuffling below. If your AI app renders user-supplied
+> content or talks to a SQL backend, you're one unescaped
+> interpolation away from shipping these.
 
 <!-- BEGIN cwe.report.md -->
 
