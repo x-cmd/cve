@@ -8,7 +8,7 @@
 
 <!-- BEGIN cve.latest-10.report.md -->
 
-## **The 10 newest CVEs** (descending CVE id = newest published first).
+**The 10 newest CVEs** (descending CVE id = newest published first).
 
 | CVE | Score | Product | CWE | Description |
 | --- | ---:  | ---     | :-: | ---         |
@@ -34,7 +34,7 @@ _Click a CVE id for the full record on NVD._
 
 <!-- BEGIN cwe.report.md -->
 
-_117,521 CVEs across 683 distinct CWEs since 2024._
+_117,523 CVEs across 683 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -79,7 +79,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-09-13)_ | 56,163 | 52,942 | 7.08 | 10.0 |
+| 2026 _(YTD as of 2026-09-13)_ | 56,164 | 52,943 | 7.08 | 10.0 |
 | 2025 | 43,471 | 42,044 | 6.79 | 10.0 |
 | 2024 | 38,451 | 37,057 | 6.81 | 10.0 |
 | 2023 | 30,616 | 24,751 | 6.73 | 10.0 |
@@ -107,7 +107,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **372,343** | **200,912** | **6.87** | **10.0** |
+| **Total** | **372,344** | **200,913** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
