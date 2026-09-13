@@ -12,6 +12,7 @@
 
 | CVE | Score | Product | CWE | Description |
 | --- | ---:  | ---     | :-: | ---         |
+| [CVE-2026-90668](https://nvd.nist.gov/vuln/detail/CVE-2026-90668) | 8.7 | UnrealIRCd/UnrealIRCd | [770](https://cwe.mitre.org/data/definitions/770.html) | The webserver in UnrealIRCd 6.0.5 through 6.2.6 before 6.2.7 does not limit the… |
 | [CVE-2026-90651](https://nvd.nist.gov/vuln/detail/CVE-2026-90651) | 8.1 | Socket/Socket Firewall | [295](https://cwe.mitre.org/data/definitions/295.html) | Socket Firewall (socketdev/socket-registry-firewall) in registry mode before… |
 | [CVE-2026-90648](https://nvd.nist.gov/vuln/detail/CVE-2026-90648) | 7.1 | WebAssembly/wabt | [252](https://cwe.mitre.org/data/definitions/252.html) | wasm2c in WebAssembly wabt through 1.0.41 allows sandbox escape in some… |
 | [CVE-2026-90647](https://nvd.nist.gov/vuln/detail/CVE-2026-90647) | 9.1 | Kalkitech/ASE2000 V2 Communication Test Set | [295](https://cwe.mitre.org/data/definitions/295.html) | ASE/Kalkitech ASE2000 V2 Communication Test Set 2.35 through 2.37 on Windows… |
@@ -21,7 +22,6 @@
 | [CVE-2026-90558](https://nvd.nist.gov/vuln/detail/CVE-2026-90558) | 9.8 | irontec/sngrep | [121](https://cwe.mitre.org/data/definitions/121.html) | sngrep through 1.8.4 contains stack buffer overflow vulnerabilities in SIP… |
 | [CVE-2026-90557](https://nvd.nist.gov/vuln/detail/CVE-2026-90557) | 6.9 | freeciv/freeciv | [125](https://cwe.mitre.org/data/definitions/125.html) | Freeciv versions 3.1.0 through 3.2.5 contain an out-of-bounds read… |
 | [CVE-2026-90556](https://nvd.nist.gov/vuln/detail/CVE-2026-90556) | 8.5 | freeciv/freeciv | [122](https://cwe.mitre.org/data/definitions/122.html) | Freeciv versions before 3.2.6 contain a heap buffer overflow in worklist_load()… |
-| [CVE-2026-90555](https://nvd.nist.gov/vuln/detail/CVE-2026-90555) | 7.1 | vllm-project/vLLM | [409](https://cwe.mitre.org/data/definitions/409.html) | vLLM versions before 0.28.0 fail to validate audio sample rate headers in the… |
 
 _Click a CVE id for the full record on NVD._
 <!-- END cve.latest-10.report.md -->
@@ -34,7 +34,7 @@ _Click a CVE id for the full record on NVD._
 
 <!-- BEGIN cwe.report.md -->
 
-_117,520 CVEs across 683 distinct CWEs since 2024._
+_117,521 CVEs across 683 distinct CWEs since 2024._
 
 ### What mistake do engineers keep making most often since 2024?
 
@@ -79,7 +79,7 @@ _Per-year CVE volume and severity._
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _(YTD as of 2026-09-13)_ | 56,162 | 52,941 | 7.08 | 10.0 |
+| 2026 _(YTD as of 2026-09-13)_ | 56,163 | 52,942 | 7.08 | 10.0 |
 | 2025 | 43,471 | 42,044 | 6.79 | 10.0 |
 | 2024 | 38,451 | 37,057 | 6.81 | 10.0 |
 | 2023 | 30,616 | 24,751 | 6.73 | 10.0 |
@@ -107,7 +107,7 @@ _Per-year CVE volume and severity._
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **372,342** | **200,911** | **6.87** | **10.0** |
+| **Total** | **372,343** | **200,912** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## Reports
