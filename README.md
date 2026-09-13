@@ -1,4 +1,4 @@
-# The 10 newest CVEs
+# CVE Insights for AI Builders
 
 <!-- cve-data-as-of:START -->
 **Data as of: 2026-09-13** _(refreshed daily from upstream cvelistV5 — pull this page tomorrow and the rankings will have moved)._
@@ -8,7 +8,7 @@
 
 <!-- BEGIN cve.latest-10.report.md -->
 
-**The 10 newest CVEs** (descending CVE id = newest published first).
+## **The 10 newest CVEs** (descending CVE id = newest published first).
 
 | CVE | Score | Product | CWE | Description |
 | --- | ---:  | ---     | :-: | ---         |
@@ -26,7 +26,7 @@
 _Click a CVE id for the full record on NVD._
 <!-- END cve.latest-10.report.md -->
 
-# What CVEs keep teaching us
+## What CVEs keep teaching us
 
 > This page is a living mirror of the upstream CVE index. The tables
 > below (per-year stats, top-10 CWE mistakes, top-10 by severity) are
