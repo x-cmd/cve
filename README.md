@@ -14,20 +14,6 @@
 > - **[FAQ](#faq)** — the questions people actually ask.
 >
 > For end users: [`SKILL.md`](./SKILL.md) (raw TSV recipes). For developers: [`CONTRIBUTING.md`](./CONTRIBUTING.md) (pipeline).
->
-> **📑 Contents**
-> - [The 10 newest CVEs](#the-10-newest-cves)
-> - [What CVEs keep teaching us](#what-cves-keep-teaching-us)
-> - [How fast is CVE growing?](#how-fast-is-cve-growing)
-> - [Reports](#reports)
-> - [About x-cmd/cve](#about-xcmdcve)
-> - [Developer docs](#developer-docs)
-> - [License](#license)
-> - [Related](#related)
-> - [FAQ](#faq)
->
-> **For end users** — `x cve` recipes, raw TSV downloads: see [`SKILL.md`](./SKILL.md).
-> **For developers** — schema, repo layout, scripts, CI pipeline: see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## The 10 newest CVEs
 
