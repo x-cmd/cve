@@ -425,3 +425,29 @@ Force a re-fetch with `python3 .x-cmd/cwe_zh.py --force`.
 
 ### Is there a CVE database in Chinese / 中文 CVE 数据库?
 
+**No authoritative Chinese mirror of CVE exists.** MITRE publishes
+CVE records in English only. The closest alternatives:
+
+- **This repo's `README.cn.md`** — Chinese rendering of the same
+  data: the per-year CVE volume table, the Top 10 CWE rankings, and
+  the FAQ are all translated. CVE ids, scores, vendor/product
+  names, and descriptions stay in English (they're identifiers, not
+  prose).
+- **[cwe.org.cn](https://cwe.org.cn)** — MITRE's official Chinese
+  mirror of the **CWE** (weakness taxonomy), not CVE. Coverage is
+  ~91% of the 969-entry CWE catalog; this repo fetches from there
+  into [`data/cwe.zh.tsv`](./data/cwe.zh.tsv).
+- **[CNNVD](https://www.cnnvd.org.cn/)** — China National Vulnerability
+  Database. Maintained by CNCERT/CC, with its own assignment
+  process. Coverage skews toward Chinese-vendor software; **not a
+  direct translation of CVE**, and the id space (CNNVD-YYYY-NNNNNN)
+  is independent. Useful for a regional view, not a substitute.
+- **Vendor advisories** — Alibaba, Huawei, Tencent, and other big
+  Chinese vendors publish their own CVE writeups in Chinese, but
+  only for their own products.
+
+If you need Chinese CVE text for an AI tool you ship, the
+realistic path is: pipe the English `desc` field from this repo's
+TSV through a translation model in your own pipeline. Don't
+trust an unofficial mirror to be complete or current.
+
