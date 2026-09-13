@@ -22,7 +22,6 @@ records on the index. If any of the products below are in your
 dependency tree (almost certainly), click through to the NVD page
 and check the affected-version range against your pinned versions.
 
-![The 10 newest CVEs — card view](docs/assets/cve-latest-10.svg)
 
 <!-- BEGIN cve.latest-10.report.md -->
 
