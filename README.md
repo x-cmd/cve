@@ -340,6 +340,30 @@ the past five years, with 2026 already past 56,000 records in
 the first three quarters. Full per-year TSV lives at
 [`report/cve.report.tsv`](./report/cve.report.tsv).
 
+### Why does `cve-2015.tsv` have 8,110 rows but a max CVE id of 1,142,857?
+
+Because MITRE assigned **large reserved id blocks** to the big
+CNAs (Microsoft, Apple, Adobe, Google, Oracle) and each CNA
+filled only a fraction. The 99% gap in 2015 and similar years is
+not a bug — it's the structural shape of the post-2014 CNA
+distribution model. Post-2020 the gap settled at 38-53%, the
+steady-state mix of reserved blocks + REJECT (withdrawn)
+records + duplicate-merge dedup.
+
+| Year | Rows | Max NNNN | Gap | Gap % |
+|---|---|---|---|---|
+| 2014 | 8,426 | 125,128 | 116,702 | 93% |
+| 2015 | 8,110 | 1,142,857 | 1,134,747 | 99% |
+| 2018 | 16,187 | 1,999,047 | 1,982,860 | 99% |
+| 2024 | 38,450 | 58,382 | 19,932 | 34% |
+| 2026 YTD | 56,167 | 90,679 | 34,512 | 38% |
+
+This is also why the per-year TSV is sorted by the NNNN
+**integer** (not lexicographic) — so `CVE-2026-10000` shows up
+where it actually belongs, not buried under the gap. Full
+numbers in
+[docs/5-yearly-stats-explained.md](./docs/5-yearly-stats-explained.md).
+
 ### How do I look up a single CVE?
 
 For one record by id (e.g. `CVE-2024-0001`), the upstream
