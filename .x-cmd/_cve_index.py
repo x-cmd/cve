@@ -351,8 +351,28 @@ def save_year_files(
     # Consumers (x cve ls / fz) want the latest CVEs at the top of
     # the stream, so we store them in that order on disk and avoid
     # an extra `tac` pass at read time.
+    #
+    # Numeric sort on the NNNN sequence field. MITRE issues 5-digit
+    # ids (>= 10000) starting around 2025; a plain lexicographic
+    # sort puts "9999" ahead of "10000"-"99999", so x cve | head
+    # would stop at CVE-2026-9999 and never surface the real
+    # highest ids (e.g. CVE-2026-90616). See issue #3.
+    def _cve_seq_key(line: str) -> tuple[int, int, str]:
+        # line is "CVE-YYYY-NNNN\t...". Pull the 4th-from-last dash
+        # segment as the integer sequence, fall back to string sort
+        # for non-numeric ids (CWE-NNN, drafts, etc.).
+        first_tab = line.find("\t")
+        cve_id = line if first_tab < 0 else line[:first_tab]
+        # CVE-YYYY-NNNN[NNNN] (5+ digit ids allowed). Use rsplit so
+        # the leading "CVE-YYYY-" prefix is dropped in one shot.
+        try:
+            seq_str = cve_id.rsplit("-", 1)[1]
+            return (0, -int(seq_str), cve_id)
+        except (IndexError, ValueError):
+            return (1, 0, cve_id)
+
     for year in target_years & years_with_rows:
-        buckets[year].sort(reverse=True)
+        buckets[year].sort(key=_cve_seq_key)
 
     for year in target_years:
         out = year_file_path(root, year)
