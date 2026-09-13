@@ -93,9 +93,22 @@ NNNN sequence value would suggest. Sample (computed from
 The 98-99% gaps for 2014-2019 are not bugs. In that era MITRE
 assigned **large reserved id blocks** to the big CNAs — Microsoft,
 Apple, Adobe, Google, Oracle each got whole 10000-id ranges and
-filled only a fraction. Once the CNA-based system matured around
-2020 the gap settled at 38-53%, which is the steady-state
-combination of:
+filled only a fraction. Concrete shape of 2014 (verified against
+the upstream `cvelistV5` JSON tree):
+
+| 2014 NNNN range | Rows | Likely owner |
+|---|---|---|
+| 1 – 9,999 | 8,162 | general / small CNAs |
+| 10,000 – 19,999 | 102 | Microsoft (reserved) |
+| 20,000 – 99,999 | 0 | (no CNAs filled this range) |
+| 100,000 – 109,999 | 39 | Microsoft (mid-range) |
+| 120,000 – 125,127 | 123 | Apple (late-2014 block) |
+
+So the 93% gap in 2014 is two big blocks reserved for Microsoft
+(100k) and Apple (120k) that each got 1-2% filled. The 99% gap
+in 2015 follows the same shape. Once the CNA-based system
+matured around 2020 the gap settled at 38-53%, which is the
+steady-state combination of:
 
 - **Reserved blocks** the CNAs hold but haven't yet assigned.
 - **REJECT** records — MITRE marks a CVE withdrawn; we drop the

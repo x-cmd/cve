@@ -344,19 +344,23 @@ the first three quarters. Full per-year TSV lives at
 
 Because MITRE assigned **large reserved id blocks** to the big
 CNAs (Microsoft, Apple, Adobe, Google, Oracle) and each CNA
-filled only a fraction. The 99% gap in 2015 and similar years is
-not a bug — it's the structural shape of the post-2014 CNA
-distribution model. Post-2020 the gap settled at 38-53%, the
-steady-state mix of reserved blocks + REJECT (withdrawn)
-records + duplicate-merge dedup.
+filled only a fraction. Take 2014 as a concrete example
+(verified against the upstream `cvelistV5` JSON tree):
 
-| Year | Rows | Max NNNN | Gap | Gap % |
-|---|---|---|---|---|
-| 2014 | 8,426 | 125,128 | 116,702 | 93% |
-| 2015 | 8,110 | 1,142,857 | 1,134,747 | 99% |
-| 2018 | 16,187 | 1,999,047 | 1,982,860 | 99% |
-| 2024 | 38,450 | 58,382 | 19,932 | 34% |
-| 2026 YTD | 56,167 | 90,679 | 34,512 | 38% |
+| 2014 NNNN range | Rows | Likely owner |
+|---|---|---|
+| 1 – 9,999 | 8,162 | general / small CNAs |
+| 10,000 – 19,999 | 102 | Microsoft (reserved) |
+| 20,000 – 99,999 | 0 | (no CNAs filled this range) |
+| 100,000 – 109,999 | 39 | Microsoft (mid-range) |
+| 120,000 – 125,127 | 123 | Apple (late-2014 block) |
+
+So the 93% gap in 2014 (8,426 rows vs max id 125,128) is mostly
+two big blocks reserved for Microsoft and Apple that each got
+only 1-2% filled. The 99% gap in 2015 follows the same shape.
+Post-2020 the gap settled at 38-53%, the steady-state mix of
+smaller reserved blocks + REJECT (withdrawn) records +
+duplicate-merge dedup.
 
 This is also why the per-year TSV is sorted by the NNNN
 **integer** (not lexicographic) — so `CVE-2026-10000` shows up

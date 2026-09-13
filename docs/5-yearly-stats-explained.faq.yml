@@ -85,7 +85,17 @@ id: x-cve-5-yearly-stats-explained
           cn: 为什么 cve-2015.tsv 只有 8,110 行但最大 CVE id 是 1,142,857？
         answer:
           en: |
-            In 2014-2019, MITRE assigned large reserved id blocks to the big CNAs (Microsoft, Apple, Adobe, Google, Oracle), and each CNA filled only a fraction. The 99% gap in 2015 is structural, not a bug.
+            In 2014-2019, MITRE assigned large reserved id blocks to the big CNAs (Microsoft, Apple, Adobe, Google, Oracle), and each CNA filled only a fraction. Concrete shape of 2014 (verified against the upstream `cvelistV5` JSON tree):
+
+            | 2014 NNNN range | Rows | Likely owner |
+            | --- | ---: | --- |
+            | 1 – 9,999 | 8,162 | general / small CNAs |
+            | 10,000 – 19,999 | 102 | Microsoft (reserved) |
+            | 20,000 – 99,999 | 0 | (no CNAs filled) |
+            | 100,000 – 109,999 | 39 | Microsoft (mid-range) |
+            | 120,000 – 125,127 | 123 | Apple (late-2014 block) |
+
+            So the 93% gap in 2014 (8,426 rows vs max id 125,128) is mostly two big blocks reserved for Microsoft and Apple that each got only 1-2% filled. The 99% gap in 2015 follows the same shape.
 
             | Year | Rows | Max NNNN | Gap | Gap % |
             | ---- | ---: | ------: | --: | ----: |
@@ -97,7 +107,17 @@ id: x-cve-5-yearly-stats-explained
 
             Post-2020 the gap settled at 38-53% — reserved blocks + REJECT (withdrawn) records + duplicate-merge dedup. This is why the per-year TSV is sorted by NNNN integer (not lexicographic), so CVE-2026-10000 shows up where it actually belongs.
           cn: |
-            2014-2019 年，MITRE 把大段序号预留给了大 CNA（Microsoft、Apple、Adobe、Google、Oracle），每个 CNA 只填了一小部分。2015 年 99% 的跳号是结构性的，不是 bug。
+            2014-2019 年，MITRE 把大段序号预留给了大 CNA（Microsoft、Apple、Adobe、Google、Oracle），每个 CNA 只填了一小部分。2014 年真实分布（已对照上游 `cvelistV5` JSON 仓库验证）：
+
+            | 2014 NNNN 区间 | 行数 | 可能归属 |
+            | --- | ---: | --- |
+            | 1 – 9,999 | 8,162 | 通用 / 小 CNA |
+            | 10,000 – 19,999 | 102 | Microsoft（预留） |
+            | 20,000 – 99,999 | 0 | （没有 CNA 填这段） |
+            | 100,000 – 109,999 | 39 | Microsoft（中段） |
+            | 120,000 – 125,127 | 123 | Apple（2014 末段） |
+
+            所以 2014 年 93% 跳号（8,426 行 vs 最大 id 125,128）主要是两段预留号段——Microsoft 和 Apple 各填了 1-2%。2015 年 99% 跳号同理。
 
             | 年份 | 行数 | 最大 NNNN | 跳号 | 跳号率 |
             | ---- | ---: | ------: | --: | ----: |
