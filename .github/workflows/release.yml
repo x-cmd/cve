@@ -309,12 +309,10 @@ jobs:
           # H1 tagline → cwe tables → cve section → Reports link table.
           INTRO_CVE = {
               Path("README.md"): (
-                  "## How fast is CVE growing?\n\n"
-                  "_Per-year CVE volume and severity._"
+                  "## How fast is CVE growing?"
               ),
               Path("README.cn.md"): (
-                  "## CVE 增长得有多快？\n\n"
-                  "_逐年 CVE 数量与严重程度。_"
+                  "## CVE 增长得有多快？"
               ),
           }
           # INTRO_CWE intentionally empty — the H1 tagline under
@@ -352,14 +350,75 @@ jobs:
           def stitch(readme: str, md_path: Path, begin: str, end: str,
                      intro: str) -> str:
               body = md_path.read_text(encoding="utf-8").rstrip() + "\n"
-              # If `intro` is empty, the block starts directly with the
-              # BEGIN marker + body (no extra attribution line).
-              # Otherwise intro sits between BEGIN and body as a
-              # short attribution paragraph.
-              if intro:
+
+              # If `intro` starts with a "## H2" line, treat it as the
+              # block's heading (the cve.report.md body itself has
+              # no H2 — the table starts with the header row).
+              # Split intro: first line is the H2 (preserved across
+              # CI runs), the rest is an optional attribution
+              # paragraph (also preserved).
+              h2_line = None
+              intro_rest = ""
+              if intro.startswith("## "):
+                  intro_lines = intro.split("\n", 1)
+                  h2_line = intro_lines[0]
+                  intro_rest = intro_lines[1] if len(intro_lines) > 1 else ""
+
+              # If the BEGIN/END pair already exists in the README,
+              # preserve any hand-written content between BEGIN and
+              # END that's NOT part of the report body. Strategy:
+              #   1. if the block already has an H2, replace it with
+              #      the latest H2 from INTRO_CVE
+              #   2. everything between the H2 and END is hand-written
+              #      (SVG, popularization, `<details>`-folded table)
+              #      and stays untouched
+              #   3. the latest report body is appended after the
+              #      hand-written section
+              if begin in readme and end in readme:
+                  i = readme.index(begin)
+                  j = readme.index(end)
+                  inner = readme[i + len(begin):j]
+                  h2_match = re.search(r'^## .+\n', inner, re.MULTILINE)
+                  if h2_match and h2_line:
+                      kept_prefix = inner[:h2_match.start()]
+                      hand_written = inner[h2_match.end():]
+                      # Ensure exactly one blank line between H2 and
+                      # the next thing (intro_rest or hand_written).
+                      hw_stripped = hand_written.lstrip("\n")
+                      # Stitch: BEGIN + kept_prefix + H2 + intro_rest + hand_written + body + END
+                      middle = f"{intro_rest}" if intro_rest else ""
+                      if middle and not middle.endswith("\n"):
+                          middle += "\n"
+                      if hw_stripped:
+                          if middle and not middle.endswith("\n"):
+                              middle += "\n"
+                      block = (
+                          f"{begin}\n\n"
+                          f"{kept_prefix}"
+                          f"{h2_line}\n"
+                          f"{middle}"
+                          f"{hw_stripped}"
+                          f"{body}"
+                          f"{end}\n"
+                      )
+                  elif h2_line:
+                      # No existing H2 — insert fresh.
+                      block = f"{begin}\n\n{h2_line}\n{intro_rest}\n\n{body}{end}\n"
+                  else:
+                      # No H2 anywhere — fall back to plain body.
+                      block = f"{begin}\n\n{body}{end}\n"
+                  tail = readme[readme.index(end) + len(end):].lstrip("\n")
+                  return readme[:i] + block + "\n" + tail
+
+              # First insert: BEGIN/END block + blank line before
+              # the anchor.
+              if h2_line:
+                  block = f"{begin}\n\n{h2_line}\n{intro_rest}\n\n{body}{end}\n"
+              elif intro:
                   block = f"{begin}\n\n{intro}\n\n{body}{end}\n"
               else:
                   block = f"{begin}\n\n{body}{end}\n"
+              return readme.replace(ANCHOR, block + "\n\n" + ANCHOR, 1)
               if begin in readme and end in readme:
                   # Replace in place. Strip trailing blank lines from
                   # the surrounding tail so successive runs don't pile
