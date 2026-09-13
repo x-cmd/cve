@@ -27,6 +27,43 @@ id: x-cve-3-latest-cves-explained
         reference:
           - docs/3-latest-cves-explained.en.md
 
+      - id: why-blank-score
+        question:
+          en: Why is the score blank for some CVEs?
+          cn: 为什么有些 CVE 的 score 是空的？
+        answer:
+          en: |
+            Blank means MITRE has no published CVSS vector for that record — NOT "low severity". Three common reasons:
+
+              1. Pre-2017 records. CVSS v2.0 only became standard in 2007; many CNAs didn't adopt it consistently for another decade. CVE-1999-0001 through ~CVE-2016-NNNN frequently have empty scores.
+
+              2. Smaller CNAs opt out. The CVE assignment process is free and most CNAs are volunteer-run. Publishing a CVSS vector requires running the calculator on the impact metrics; many smaller CNAs don't bother.
+
+              3. Reserved-but-not-yet-published IDs. When MITRE reserves a block for a CNA, the JSON may exist but lack `containers.cna.metrics[]`. We treat it as scored: 0.
+
+            In `data/cve-YYYY.tsv` these rows have an empty score field; the parser preserves the empty rather than writing 0 or null so you can distinguish "no data" from "low severity". For the latest-10-CVE table an empty score renders as `—`.
+
+            report/cve.report.tsv's Scored column shows how many CVEs in each year have a score at all. Modern years (2024+) are ~98% scored; 2000 is 0/1236 — none of that year's CVEs have scores.
+
+            For prioritization, pair CVSS with EPSS (first.org/epss) and CISA KEV (cisa.gov/known-exploited-vulnerabilities-catalog) — a CVE with no CVSS score but in KEV is still actively exploited in the wild.
+          cn: |
+            空白代表 MITRE 没发布该记录的 CVSS 向量——不是「严重度低」。三种常见原因：
+
+              1. 2017 年以前的记录。CVSS v2.0 2007 年才成为标准，许多 CNA 又花了十年才稳定采用。CVE-1999-0001 到 ~CVE-2016-NNNN 经常 score 为空。
+
+              2. 较小的 CNA 选择不发。CVE 分配流程免费，绝大多数 CNA 是志愿者运营。发布 CVSS 向量需要算分数；很多小 CNA 不做这步。
+
+              3. 已预留但尚未发布的 id。MITRE 给 CNA 预留一段 id，JSON 文件可能存在但缺 `containers.cna.metrics[]`。我们标为 scored: 0。
+
+            在 `data/cve-YYYY.tsv` 里这些行的 score 字段为空；解析器保留空而非写 0 或 null，方便区分「无数据」和「严重度低」。最新 10 条 CVE 表里空分渲染为 `—`。
+
+            `report/cve.report.tsv` 的 Scored 列展示每年有多少 CVE 有分。2024+ 现代年份约 98% 有分；2000 年 0/1236——那年一条都没有分。
+
+            优先级排定请搭配 EPSS（first.org/epss）+ CISA KEV（cisa.gov/known-exploited-vulnerabilities-catalog）：一条没 CVSS 分但进了 KEV 的 CVE 仍然是野外被利用的活跃漏洞。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
       - id: cwe-col-plus
         question:
           en: Why does the CWE column show `(+2)` sometimes?

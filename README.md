@@ -411,6 +411,38 @@ The release includes pre-aggregated variants for the common
 queries — see [`report/`](./report/) for top-100 CWE rankings
 by count and by score.
 
+### Why is the score blank for some CVEs?
+
+**A blank score means MITRE has no published CVSS vector for that
+record — not "low severity".** Three common reasons:
+
+1. **Pre-2017 records.** CVSS v2.0 only became standard in 2007,
+   and many CNAs didn't adopt it consistently for another decade.
+   CVE-1999-0001 through ~CVE-2016-NNNN frequently have empty
+   scores.
+2. **Smaller CNAs opt out.** The CVE assignment process is free
+   and the CNAs are mostly volunteer-run. Publishing a CVSS
+   vector requires running the calculator on the impact metrics;
+   many smaller CNAs don't bother.
+3. **Reserved-but-not-yet-published IDs.** When MITRE reserves a
+   block for a CNA, the JSON file may exist but lack a
+   `containers.cna.metrics[]` entry. We treat it as "scored: 0".
+
+In `data/cve-YYYY.tsv` these rows have an empty `score` column;
+the TSV parser preserves the empty field rather than writing
+`0` or `null` so you can distinguish "no data" from "low
+severity". For the latest-10-CVE table on the front page, an
+empty score renders as `—`.
+
+The `report/cve.report.tsv` Scored column shows how many CVEs in
+each year have a score at all. Modern years (2024+) are ~98%
+scored; 2000 is 0/1236 — none of that year's CVEs have scores.
+For prioritization, pair CVSS with [EPSS](https://www.first.org/epss/)
+(exploitation probability, first.org) and the
+[CISA KEV catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+(Known Exploited Vulnerabilities) — a CVE with no CVSS score but
+in the KEV catalog is still actively exploited in the wild.
+
 ### Where do the Chinese CWE names come from?
 
 The Chinese names surfaced in the CWE ranking tables come from
