@@ -1,0 +1,140 @@
+id: x-cve-0-cve-for-ai-builders
+
+<data>:
+  - name:
+      en: overview
+      cn: 概览
+    qa:
+      - id: what-is-this-repo
+        question:
+          en: What is this repo?
+          cn: 这个仓库是什么？
+        answer:
+          en: A daily-refreshed CVE / CWE intelligence feed. ~370k records regenerated every 4 hours from CVEProject/cvelistV5. Plain TSVs on GitHub release assets, no API key.
+          cn: 一个每日刷新的 CVE / CWE 情报源。约 37 万条记录，每 4 小时从 CVEProject/cvelistV5 重新生成。GitHub release 上的纯 TSV，无需 API key。
+        confidence: 9
+        reference:
+          - docs/0-cve-for-ai-builders.en.md
+          - docs/0-cve-for-ai-builders.cn.md
+
+      - id: who-is-it-for
+        question:
+          en: Who is this for?
+          cn: 谁应该用？
+        answer:
+          en: AI builders shipping applications on open-source stacks (PyTorch, LangChain, vector DBs, MCP servers, agent frameworks). Anyone who needs to know what CVEs are landing in their dependencies.
+          cn: 在开源栈上构建 AI 应用的开发者（PyTorch、LangChain、向量数据库、MCP server、agent 框架）。任何想知道依赖里出现了哪些漏洞的人。
+        confidence: 9
+        reference:
+          - docs/0-cve-for-ai-builders.en.md
+
+      - id: what-can-i-do-with-it
+        question:
+          en: What can I actually do with this?
+          cn: 我能用它做什么？
+        answer:
+          en: Audit your stack with `curl | xz | awk`. Look up one CVE by id with `x cve info`. Prioritize remediation with CVSS + EPSS + KEV. Track how the rankings shift over time with `git log` on the report TSVs.
+          cn: 用 `curl | xz | awk` 审计代码栈。用 `x cve info` 查单条 CVE。用 CVSS + EPSS + KEV 排修复优先级。用 `git log` 跟踪排名漂移。
+        confidence: 9
+        reference:
+          - docs/6-using-the-data.en.md
+
+  - name:
+      en: data freshness
+      cn: 数据时效
+    qa:
+      - id: how-fresh
+        question:
+          en: How fresh is the data?
+          cn: 数据多久更新一次？
+        answer:
+          en: Every 4 hours via `.github/workflows/release.yml` (cron `37 */4 * * *` UTC), plus on every push to `main`. Worst-case latency for a newly-published CVE: 4 hours.
+          cn: 每 4 小时通过 `.github/workflows/release.yml` 更新（cron `37 */4 * * *` UTC），另外每次 push 到 `main` 时也跑。新 CVE 入库最坏延迟：4 小时。
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+      - id: is-it-real-time
+        question:
+          en: Is it real-time?
+          cn: 是实时吗？
+        answer:
+          en: No — it's every 4 hours. For real-time, subscribe to NVD RSS or your vendors' advisory feeds.
+          cn: 不是——每 4 小时。要实时请订阅 NVD RSS 或你的供应商安全公告。
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+  - name:
+      en: data quality
+      cn: 数据质量
+    qa:
+      - id: cve-vs-cwe
+        question:
+          en: What's the difference between CVE and CWE?
+          cn: CVE 和 CWE 有什么区别？
+        answer:
+          en: CVE = a specific instance of a vulnerability (e.g. CVE-2026-90616: Flatpak before 1.18.1 sandbox escape). CWE = the category of weakness (e.g. CWE-22: Path Traversal). One CVE typically references one or more CWE ids.
+          cn: CVE = 某个具体漏洞（例如 CVE-2026-90616：Flatpak 1.18.1 前的沙箱逃逸）。CWE = 弱点类别（例如 CWE-22：路径遍历）。一条 CVE 通常引用一个或多个 CWE id。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md
+
+      - id: missing-cve
+        question:
+          en: I searched a CVE id and got nothing — why?
+          cn: 我查的 CVE id 没结果 — 为什么？
+        answer:
+          en: Three possibilities: (1) just-published — wait up to 4 hours for the next CI run; (2) reserved but not yet assigned — check cve.org for the official status; (3) withdrawn — MITRE removes withdrawn records from the catalog entirely.
+          cn: 三种可能：(1) 刚发布 — 等下一次 CI 跑（最多 4 小时）；(2) 已预留但尚未分配 — 在 cve.org 查看官方状态；(3) 已撤销 — MITRE 会直接从目录删除撤销记录。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+      - id: blank-cvss
+        question:
+          en: Why are some CVSS scores blank?
+          cn: 为什么有些 CVSS 分是空的？
+        answer:
+          en: Blank means MITRE has not published a CVSS vector for that record — it does NOT mean low severity. Older CVEs (1999-2016) and smaller CNAs often leave the field empty.
+          cn: 空白代表 MITRE 没发布该记录的 CVSS 向量——不代表「严重度低」。早期 CVE（1999-2016）和较小的 CNA 经常留空。
+        confidence: 9
+        reference:
+          - docs/2-latest-cves-explained.en.md
+
+      - id: patched-column
+        question:
+          en: Does the "patched" column tell me if a CVE is fixed?
+          cn: 「patched」字段能告诉我 CVE 是否修复了吗？
+        answer:
+          en: No. `patched: 0` does not mean unpatched — many CNAs publish fixes without populating the structured field. `patched: 1` does not mean your installed version pulls the fix. For real fix status, check the CVE's affected versions on NVD and your SCA tool.
+          cn: 不能。`patched: 0` 不代表未修复——很多 CNA 修了但没填这个结构化字段。`patched: 1` 不代表你安装的版本就拿到修复。真要查修复状态，看 NVD 的 affected versions 段，或者你的 SCA 工具。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+  - name:
+      en: scope
+      cn: 范围
+    qa:
+      - id: what-isnt-covered
+        question:
+          en: What isn't in this repo?
+          cn: 仓库不包含什么？
+        answer:
+          en: No EPSS / KEV (fetch from first.org and cisa.gov separately). No CPE dictionary for SBOM matching. No patches — your stack, your problem. This is the intelligence, not the fix.
+          cn: 没有 EPSS / KEV（分别从 first.org 和 cisa.gov 取）。没有 CPE 字典做 SBOM 匹配。没有补丁——修不修是你的事。这仓库只给情报，不给修复。
+        confidence: 9
+        reference:
+          - docs/0-cve-for-ai-builders.en.md
+
+      - id: chinese-cwe
+        question:
+          en: Where do the Chinese CWE names come from?
+          cn: CWE 中文名从哪来？
+        answer:
+          en: Fetched from cwe.org.cn — MITRE's official Chinese mirror. ~91% coverage; the remaining 9% (views, deprecated ids) fall back to English at render time.
+          cn: 从 cwe.org.cn 抓——MITRE 官方中文镜像。约 91% 覆盖；剩下的 9%（view、已废弃 id）在渲染时自动回退英文。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md

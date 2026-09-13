@@ -1,0 +1,91 @@
+id: x-cve-6-using-the-data
+
+<data>:
+  - name:
+      en: paths
+      cn: 路径
+    qa:
+      - id: which-path
+        question:
+          en: Should I use raw TSV, x cve, or Python?
+          cn: 我应该用原始 TSV、x cve 还是 Python？
+        answer:
+          en: 'One record / browsing / Shodan enrichment → `x cve`. Bulk analytics, joins into Python/R/DuckDB → raw TSV (`curl` then DuckDB / pandas / polars). All three read the SAME per-year TSVs.'
+          cn: 单条查 / 浏览 / Shodan 增强 → `x cve`。批量分析、Python/R/DuckDB join → 原始 TSV（curl 后用 DuckDB / pandas / polars）。三种方式读的是**同一份** per-year TSV。
+        confidence: 9
+        reference:
+          - docs/6-using-the-data.en.md
+
+      - id: no-install
+        question:
+          en: I can't install x-cmd. What's the next best option?
+          cn: 我装不了 x-cmd。次优方案是什么？
+        answer:
+          en: Raw TSV via curl. The data is plain text on GitHub release assets — no SDK, no API key, no runtime. DuckDB even reads xz-compressed assets directly over HTTP.
+          cn: 用 curl 拿原始 TSV。数据就是 GitHub release 上的纯文本——无需 SDK、无需 API key、无需运行时。DuckDB 甚至能直接通过 HTTP 读 xz 压缩的 asset。
+        confidence: 9
+        reference:
+          - docs/6-using-the-data.en.md
+
+  - name:
+      en: queries
+      cn: 查询
+    qa:
+      - id: cwe-regex
+        question:
+          en: How do I match CWE-79 exactly (not 179, 779, 789)?
+          cn: 怎么精确匹配 CWE-79（而不是 179、779、789）？
+        answer:
+          en: 'Match the whole ; -bounded field: `$8 ~ /(^|;)79(;|$)/`. Bare `== 79` will match `179` and `779` because they contain `79` as a substring.'
+          cn: 匹配完整的分号定界字段：`$8 ~ /(^|;)79(;|$)/`。直接 `== 79` 会匹配到 179、779 等含 79 子串的 id。
+        confidence: 9
+        reference:
+          - docs/6-using-the-data.en.md
+
+      - id: cross-year
+        question:
+          en: How do I query multiple years in one shot?
+          cn: 怎么一次查多年？
+        answer:
+          en: 'Shell: pipe multiple xz outputs together — `xz -dc cve-2024.tsv cve-2025.tsv cve-2026.tsv | awk ...`. DuckDB: `union_all_by_name` over per-year read_csv calls. pandas: glob `cve-*.tsv`, concat.'
+          cn: Shell: 多个 xz 输出拼接——`xz -dc cve-2024.tsv cve-2025.tsv cve-2026.tsv | awk ...`。DuckDB: 多次 read_csv 用 `union_all_by_name`。pandas: glob `cve-*.tsv`，concat。
+        confidence: 9
+        reference:
+          - docs/6-using-the-data.en.md
+
+      - id: column-count
+        question:
+          en: How many columns in each row?
+          cn: 每行多少列？
+        answer:
+          en: Always 9 — cve, year, no, vp, ghsa, score, patched, cwe, desc. Missing fields are empty (no NaN, no null literal). See the schema reference.
+          cn: 始终 9 列——cve、year、no、vp、ghsa、score、patched、cwe、desc。缺失字段为空（不是 NaN、不是 null 字面量）。见 schema 参考。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+  - name:
+      en: integration
+      cn: 集成
+    qa:
+      - id: duckdb-vs-pandas
+        question:
+          en: DuckDB or pandas?
+          cn: DuckDB 还是 pandas？
+        answer:
+          en: DuckDB for ad-hoc SQL on the full set (~2-3 s cold, <100 ms warm). pandas for joining into your existing DataFrame pipeline. polars for larger-than-memory datasets.
+          cn: DuckDB 适合对全集跑临时 SQL（冷启动 2-3 秒，热数据 <100 毫秒）。pandas 适合 join 进现有 DataFrame pipeline。polars 适合超出内存的大数据集。
+        confidence: 9
+        reference:
+          - docs/6-using-the-data.en.md
+
+      - id: cve-id-format
+        question:
+          en: Why do some CVE ids have 5-digit sequence numbers?
+          cn: 为什么有些 CVE id 是 5 位序号？
+        answer:
+          en: MITRE began issuing 5-digit CVE sequence ids (NNNN >= 10000) around 2025. Sort by integer value, not lexicographic — see issue #3. `x cve | head` now correctly surfaces 5-digit ids.
+          cn: MITRE 从 2025 年左右开始发 5 位序号的 CVE id（NNNN >= 10000）。按整数值排序，不要字典序——见 issue #3。`x cve | head` 现在能正确显示 5 位 id。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md

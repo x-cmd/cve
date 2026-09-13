@@ -1,0 +1,87 @@
+id: x-cve-2-how-data-is-built
+
+<data>:
+  - name:
+      en: scripts
+      cn: 脚本
+    qa:
+      - id: which-script
+        question:
+          en: Which script produces the latest-10 table on the README?
+          cn: README 顶部的最新 10 条 CVE 表是哪个脚本生成的？
+        answer:
+          en: '.x-cmd/latest.py. It reads only the head of each per-year TSV (sorted desc by NNNN within year), takes rows until it has N, and emits report/cve.latest-N.report.{tsv,md}.'
+          cn: .x-cmd/latest.py。它只读每个 per-year TSV 的头部（按 NNNN 倒序），凑够 N 条，输出 report/cve.latest-N.report.{tsv,md}。
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+      - id: which-script-rankings
+        question:
+          en: Which script produces the Top CWE rankings?
+          cn: Top CWE 排名是哪个脚本生成的？
+        answer:
+          en: '.x-cmd/cwe_report.py. It joins every CVE row against its CWE ids, then ranks by CVE count and by mean CVSS score (with ≥ 10 samples per CWE). Emits 4 TSVs (all years + since 2024) and 2 markdowns (English + Chinese).'
+          cn: .x-cmd/cwe_report.py。把每条 CVE 行跟它的 CWE id 做 join，再按 CVE 数量和平均 CVSS 排序（每个 CWE 至少 10 个样本）。输出 4 份 TSV（全部年份 + since 2024）和 2 份 markdown（英文 + 中文）。
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+      - id: dependencies
+        question:
+          en: What dependencies do the scripts need?
+          cn: 这些脚本需要什么依赖？
+        answer:
+          en: Python 3.8+ stdlib only. No pip install, no virtualenv. tsv.py needs a network clone of CVEProject/cvelistV5; the rest read from data/ locally.
+          cn: 只要 Python 3.8+ 标准库。无需 pip install，无需虚拟环境。tsv.py 需要联网克隆 CVEProject/cvelistV5；其余脚本本地从 data/ 读。
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+      - id: how-to-run-locally
+        question:
+          en: How do I run the pipeline locally?
+          cn: 本地怎么跑这个 pipeline？
+        answer:
+          en: 'git clone https://github.com/CVEProject/cvelistV5 && cd x-cmd/cve && python3 .x-cmd/tsv.py --src ../cvelistV5/cves --out data --rebuild && python3 .x-cmd/cwe.py && python3 .x-cmd/cwe_zh.py && python3 .x-cmd/cwe_report.py && python3 .x-cmd/latest.py && python3 .x-cmd/report.py'
+          cn: 'git clone https://github.com/CVEProject/cvelistV5 && cd x-cmd/cve && python3 .x-cmd/tsv.py --src ../cvelistV5/cves --out data --rebuild && python3 .x-cmd/cwe.py && python3 .x-cmd/cwe_zh.py && python3 .x-cmd/cwe_report.py && python3 .x-cmd/latest.py && python3 .x-cmd/report.py'
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+  - name:
+      en: ci
+      cn: CI
+    qa:
+      - id: schedule
+        question:
+          en: How often does CI run?
+          cn: CI 多久跑一次？
+        answer:
+          en: Every 4 hours at `37 */4 * * *` UTC, plus on every push to main. Worst-case latency for a new CVE: 4 hours.
+          cn: 每 4 小时（`37 */4 * * *` UTC），加上每次 push 到 main。新 CVE 最坏延迟：4 小时。
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+      - id: what-if-no-changes
+        question:
+          en: What happens if there's no upstream change?
+          cn: 没有上游变更时怎么跑？
+        answer:
+          en: 'tsv.py --rebuild runs and re-emits identical TSVs. release.yml detects byte-equality against the previous release and skips every upload step. Consumer-cached sha256s stay valid.'
+          cn: 'tsv.py --rebuild 照常跑，输出和上次一致的 TSV。release.yml 用 cmp 对比 prev release asset，相同就跳过所有上传步骤。消费者缓存的 sha256 保持有效。'
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md
+
+      - id: can-i-rerun-ci
+        question:
+          en: Can I trigger CI manually?
+          cn: 我能手动触发 CI 吗？
+        answer:
+          en: Yes — GitHub Actions → release-xz → Run workflow. Useful for forcing a re-fetch after an upstream CVEProject push that wasn't auto-triggered.
+          cn: 可以——GitHub Actions → release-xz → Run workflow。cveProject 推送后没自动触发时，手动跑一次很有用。
+        confidence: 9
+        reference:
+          - docs/2-how-data-is-built.en.md

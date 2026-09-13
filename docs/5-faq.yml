@@ -1,0 +1,76 @@
+id: x-cve-5-yearly-stats-explained
+
+<data>:
+  - name:
+      en: columns
+      cn: 字段
+    qa:
+      - id: total-row
+        question:
+          en: What does the **Total** row mean?
+          cn: **Total** 行是什么意思？
+        answer:
+          en: Sum of CVEs across all years, weighted-average score across scored CVEs. Grows monotonically — withdrawn CVEs are dropped retroactively from the per-year files but the historical years keep their counts.
+          cn: 所有年份 CVE 数量的总和，已打分 CVE 的加权平均分。单调增长——撤销的 CVE 会从 per-year 文件里回溯删除，但历史年份保留原计数。
+        confidence: 9
+        reference:
+          - docs/5-yearly-stats-explained.en.md
+
+      - id: ytd
+        question:
+          en: What does "YTD" mean on the current-year row?
+          cn: 当前年份行的「YTD」是什么意思？
+        answer:
+          en: Year-to-date. The 2026 row's count is partial — only counts CVEs published through today. Compare with 2025 only after Dec 31.
+          cn: Year-to-date（年初至今）。2026 行的计数是局部的——只算到今天为止发布的 CVE。跟 2025 对比要等 12 月 31 日之后。
+        confidence: 9
+        reference:
+          - docs/5-yearly-stats-explained.en.md
+
+      - id: em-dash-avg
+        question:
+          en: Why does Avg score show `—` for some years?
+          cn: 为什么有些年份的 Avg score 显示 — ？
+        answer:
+          en: No scored CVEs in that year (mostly 2000 — pre-CNA era, no CVSS published). Em-dash (—) instead of 0.0 or NaN keeps the column visually stable and clearly distinguishes "no data" from "all zeros".
+          cn: 该年份没有已打分 CVE（主要是 2000 年——前 CNA 时代，没发布 CVSS）。用破折号（—）而不是 0.0 或 NaN，让列在视觉上稳定，并清楚区分「无数据」和「全 0」。
+        confidence: 9
+        reference:
+          - docs/5-yearly-stats-explained.en.md
+
+      - id: scored-vs-total
+        question:
+          en: Why does Scored / CVEs not equal 100% for older years?
+          cn: 为什么旧年份的 Scored / CVEs 不是 100%？
+        answer:
+          en: CVSS v2.0 was published in 2007; pre-2007 CVEs and CNAs that didn't publish CVSS scores leave the column empty. Modern years (2024+) are ~98% scored.
+          cn: CVSS v2.0 2007 年才发布；2007 年以前的 CVE 和不发布 CVSS 的 CNA 把分留空。现代年份（2024+）大约 98% 已打分。
+        confidence: 9
+        reference:
+          - docs/5-yearly-stats-explained.en.md
+
+  - name:
+      en: trends
+      cn: 趋势
+    qa:
+      - id: doubling
+        question:
+          en: Is CVE volume really doubling every 5 years?
+          cn: CVE 量真的是每 5 年翻一倍吗？
+        answer:
+          en: Roughly. 2018: ~16k → 2023: ~30k → 2026 YTD: ~56k. The growth is partly real (more software, more eyes) and partly structural (more CNAs, lower reporting bar).
+          cn: 大致如此。2018: ~16k → 2023: ~30k → 2026 至今: ~56k。增长部分是真实的（更多软件、更多关注），部分是结构性的（更多 CNA、报告门槛降低）。
+        confidence: 8
+        reference:
+          - docs/5-yearly-stats-explained.en.md
+
+      - id: scanning-cadence
+        question:
+          en: What scanning cadence should I use?
+          cn: 我应该用多频繁的扫描节奏？
+        answer:
+          en: If your scanning is annual, you're 6-12 months behind. Quarterly catches most. Monthly matches the cadence of NVD CPE dictionary updates. Continuous matches this repo's 4-hour refresh.
+          cn: 年度扫描会落后 6-12 个月。季度能赶上大部分。月份匹配 NVD CPE 字典的更新频率。持续匹配本仓库 4 小时刷新。
+        confidence: 9
+        reference:
+          - docs/0-cve-for-ai-builders.en.md

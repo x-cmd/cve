@@ -1,0 +1,102 @@
+id: x-cve-1-why-cve-for-ai-builders
+
+<data>:
+  - name:
+      en: basics
+      cn: 基础概念
+    qa:
+      - id: what-is-cve
+        question:
+          en: What is CVE?
+          cn: CVE 是什么？
+        answer:
+          en: Common Vulnerabilities and Exposures. A public catalog of every disclosed computer-security vulnerability, maintained by MITRE. ~370k records since CVE-1999-0001.
+          cn: 公共漏洞和暴露目录。由 MITRE 维护，自 CVE-1999-0001 起约 37 万条记录。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md
+
+      - id: what-is-cwe
+        question:
+          en: What is CWE?
+          cn: CWE 是什么？
+        answer:
+          en: Common Weakness Enumeration. The TAXONOMY of weakness types — categories like XSS, SQL Injection, Use After Free, Path Traversal. A CVE points at one or more CWE ids.
+          cn: 通用缺陷枚举。弱点**类型**的分类体系——XSS、SQL 注入、释放后重用、路径遍历等。一条 CVE 引用一个或多个 CWE id。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md
+
+      - id: cve-vs-cwe
+        question:
+          en: What's the difference between CVE and CWE?
+          cn: CVE 和 CWE 的区别？
+        answer:
+          en: CVE = a specific instance of a vulnerability (one record per finding). CWE = the category of weakness the bug belongs to. A CVE has a unique id (CVE-YYYY-NNNN) and references one or more CWE ids.
+          cn: CVE = 一个具体的漏洞（一条记录对应一个发现）。CWE = 该漏洞所属的弱点类别。一条 CVE 有唯一 id（CVE-YYYY-NNNN）并引用一个或多个 CWE id。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md
+
+  - name:
+      en: ai builder relevance
+      cn: 与 AI builder 的关系
+    qa:
+      - id: why-ai-care
+        question:
+          en: Why should AI builders care about CVE?
+          cn: 为什么 AI builder 应该关心 CVE？
+        answer:
+          en: Because every AI app is mostly other people's code — model runtimes, agent frameworks, vector DBs, MCP servers, IDE plugins. Every one of those ships CVEs. You can't secure what you don't track.
+          cn: 因为每个 AI 应用大部分是别人的代码——模型运行时、agent 框架、向量数据库、MCP server、IDE 插件。每个都有 CVE。不跟踪就没法保证安全。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md
+
+      - id: ai-specific-cwes
+        question:
+          en: Which CVE classes hit AI stacks hardest?
+          cn: 哪些 CVE 类对 AI 栈影响最大？
+        answer:
+          en: CWE-95 (Eval Injection) — your agent's tool-calling path. CWE-94 (Code Injection) — LLM-generated-code sandboxes. CWE-1336 (Template Injection) — Jinja/Handlebars on untrusted input. CWE-862 (Missing Authorization) — agent + internal API patterns.
+          cn: CWE-95（Eval 注入）—— agent 工具调用路径。CWE-94（代码注入）—— LLM 生成代码沙箱。CWE-1336（模板注入）—— Jinja/Handlebars 渲染不可信输入。CWE-862（缺少授权）—— agent + 内部 API 模式。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md
+
+      - id: llm-scanner-help
+        question:
+          en: Will an LLM-based vulnerability scanner help?
+          cn: LLM 漏洞扫描器有用吗？
+        answer:
+          en: An LLM can prioritize and triage CVE feeds (which is what dependabot / `npm audit` already do heuristically). It does NOT replace knowing your dependency tree. The intelligence here is upstream of any AI judgement.
+          cn: LLM 可以用来优先级排序和分流 CVE 源（这正是 dependabot / `npm audit` 在启发式上做的事）。它**不能**替代你对依赖树的了解。这里的情报是任何 AI 判断的上游。
+        confidence: 7
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md
+
+  - name:
+      en: scope
+      cn: 范围
+    qa:
+      - id: not-covered
+        question:
+          en: What isn't covered?
+          cn: 什么不在覆盖范围？
+        answer:
+          en: No EPSS / KEV (separate feeds). No CPE dictionary for SBOM matching. No patches — your stack, your problem. This repo is the intelligence, not the fix.
+          cn: 没有 EPSS / KEV（独立数据源）。没有 CPE 字典做 SBOM 匹配。没有补丁——修不修是你的事。这仓库只给情报，不给修复。
+        confidence: 9
+        reference:
+          - docs/0-cve-for-ai-builders.en.md
+
+      - id: how-to-prioritize
+        question:
+          en: How should I prioritize remediation?
+          cn: 修复优先级怎么排？
+        answer:
+          en: CVSS gives the starting rank. Pair with EPSS (exploitation probability, first.org/epss) and KEV (CISA Known Exploited, cisa.gov/known-exploited-vulnerabilities-catalog) for the "what should I drop everything for" answer.
+          cn: CVSS 是起点。搭配 EPSS（利用概率，first.org/epss）和 KEV（CISA 已知被利用，cisa.gov/known-exploited-vulnerabilities-catalog）才能回答「哪些必须立刻修」。
+        confidence: 9
+        reference:
+          - docs/1-why-cve-for-ai-builders.en.md

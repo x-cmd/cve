@@ -1,0 +1,102 @@
+id: x-cve-3-latest-cves-explained
+
+<data>:
+  - name:
+      en: columns
+      cn: 字段
+    qa:
+      - id: cve-col
+        question:
+          en: What does the CVE column mean?
+          cn: CVE 列是什么意思？
+        answer:
+          en: The full CVE id, e.g. CVE-2026-90616. Click it to go to the NVD detail page for that record (affected versions, references, timeline, ADP containers).
+          cn: 完整 CVE id，例如 CVE-2026-90616。点它跳到该记录的 NVD 详情页（影响版本、参考、时间线、ADP 容器）。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+      - id: score-col
+        question:
+          en: What does the Score column mean?
+          cn: Score 列是什么意思？
+        answer:
+          en: Highest CVSS base score across v4.0 → v3.1 → v3.0 → v2.0. Range 0-10. 9+ critical, 7-8.9 high, 4-6.9 medium, 0.1-3.9 low. Blank = no score published (not "low severity").
+          cn: v4.0 → v3.1 → v3.0 → v2.0 中最高的 CVSS 基础分。范围 0-10。9+ 严重、7-8.9 高、4-6.9 中、0.1-3.9 低。空白 = 没发布分数（不是「严重度低」）。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+      - id: cwe-col-plus
+        question:
+          en: Why does the CWE column show `(+2)` sometimes?
+          cn: CWE 列有时显示 (+2) 是什么意思？
+        answer:
+          en: The CVE references 3 CWE ids. The first is shown as a link; the count of additional ids is shown as `(+N)` so the column doesn't blow up.
+          cn: 该 CVE 引用了 3 个 CWE id。第一个显示为链接；其他几个以 (+N) 形式显示，避免列宽爆炸。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+      - id: description-truncated
+        question:
+          en: The description is truncated — where do I get the full text?
+          cn: 描述被截断了——去哪看完整版？
+        answer:
+          en: Click the CVE id → NVD detail page → "Description" section. Or run `x cve detail CVE-YYYY-NNNN` for the raw upstream JSON.
+          cn: 点 CVE id → NVD 详情页 → "Description" 段。或者跑 `x cve detail CVE-YYYY-NNNN` 看上游 JSON。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+  - name:
+      en: cvss
+      cn: CVSS
+    qa:
+      - id: cvss-versions
+        question:
+          en: Which CVSS version is used?
+          cn: 用哪个 CVSS 版本？
+        answer:
+          en: Whichever is highest. v4.0 is preferred (current spec, 2023+), v3.1 is current de-facto standard, v3.0 is older v3 variant, v2.0 is legacy. We store the single highest number, not the full vector.
+          cn: 哪个最高用哪个。v4.0 优先（当前规范，2023+），v3.1 是当前事实标准，v3.0 是更早的 v3 变体，v2.0 是遗留。我们只存最高的那个分数，不是完整向量。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+      - id: blank-cvss-2
+        question:
+          en: Why is the score blank for some recent CVEs?
+          cn: 为什么有些最近的 CVE 分是空的？
+        answer:
+          en: The CNA never published a CVSS vector for that record. Not "low severity". Old CVEs (1999-2016) and smaller CNAs often leave the field empty.
+          cn: 该 CNA 没发布 CVSS 向量。不是「严重度低」。早期 CVE（1999-2016）和较小的 CNA 经常留空。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+  - name:
+      en: patched
+      cn: patched 字段
+    qa:
+      - id: patched-zero
+        question:
+          en: If patched is 0, is it unpatched?
+          cn: patched 是 0 是不是没修？
+        answer:
+          en: Not necessarily. Many CNAs publish a fix without populating the structured `solutions[]` field. The maintainer fixed it; MITRE has no machine-readable signal.
+          cn: 不一定。很多 CNA 修了但没填这个结构化字段。维护者修了；MITRE 这边没有机器可读信号。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md
+
+      - id: patched-one
+        question:
+          en: If patched is 1, am I safe?
+          cn: patched 是 1 我就安全了吗？
+        answer:
+          en: Not necessarily. `patched: 1` only means a fix exists upstream. Whether your pinned dependency version pulls the fix in is a separate question — that's `dependabot` / Renovate / `npm audit fix` territory.
+          cn: 不一定。`patched: 1` 只代表上游有修复。你固定的依赖版本是不是拉到这个修复是另一个问题——那是 `dependabot` / Renovate / `npm audit fix` 的活儿。
+        confidence: 9
+        reference:
+          - docs/3-latest-cves-explained.en.md

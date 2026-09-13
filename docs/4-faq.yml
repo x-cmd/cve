@@ -1,0 +1,76 @@
+id: x-cve-4-top-cwes-explained
+
+<data>:
+  - name:
+      en: ranking logic
+      cn: 排序逻辑
+    qa:
+      - id: how-join
+        question:
+          en: How does the CVE × CWE join work?
+          cn: CVE × CWE join 是怎么做的？
+        answer:
+          en: Each CVE row has a `cwe` column with one or more ids (prefix stripped, joined by ;). We explode to one row per (CVE, CWE) pair. A CVE with cwe='79;352' contributes +1 to both CWE-79 and CWE-352.
+          cn: 每条 CVE 行的 cwe 列有一个或多个 id（前缀去掉，分号连接）。展开成一行一个 (CVE, CWE) 对。一条 cwe='79;352' 的 CVE 同时给 CWE-79 和 CWE-352 各 +1。
+        confidence: 9
+        reference:
+          - docs/4-top-cwes-explained.en.md
+
+      - id: count-vs-score
+        question:
+          en: What's the difference between "by count" and "by mean CVSS"?
+          cn: 「按数量」和「按平均 CVSS」有什么区别？
+        answer:
+          en: 'By count: which CWE classes appear in the most CVEs? By mean CVSS: which CWE classes, when they ship, hurt the most? Eval Injection is rare but high-CVSS; XSS is common but medium-CVSS.'
+          cn: 按数量：哪个 CWE 类别出现在最多 CVE 里？按平均 CVSS：哪个 CWE 类别一旦出现后果最严重？Eval 注入出现不多但分高；XSS 出现频繁但分中。
+        confidence: 9
+        reference:
+          - docs/4-top-cwes-explained.en.md
+
+      - id: since-2024
+        question:
+          en: Why is the window "since 2024"?
+          cn: 为什么窗口是「since 2024」？
+        answer:
+          en: Without a window, the all-years view is dominated by 2008-2018 CVEs — every SQL injection in the 2010 PHP era shows up, modern classes (LLM prompt injection, agent auth, MCP supply chain) never make the top. The since-2024 window reflects what engineers are getting wrong RIGHT NOW.
+          cn: 不限窗口的话，全年份视图会被 2008-2018 的旧 CVE 占满——2010 年代 PHP 时代的 SQL 注入雪崩全在榜上，现代类别（LLM prompt 注入、agent 鉴权、MCP 供应链）永远上不了榜。since 2024 窗口反映工程师**现在**还在犯的错误。
+        confidence: 9
+        reference:
+          - docs/4-top-cwes-explained.en.md
+
+      - id: min-10-samples
+        question:
+          en: Why does the mean-CVSS ranking require ≥ 10 samples per CWE?
+          cn: 为什么平均 CVSS 排名要求每个 CWE 至少 10 个样本？
+        answer:
+          en: A single CWE-506 Embedded Malicious Code CVE with score 9.8 would otherwise dominate the ranking — that's a single incident, not a class trend. The 10-sample floor suppresses single-CVE outliers and ensures the mean reflects a pattern.
+          cn: 不设下限的话，一条 CWE-506 嵌入式恶意代码 CVE（9.8 分）会霸榜——那只是一个事件，不是类别趋势。10 样本下限压掉单 CVE 离群点，让平均分反映模式。
+        confidence: 9
+        reference:
+          - docs/4-top-cwes-explained.en.md
+
+  - name:
+      en: stability
+      cn: 稳定性
+    qa:
+      - id: rankings-shift
+        question:
+          en: Why do the rankings shift every CI run?
+          cn: 为什么排名每次 CI 跑都会变？
+        answer:
+          en: Two reasons: (1) new CVEs landing (~50-200 per day in 2026) may reference new CWE ids or reinforce existing ones; (2) CNAs can re-classify CVEs by updating `problemTypes[]` (e.g. adding CWE-862 to a CVE that originally had only CWE-79).
+          cn: 两种原因：(1) 新 CVE 入库（2026 年每天 50-200 条）可能引用新 CWE id 或加强现有类别；(2) CNA 可以通过更新 `problemTypes[]` 给 CVE 重新分类（例如给原本只有 CWE-79 的 CVE 加上 CWE-862）。
+        confidence: 9
+        reference:
+          - docs/4-top-cwes-explained.en.md
+
+      - id: git-log-rankings
+        question:
+          en: Can I see how the rankings changed historically?
+          cn: 能看到排名的历史变化吗？
+        answer:
+          en: Yes — `git log -- report/cwe.top100.by-cve-count.since-2024.report.tsv`. Each CI run commits the regenerated report to main.
+          cn: 能——`git log -- report/cwe.top100.by-cve-count.since-2024.report.tsv`。每次 CI 跑都会把重新生成的 report commit 到 main。
+        confidence: 9
+        reference:
+          - docs/4-top-cwes-explained.en.md
