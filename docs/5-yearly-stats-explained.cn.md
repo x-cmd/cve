@@ -60,13 +60,18 @@ contribute zero scores.
 
 ## How fast is the catalog actually growing?
 
-A rough rule of thumb: CVE volume is roughly doubling every five
-years. Recent years:
+Recent years:
 
-- 2018: ~16,000 CVEs
-- 2023: ~30,000
-- 2025: ~43,000
-- 2026: ~75,000 YTD on track
+- 2018: 16,188 CVEs
+- 2020: 19,392
+- 2022: 26,445
+- 2024: 38,451
+- 2026 YTD (Sep 13): 56,168 — on track for ~75,000 by year-end
+
+The doubling interval is shrinking: 2018 → 2023 (5 years) nearly
+doubled (16k → 30k), 2023 → 2026 (3 years) is on track to 2.5×.
+2024 → 2026 is doubling in just two years. The growth is
+accelerating, not stable.
 
 If your security scanning cadence is annual, you're 6-12 months
 behind on the most recent year's worth of disclosures. The 4-hour

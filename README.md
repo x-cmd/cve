@@ -8,7 +8,7 @@
 >
 > - **[The 10 newest CVEs](#the-10-newest-cves)** — what landed in your stack this week.
 > - **[What CVEs keep teaching us](#what-cves-keep-teaching-us)** — top weakness classes since 2024; the same names show up again and again.
-> - **[How fast is CVE growing?](#how-fast-is-cve-growing)** — volume doubles every 5 years; is your scanner keeping up?
+> - **[How fast is CVE growing?](#how-fast-is-cve-growing)** — 2026 is on track for ~75k, double 2024's 38k; is your scanner keeping up?
 > - **[Reports](#reports)** — the raw TSVs behind the tables above (free, no API key).
 > - **[About x-cmd/cve](#about-xcmdcve)** — this repo is the producer, `x cve` is the consumer.
 > - **[FAQ](#faq)** — the questions people actually ask.
@@ -109,8 +109,9 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 
 ## How fast is CVE growing?
 
-> Volume roughly doubles every five years — if your scanning cadence
-> is annual, you're 6-12 months behind the most recent year. Source:
+> 2026 is on track for ~75,000 CVEs — double 2024's 38,451 in
+> just two years. If your scanning cadence is annual, you're
+> 6-12 months behind the most recent year. Source:
 > [`report/cve.report.tsv`](./report/cve.report.tsv).
 
 | Year | CVEs | Scored | Avg score | Max score |
