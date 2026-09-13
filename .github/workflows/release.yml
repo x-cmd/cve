@@ -236,6 +236,13 @@ jobs:
       - name: Generate year stats report
         run: python3 .x-cmd/report.py
 
+      - name: Generate latest-N CVE table
+        # Emits report/cve.latest-10.report.{tsv,md} for the README's
+        # front-of-page "10 newest CVEs" table. Reads only the head of
+        # each per-year TSV (sorted desc by NNNN within year) so it
+        # runs in well under a second on 28 years of data.
+        run: python3 .x-cmd/latest.py
+
       - name: Inline reports into README + README.cn
         # Stitch both report/cve.report.md (per-year stats) and
         # report/cwe.report.md (top-10 CWE rankings) into README.md
@@ -403,6 +410,17 @@ jobs:
                   cwe_block_md = Path("report/cwe.report.md")
                   cwe_begin = "<!-- BEGIN cwe.report.md -->"
                   cwe_end = "<!-- END cwe.report.md -->"
+              # Stitch latest-10 FIRST so it lands in position #1 (right
+              # under the H1 "The 10 newest CVEs" / "最近 10 个 CVE"),
+              # then cwe in position #2 (no ## heading), then cve in
+              # position #3 with its own `## CVE growth trend` heading.
+              text = stitch(
+                  text,
+                  Path("report/cve.latest-10.report.md"),
+                  "<!-- BEGIN cve.latest-10.report.md -->",
+                  "<!-- END cve.latest-10.report.md -->",
+                  "",  # the .md carries its own H1 + caption
+              )
               # Stitch cwe FIRST so it lands in position #2 (no ## heading),
               # then stitch cve so it lands in position #3 with its own
               # `## CVE growth trend` (or `## CVE 增长趋势`) heading.
@@ -443,6 +461,8 @@ jobs:
               report/README.md \
               report/cve.report.md \
               report/cve.report.tsv \
+              report/cve.latest-10.report.md \
+              report/cve.latest-10.report.tsv \
               report/cwe.report.md \
               report/cwe.report.zh.md \
               report/cwe.top100.by-cve-count.report.tsv \

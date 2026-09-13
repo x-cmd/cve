@@ -1,10 +1,32 @@
-# What CVEs keep teaching us
+# The 10 newest CVEs
 
 <!-- cve-data-as-of:START -->
 **Data as of: 2026-09-13** _(refreshed daily from upstream cvelistV5 — pull this page tomorrow and the rankings will have moved)._
 <!-- cve-data-as-of:END -->
 
 > 🌐 **中文版：[README.cn.md](./README.cn.md)** —— same data, Chinese CWE names (MITRE 官方中文翻译, ~91% 覆盖；缺失自动回退英文).
+
+<!-- BEGIN cve.latest-10.report.md -->
+
+**The 10 newest CVEs** (descending CVE id = newest published first).
+
+| CVE | Score | Product | CWE | Description |
+| --- | ---:  | ---     | :-: | ---         |
+| [CVE-2026-90651](https://nvd.nist.gov/vuln/detail/CVE-2026-90651) | 8.1 | Socket/Socket Firewall | [295](https://cwe.mitre.org/data/definitions/295.html) | Socket Firewall (socketdev/socket-registry-firewall) in registry mode before… |
+| [CVE-2026-90648](https://nvd.nist.gov/vuln/detail/CVE-2026-90648) | 7.1 | WebAssembly/wabt | [252](https://cwe.mitre.org/data/definitions/252.html) | wasm2c in WebAssembly wabt through 1.0.41 allows sandbox escape in some… |
+| [CVE-2026-90647](https://nvd.nist.gov/vuln/detail/CVE-2026-90647) | 9.1 | Kalkitech/ASE2000 V2 Communication Test Set | [295](https://cwe.mitre.org/data/definitions/295.html) | ASE/Kalkitech ASE2000 V2 Communication Test Set 2.35 through 2.37 on Windows… |
+| [CVE-2026-90616](https://nvd.nist.gov/vuln/detail/CVE-2026-90616) | 7.4 | Flatpak/Flatpak | [61](https://cwe.mitre.org/data/definitions/61.html) | In Flatpak before 1.18.1, a malicious sandboxed app can obtain arbitrary read… |
+| [CVE-2026-90560](https://nvd.nist.gov/vuln/detail/CVE-2026-90560) | 8.8 | luben/zstd-jni | [125](https://cwe.mitre.org/data/definitions/125.html) | zstd-jni versions 1.2.0 through 1.5.7-13 contain an out-of-bounds read… |
+| [CVE-2026-90559](https://nvd.nist.gov/vuln/detail/CVE-2026-90559) | 8.7 | xerial/snappy-java | [787](https://cwe.mitre.org/data/definitions/787.html) | snappy-java through 1.1.10.8 contains an out-of-bounds write vulnerability in… |
+| [CVE-2026-90558](https://nvd.nist.gov/vuln/detail/CVE-2026-90558) | 9.8 | irontec/sngrep | [121](https://cwe.mitre.org/data/definitions/121.html) | sngrep through 1.8.4 contains stack buffer overflow vulnerabilities in SIP… |
+| [CVE-2026-90557](https://nvd.nist.gov/vuln/detail/CVE-2026-90557) | 6.9 | freeciv/freeciv | [125](https://cwe.mitre.org/data/definitions/125.html) | Freeciv versions 3.1.0 through 3.2.5 contain an out-of-bounds read… |
+| [CVE-2026-90556](https://nvd.nist.gov/vuln/detail/CVE-2026-90556) | 8.5 | freeciv/freeciv | [122](https://cwe.mitre.org/data/definitions/122.html) | Freeciv versions before 3.2.6 contain a heap buffer overflow in worklist_load()… |
+| [CVE-2026-90555](https://nvd.nist.gov/vuln/detail/CVE-2026-90555) | 7.1 | vllm-project/vLLM | [409](https://cwe.mitre.org/data/definitions/409.html) | vLLM versions before 0.28.0 fail to validate audio sample rate headers in the… |
+
+_Click a CVE id for the full record on NVD._
+<!-- END cve.latest-10.report.md -->
+
+# What CVEs keep teaching us
 
 > This page is a living mirror of the upstream CVE index. The tables
 > below (per-year stats, top-10 CWE mistakes, top-10 by severity) are
@@ -90,7 +112,7 @@ _Per-year CVE volume and severity._
 
 ## Reports
 
-The two tables above are sliced from the seven derived reports in
+The tables above are sliced from the derived reports in
 [`report/`](./report/) (sibling of `data/`) — see
 [`report/README.md`](./report/README.md) for methodology, the SINCE_DATE
 cutoff, and how the top-10 markdown is sliced from the top-100 TSV.
@@ -101,6 +123,13 @@ cutoff, and how the top-10 markdown is sliced from the top-100 TSV.
 | ---  | ---    | ---    |
 | [`report/cve.report.md`](./report/cve.report.md)   | Markdown table | all years |
 | [`report/cve.report.tsv`](./report/cve.report.tsv) | TSV            | all years |
+
+### Latest-N CVEs (front-of-page table)
+
+| File | Format | Window |
+| ---  | ---    | ---    |
+| [`report/cve.latest-10.report.md`](./report/cve.latest-10.report.md)   | Markdown table | newest 10 CVEs |
+| [`report/cve.latest-10.report.tsv`](./report/cve.latest-10.report.tsv) | TSV            | newest 10 CVEs |
 
 ### CWE rankings — top 100 TSVs (one per axis × window)
 
@@ -167,21 +196,25 @@ shell module backed by the per-year TSVs this repo publishes daily.
 ├── .x-cmd/
 │   ├── tsv.py              # full rebuild from a local cvelistV5 clone
 │   ├── cwe.py              # MITRE CWE catalog mirror → data/cwe.tsv + .slim.tsv
-│   ├── cwe_report.py       # aggregate data/cve-*.tsv ∩ data/cwe.slim.tsv → report/cwe.report.{tsv,md}
+│   ├── cwe_zh.py           # MITRE Chinese mirror (cwe.org.cn) → data/cwe.zh.tsv (issue #2)
+│   ├── cwe_report.py       # aggregate data/cve-*.tsv ∩ data/cwe.slim.tsv (+ .zh.tsv) → report/cwe.report.{tsv,md,zh.md}
 │   ├── report.py           # per-year stats → report/cve.report.{tsv,md}
+│   ├── latest.py           # newest-N CVEs → report/cve.latest-N.report.{tsv,md}
 │   └── _cve_index.py       # shared parse / IO helpers
 ├── data/                   # regenerated on every CI run — NOT in git
 │   ├── cve-YYYY.tsv        # one TSV per year (rows in DESCENDING cve-id order)
 │   ├── index.tsv           # year \t rows \t file
 │   └── cve.tsv.state.json  # per-file mtimes (for tsv.py incremental)
 └── report/                 # regenerated on every CI run — committed to main
-    ├── README.md           # docks the seven files + methodology
-    ├── cve.report.{tsv,md} # per-year stats
-    ├── cwe.top100.by-cve-count.report.tsv               # all years, by count
-    ├── cwe.top100.by-cve-score.report.tsv               # all years, by score
+    ├── README.md                              # docks the files + methodology
+    ├── cve.report.{tsv,md}                    # per-year stats
+    ├── cve.latest-10.report.{tsv,md}          # newest 10 CVEs (front-of-page table)
+    ├── cwe.top100.by-cve-count.report.tsv     # all years, by count
+    ├── cwe.top100.by-cve-score.report.tsv     # all years, by score
     ├── cwe.top100.by-cve-count.since-2024.report.tsv   # since 2024, by count
     ├── cwe.top100.by-cve-score.since-2024.report.tsv   # since 2024, by score
-    └── cwe.report.md       # since 2024, top-10 markdown (sliced from the TSVs)
+    ├── cwe.report.md                          # English, since 2024, top-10 markdown
+    └── cwe.report.zh.md                       # Chinese, since 2024, top-10 markdown
 ├── README.cn.md            # Chinese version of README.md (auto-updated)
 └── .github/workflows/
     └── release.yml         # every 4h: tsv.py --rebuild → reports → xz → upload
@@ -251,9 +284,22 @@ python3 .x-cmd/tsv.py --rebuild
 # data/cwe.slim.tsv (id+name only, used for joins).
 python3 .x-cmd/cwe.py
 
+# Fetch MITRE Chinese mirror (cwe.org.cn) → data/cwe.zh.tsv.
+# 30-day local cache; on missing data the Chinese README falls
+# back to English names (issue #2).
+python3 .x-cmd/cwe_zh.py
+
 # Aggregate cross-reference: how many CVEs reference each CWE,
-# mean + max score. Reads data/cve-*.tsv + data/cwe.slim.tsv.
+# mean + max score. Reads data/cve-*.tsv + data/cwe.slim.tsv
+# + data/cwe.zh.tsv.
 python3 .x-cmd/cwe_report.py
+
+# Newest-N CVEs (default 10) for the front-of-page table.
+# Reads only the head of each per-year TSV.
+python3 .x-cmd/latest.py
+
+# Per-year stats → report/cve.report.{tsv,md}.
+python3 .x-cmd/report.py
 ```
 
 ### CWE data — what we publish vs what we derive
@@ -342,3 +388,146 @@ Downstream consumers of these TSVs must retain that attribution.
 - [x-cmd/cwe module docs](https://x-cmd.com/mod/cwe) — companion module
 - [x-cmd/x-cmd](https://github.com/x-cmd/x-cmd) — module source (`mod/cve/`)
 - [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5) — upstream data
+
+## FAQ
+
+### Where does the data come from?
+
+The CVE rows come straight from
+[CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5),
+MITRE's official JSON repository of every published CVE. Our
+[`.x-cmd/tsv.py`](./.x-cmd/tsv.py) script clones that repo once per
+CI run, walks every `cves/YYYY/NNxxx/CVE-YYYY-NNNNN.json` file, and
+emits the 9-column slim TSVs in `data/`. No web scraping, no
+upstream API keys, no transforms on the descriptions or CWE lists
+beyond whitespace folding.
+
+### How fresh is the data?
+
+The release workflow runs every 4 hours (`37 */4 * * *` UTC,
+see [`.github/workflows/release.yml`](./.github/workflows/release.yml))
+plus on every push to `main`. When MITRE publishes a new CVE, it
+shows up here within the next 4 hours at the latest. The
+"Data as of: YYYY-MM-DD" line at the top of this README is the
+ground-truth stamp — it is pulled from the freshly-stitched
+`report/cve.report.md` so it can never drift away from the data.
+
+### Why isn't the table bigger / why only Top 10?
+
+The Top-10 cutoff on the rankings is the smallest number that's
+still statistically defensible: each row aggregates hundreds to
+tens of thousands of CVEs, so the head of the table is stable
+across runs. Top-100 lives in
+[`report/cwe.top100.by-*.report.tsv`](./report/) for callers that
+need it (e.g. `x cve ls` uses the full TSV, not the markdown).
+The 9-column `data/cve-*.tsv` files carry the entire catalog with
+no truncation beyond the first sentence of each description.
+
+### Why per-year TSVs instead of one big file?
+
+Per-year files match how the upstream `cvelistV5` is already laid
+out on disk (one directory per year), so the rebuild is a clean
+local walk — no full re-parse when only 2026 changes. They also let
+`x cve` consumers download just the year(s) they care about:
+xz-compressed `cve-2026.tsv` is ~5 MB, vs ~21 MB for the full
+`cve-all.tar.xz`. And per-year files are trivially diffable in git
+to see which year got new rows between CI runs.
+
+### Why does the data say "9999 is the top id" when 2026 clearly has more?
+
+That was a real bug — fixed in commit `46759ff`
+([issue #3](https://github.com/x-cmd/cve/issues/3)). MITRE began
+issuing 5-digit CVE sequence ids (`NNNN >= 10000`) around 2025; the
+old lexicographic sort put `9999` ahead of `10000`–`99999`, so
+`x cve | head` only ever showed `CVE-YYYY-9999`. We now sort by the
+NNNN integer and the real top ids (e.g. `CVE-2026-90616`) surface
+correctly.
+
+### What does the "Top 10 CWE by CVE count" actually measure?
+
+Each CVE row can list one or more CWE ids (the weakness taxonomy
+it maps to). For every CWE in MITRE's catalog, we count how many
+CVEs in the time window reference it, and sort the catalog by that
+count descending. The "since 2024" window drops CVEs from before
+2024 so the ranking reflects what engineers are getting wrong
+*now* — adding 2008's SQL-injection pile-up would just re-rank
+[SQL Injection](https://cwe.mitre.org/data/definitions/89.html) at
+the top forever.
+
+### What does "Top 10 CWE by avg CVSS score" measure?
+
+Same `cwe` join, but we take the **mean** CVSS base score across
+the CVEs that reference each CWE (with at least 10 samples, to
+suppress single-CWE outliers). This answers "which mistake, when
+made, hurts the most?" rather than "which mistake happens most
+often?". Embedded malicious code (CWE-506) and eval injection
+(CWE-95) top the list because their CVEs tend to score 9+.
+
+### Where do the Chinese CWE names in `README.cn.md` come from?
+
+We pull them from
+[cwe.org.cn](https://cwe.org.cn) — MITRE's official Chinese
+mirror. The fetcher lives in [`.x-cmd/cwe_zh.py`](./.x-cmd/cwe_zh.py)
+and writes
+[`data/cwe.zh.tsv`](./data/cwe.zh.tsv) (~91% coverage of the
+969-entry CWE catalog; the remaining 9% are mostly views and
+deprecated ids without a Chinese translation yet). CWE names
+missing from the Chinese catalog fall back to the English name in
+the rendered table, per
+[issue #2](https://github.com/x-cmd/cve/issues/2).
+
+### Can I consume the data without `x cve`?
+
+Yes. The release assets are plain xz-compressed TSVs:
+
+```sh
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-2026.tsv.xz \
+    | xz -dc | head -5
+```
+
+…or pull the whole bundle:
+
+```sh
+curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-all.tar.xz \
+    | tar -xJ -C ./local-cve
+```
+
+The TSV columns are documented under
+[TSV columns](#tsv-列9列) below — `cve`, `year`, `no`, `vp`,
+`ghsa`, `score`, `patched`, `cwe`, `desc`. No proprietary schema,
+no API key required.
+
+### How do I run the scripts locally?
+
+The four scripts in [`.x-cmd/`](./.x-cmd/) are zero-dependency
+Python 3.8+:
+
+```sh
+python3 .x-cmd/tsv.py --src /path/to/cvelistV5/cves --out data --rebuild
+python3 .x-cmd/cwe.py                 # MITRE CWE catalog → data/cwe.tsv
+python3 .x-cmd/cwe_zh.py              # MITRE Chinese mirror → data/cwe.zh.tsv
+python3 .x-cmd/cwe_report.py          # Top-N CWE rankings → report/cwe.report.{tsv,md,zh.md}
+python3 .x-cmd/report.py              # Per-year stats → report/cve.report.{tsv,md}
+python3 .x-cmd/latest.py              # Latest-N CVEs → report/cve.latest-N.report.{tsv,md}
+```
+
+All five read from `data/` and write to `report/`. `tsv.py` is the
+only one that needs a network clone of `cvelistV5`; the rest are
+purely local. The full pipeline that CI runs is described under
+[CI](#持续集成ci).
+
+### What's the licence?
+
+Apache 2.0 for everything we wrote (scripts, this README, the
+derived `report/*` aggregates). See [`LICENSE`](./LICENSE).
+The underlying CVE records are CC BY 4.0 from CVEProject — keep
+that attribution when redistributing the per-year TSVs.
+
+### I found a missing/wrong CWE name in the Chinese table.
+
+The Chinese catalog is fetched fresh every CI run from cwe.org.cn
+and cached locally under `.x-cmd/.cwe_zh.cache/` for 30 days.
+If a name is wrong, the upstream source is `https://cwe.org.cn/data/definitions/<id>.html`
+— please open an issue there or here; we re-fetch on the next
+scheduled run after the upstream fix lands. To force a re-fetch
+right now, run `python3 .x-cmd/cwe_zh.py --force`.
