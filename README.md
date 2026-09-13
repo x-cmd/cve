@@ -102,6 +102,30 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 
 ![CVE records per year, 1999 → 2026](docs/assets/cve-growth.svg)
 
+**CVSS scoring started going mainstream around 2021.** Look at the
+amber band (unscored) at the top of each bar:
+
+| Year | Scored % |
+|---|---|
+| 2017 | 9.3% |
+| 2019 | 21.9% |
+| 2020 | 35.7% |
+| **2021** | **47.9%** — first year the scored share approaches half |
+| 2022 | 66.1% — crosses the halfway line |
+| 2023 | 80.8% |
+| 2024+ | 96%+ |
+
+For most of CVE's first two decades, the majority of records
+shipped without a published CVSS vector. CNAs didn't have to
+publish one and most didn't bother. The inflection around
+**2021–2022** tracks the broad adoption of CVSS v3.1 across
+the Linux CNA, Microsoft, and other big vendors — plus the
+NVD's stricter "no score = deprioritized" posture. By 2024
+it's basically universal.
+
+<details>
+<summary>Per-year CVE volume, scored count, and CVSS stats (click to expand)</summary>
+
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
 | 2026 _(YTD as of 2026-09-13)_ | 56,168 | 52,947 | 7.08 | 10.0 |
@@ -133,6 +157,8 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
 | **Total** | **372,348** | **200,917** | **6.87** | **10.0** |
+
+</details>
 <!-- END cve.report.md -->
 
 ## Reports
@@ -444,6 +470,79 @@ For prioritization, pair CVSS with [EPSS](https://www.first.org/epss/)
 [CISA KEV catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
 (Known Exploited Vulnerabilities) — a CVE with no CVSS score but
 in the KEV catalog is still actively exploited in the wild.
+
+### How does CVSS scoring actually work?
+
+CVSS is a 0-10 severity score published by the **CNA** (CVE
+Numbering Authority — usually the vendor or a coordinator like
+MITRE). The score is computed from a structured vector of base
+metrics in three categories:
+
+- **Exploitability** — Attack Vector (Network / Adjacent / Local
+  / Physical), Attack Complexity, Privileges Required, User
+  Interaction.
+- **Impact** — Confidentiality, Integrity, Availability impact on
+  the vulnerable component (and on the downstream component, for
+  v3.x onward).
+- **Scope** (v3.0+) — whether the bug stays in one component or
+  escapes to a wider system.
+
+The CNA fills in the vector, the calculator (e.g.
+[NVD's](https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator))
+emits the score. The full vector (not just the number) is what
+NVD and this repo's TSV preserve in the upstream JSON.
+
+### CVSS v2 vs v3.0 vs v3.1 vs v4.0 — what's the difference?
+
+Three versions live side-by-side in `data/cve-YYYY.tsv`. We
+store the highest score across v4 → v3.1 → v3.0 → v2:
+
+- **v2.0** (2007) — base metrics only, no Scope. Legacy; appears
+  on most pre-2017 records.
+- **v3.0** (2015) — added Scope (Unchanged / Changed), more
+  granular impact. Largely superseded by 3.1.
+- **v3.1** (2019) — clarified several ambiguities in v3.0 (e.g.
+  the Privileges Required metric when Scope is Changed). Current
+  de-facto standard until v4.0 fully takes over.
+- **v4.0** (2023) — finer-grained severity bands (6 instead of
+  4), explicit threat metric (EPSS-style exploitation info),
+  environmental and supplemental metrics formally separated. Used
+  on most new records from 2024 onward.
+
+For the math, see the
+[official spec](https://www.first.org/cvss/v4.0/specification-document).
+For practical purposes: a CVE's score is whichever version the
+CNA chose to publish; absent a v4.0 vector, fall back to v3.1,
+then v3.0, then v2.0.
+
+### CVSS vs EPSS vs KEV — how do they relate?
+
+Three complementary signals, three different questions:
+
+- **CVSS** (Common Vulnerability Scoring System, 0-10) — *How
+  bad is this bug, in principle?* A static measure of severity
+  from the CNA's vector. This repo.
+- **EPSS** (Exploitation Prediction Scoring System, 0-1) —
+  *What is the probability that this CVE will be exploited in the
+  next 30 days?* A statistical estimate from [FIRST.org](https://www.first.org/epss/),
+  derived from observation of real-world exploitation signals.
+  Not in this repo.
+- **KEV** (Known Exploited Vulnerabilities Catalog) — *Is this
+  CVE on CISA's actively-exploited list, yes/no?* A binary signal
+  maintained by [CISA](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+  under Binding Operational Directive 22-01. Not in this repo.
+
+A useful triage rule of thumb:
+
+| Signal | When to act |
+|---|---|
+| In **KEV** | Patch immediately — already exploited in the wild |
+| High **EPSS** (≥ 0.5) | Patch in the next cycle |
+| High **CVSS** (≥ 7) | Plan a patch within your normal SLA |
+| All three low | Track for the next quarterly scan |
+
+A blank CVSS does not mean a CVE is safe — check EPSS and KEV
+before deprioritizing.
 
 ### Where do the Chinese CWE names come from?
 
