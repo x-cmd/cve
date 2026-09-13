@@ -24,16 +24,16 @@
 
 | CVE | Score | Product | CWE | Description |
 | --- | ---:  | ---     | :-: | ---         |
-| [CVE-2026-90679](https://nvd.nist.gov/vuln/detail/CVE-2026-90679) | 4.3 | Forgejo/Forgejo | [348](https://cwe.mitre.org/data/definitions/348.html) | Forgejo 13.0.0 through 16.0.4, when "[federation] ENABLED = true" is set, has a… |
-| [CVE-2026-90678](https://nvd.nist.gov/vuln/detail/CVE-2026-90678) | 7.5 | HAProxy/HAProxy | [130](https://cwe.mitre.org/data/definitions/130.html) | An issue was discovered in HAProxy 3.3.0 through 3.4.4 and in 3.5-dev1 through… |
-| [CVE-2026-90668](https://nvd.nist.gov/vuln/detail/CVE-2026-90668) | 8.7 | UnrealIRCd/UnrealIRCd | [770](https://cwe.mitre.org/data/definitions/770.html) | The webserver in UnrealIRCd 6.0.5 through 6.2.6 before 6.2.7 does not limit the… |
-| [CVE-2026-90651](https://nvd.nist.gov/vuln/detail/CVE-2026-90651) | 8.1 | Socket/Socket Firewall | [295](https://cwe.mitre.org/data/definitions/295.html) | Socket Firewall (socketdev/socket-registry-firewall) in registry mode before… |
-| [CVE-2026-90648](https://nvd.nist.gov/vuln/detail/CVE-2026-90648) | 7.1 | WebAssembly/wabt | [252](https://cwe.mitre.org/data/definitions/252.html) | wasm2c in WebAssembly wabt through 1.0.41 allows sandbox escape in some… |
-| [CVE-2026-90647](https://nvd.nist.gov/vuln/detail/CVE-2026-90647) | 9.1 | Kalkitech/ASE2000 V2 Communication Test Set | [295](https://cwe.mitre.org/data/definitions/295.html) | ASE/Kalkitech ASE2000 V2 Communication Test Set 2.35 through 2.37 on Windows… |
-| [CVE-2026-90616](https://nvd.nist.gov/vuln/detail/CVE-2026-90616) | 7.4 | Flatpak/Flatpak | [61](https://cwe.mitre.org/data/definitions/61.html) | In Flatpak before 1.18.1, a malicious sandboxed app can obtain arbitrary read… |
-| [CVE-2026-90560](https://nvd.nist.gov/vuln/detail/CVE-2026-90560) | 8.8 | luben/zstd-jni | [125](https://cwe.mitre.org/data/definitions/125.html) | zstd-jni versions 1.2.0 through 1.5.7-13 contain an out-of-bounds read… |
-| [CVE-2026-90559](https://nvd.nist.gov/vuln/detail/CVE-2026-90559) | 8.7 | xerial/snappy-java | [787](https://cwe.mitre.org/data/definitions/787.html) | snappy-java through 1.1.10.8 contains an out-of-bounds write vulnerability in… |
-| [CVE-2026-90558](https://nvd.nist.gov/vuln/detail/CVE-2026-90558) | 9.8 | irontec/sngrep | [121](https://cwe.mitre.org/data/definitions/121.html) | sngrep through 1.8.4 contains stack buffer overflow vulnerabilities in SIP… |
+| [CVE-2026-90783](https://nvd.nist.gov/vuln/detail/CVE-2026-90783) | 8.5 | Moritz Bunkus/MKVToolNix | [680](https://cwe.mitre.org/data/definitions/680.html) | MKVToolNix through 101.0 contains a heap buffer overflow in the bundled avilib… |
+| [CVE-2026-90782](https://nvd.nist.gov/vuln/detail/CVE-2026-90782) | 6.0 | Systerel/S2OPC | [476](https://cwe.mitre.org/data/definitions/476.html) | S2OPC through 1.7.3 contains a null pointer dereference in… |
+| [CVE-2026-90781](https://nvd.nist.gov/vuln/detail/CVE-2026-90781) | 4.8 | ALSA Project/alsa-lib | [193](https://cwe.mitre.org/data/definitions/193.html) | alsa-lib through 1.2.16.1 contains a stack buffer overflow in the… |
+| [CVE-2026-90780](https://nvd.nist.gov/vuln/detail/CVE-2026-90780) | 8.7 | SIPp/sipp | [120](https://cwe.mitre.org/data/definitions/120.html) | SIPp through 3.7.7 contains a buffer overflow vulnerability in the get_header()… |
+| [CVE-2026-90779](https://nvd.nist.gov/vuln/detail/CVE-2026-90779) | 8.7 | SIPp/sipp | [121](https://cwe.mitre.org/data/definitions/121.html) | SIPp through 3.7.7 contains a stack buffer overflow vulnerability in… |
+| [CVE-2026-90778](https://nvd.nist.gov/vuln/detail/CVE-2026-90778) | 8.7 | SIPp/sipp | [120](https://cwe.mitre.org/data/definitions/120.html) | SIPp through 3.7.7 contains a buffer overflow vulnerability in get_peer_tag()… |
+| [CVE-2026-90777](https://nvd.nist.gov/vuln/detail/CVE-2026-90777) | 8.8 | espnet/espnet | [502](https://cwe.mitre.org/data/definitions/502.html) | ESPnet before 202609 deserializes pretrained model checkpoints using torch.load… |
+| [CVE-2026-90776](https://nvd.nist.gov/vuln/detail/CVE-2026-90776) | 8.7 | nodemailer/nodemailer | [407](https://cwe.mitre.org/data/definitions/407.html) | Nodemailer versions 9.1.0 through 10.0.4 contain a quadratic time complexity… |
+| [CVE-2026-90775](https://nvd.nist.gov/vuln/detail/CVE-2026-90775) | 7.1 | PostGIS/address_standardizer | [125](https://cwe.mitre.org/data/definitions/125.html) | PostGIS address_standardizer through 3.7.0 fails to validate the Weight… |
+| [CVE-2026-90774](https://nvd.nist.gov/vuln/detail/CVE-2026-90774) | 8.7 | orhun/rustypaste | [22](https://cwe.mitre.org/data/definitions/22.html) | rustypaste before 0.18.1 validates the destination path before applying the… |
 
 _Click a CVE id for the full record on NVD._
 <!-- END cve.latest-10.report.md -->
@@ -44,7 +44,7 @@ _Click a CVE id for the full record on NVD._
 
 <!-- BEGIN cwe.report.zh.md -->
 
-自 2024 年以来，共 117,528 个 CVE，涉及 683 个不同的 CWE。
+自 2024 年以来，共 117,604 个 CVE，涉及 683 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -52,16 +52,16 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
-| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | 网页生成过程中的输入中和不当（“跨站脚本”） | 17,205 | 6.17 |
-| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | SQL 命令中使用的特殊元素中和不当（“SQL 注入”） | 7,731 | 7.46 |
-| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | 缺少授权 | 6,336 | 5.97 |
-| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | 对下游组件使用的输出中特殊元素的未正确中和 ('注入') | 4,295 | 7.02 |
-| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | 对受限目录的路径名限制不当（“路径遍历”） | 3,322 | 7.18 |
+| 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | 网页生成过程中的输入中和不当（“跨站脚本”） | 17,210 | 6.17 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | SQL 命令中使用的特殊元素中和不当（“SQL 注入”） | 7,738 | 7.46 |
+| 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | 缺少授权 | 6,338 | 5.97 |
+| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | 对下游组件使用的输出中特殊元素的未正确中和 ('注入') | 4,302 | 7.02 |
+| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | 对受限目录的路径名限制不当（“路径遍历”） | 3,323 | 7.18 |
 | 6 | [352](https://cwe.mitre.org/data/definitions/352.html) | 跨站请求伪造 (CSRF) | 3,276 | 5.81 |
-| 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | 不当的代码生成控制（“代码注入”） | 2,793 | 6.79 |
+| 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | 不当的代码生成控制（“代码注入”） | 2,796 | 6.79 |
 | 8 | [416](https://cwe.mitre.org/data/definitions/416.html) | 释放后重用 (Use After Free) | 2,570 | 7.67 |
-| 9 | [78](https://cwe.mitre.org/data/definitions/78.html) | 对操作系统命令中使用的特殊元素的中和不当（“OS 命令注入”） | 2,532 | 8.10 |
-| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | 越界读取 | 2,320 | 6.34 |
+| 9 | [78](https://cwe.mitre.org/data/definitions/78.html) | 对操作系统命令中使用的特殊元素的中和不当（“OS 命令注入”） | 2,533 | 8.10 |
+| 10 | [125](https://cwe.mitre.org/data/definitions/125.html) | 越界读取 | 2,321 | 6.34 |
 
 ### 2024 年以来，犯下这些错误后果有多严重？
 
@@ -72,19 +72,20 @@ _Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE �
 | 1 | [506](https://cwe.mitre.org/data/definitions/506.html) | 嵌入式恶意代码 | 48 | 9.15 | 10.0 |
 | 2 | [95](https://cwe.mitre.org/data/definitions/95.html) | 动态评估代码中指令中和不当（“Eval 注入”） | 136 | 8.56 | 10.0 |
 | 3 | [565](https://cwe.mitre.org/data/definitions/565.html) | 依赖未经验证和完整性检查的 Cookie | 18 | 8.38 | 9.8 |
-| 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | 不受信任数据的反序列化 | 1,748 | 8.34 | 10.0 |
+| 4 | [502](https://cwe.mitre.org/data/definitions/502.html) | 不受信任数据的反序列化 | 1,749 | 8.34 | 10.0 |
 | 5 | [288](https://cwe.mitre.org/data/definitions/288.html) | 通过备用路径或通道绕过身份验证 | 465 | 8.27 | 10.0 |
 | 6 | [917](https://cwe.mitre.org/data/definitions/917.html) | 未对表达式语言语句中使用的特殊元素进行充分净化（“表达式语言注入”） | 29 | 8.21 | 10.0 |
 | 7 | [29](https://cwe.mitre.org/data/definitions/29.html) | 路径遍历：'\..\filename' | 49 | 8.16 | 9.9 |
-| 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | 缓冲区复制时未检查输入大小（“经典缓冲区溢出”） | 1,118 | 8.12 | 10.0 |
-| 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | 关键功能缺少身份验证 | 1,273 | 8.12 | 10.0 |
-| 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | 基于栈的缓冲区溢出 | 1,835 | 8.12 | 10.0 |
+| 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | 缓冲区复制时未检查输入大小（“经典缓冲区溢出”） | 1,120 | 8.12 | 10.0 |
+| 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | 关键功能缺少身份验证 | 1,276 | 8.12 | 10.0 |
+| 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | 基于栈的缓冲区溢出 | 1,836 | 8.12 | 10.0 |
 <!-- END cwe.report.zh.md -->
 
 <!-- BEGIN cve.report.md -->
 
-## CVE 增长得有多快？
 
+
+## CVE 增长得有多快？
 _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
@@ -118,6 +119,37 @@ _逐年 CVE 数量与严重程度。_
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
 | **Total** | **372,348** | **200,917** | **6.87** | **10.0** |
+| Year | CVEs | Scored | Avg score | Max score |
+| ---: | ---: | ---:   | ---:      | ---:      |
+| 2026 _（截至 2026-09-13）_ | 56,227 | 53,284 | 7.09 | 10.0 |
+| 2025 | 43,471 | 42,044 | 6.79 | 10.0 |
+| 2024 | 38,451 | 37,057 | 6.81 | 10.0 |
+| 2023 | 30,616 | 24,751 | 6.73 | 10.0 |
+| 2022 | 26,445 | 17,468 | 6.79 | 10.0 |
+| 2021 | 22,601 | 10,834 | 6.83 | 10.0 |
+| 2020 | 19,392 | 6,916 | 6.84 | 10.0 |
+| 2019 | 16,096 | 3,527 | 6.84 | 10.0 |
+| 2018 | 16,188 | 2,292 | 6.92 | 10.0 |
+| 2017 | 14,762 | 1,375 | 7.18 | 10.0 |
+| 2016 | 9,367 | 408 | 7.10 | 10.0 |
+| 2015 | 8,111 | 252 | 6.26 | 10.0 |
+| 2014 | 8,427 | 290 | 6.62 | 10.0 |
+| 2013 | 6,221 | 154 | 7.44 | 10.0 |
+| 2012 | 5,488 | 147 | 7.82 | 10.0 |
+| 2011 | 4,646 | 96 | 7.54 | 10.0 |
+| 2010 | 5,074 | 95 | 7.74 | 10.0 |
+| 2009 | 4,921 | 65 | 8.01 | 10.0 |
+| 2008 | 7,005 | 41 | 7.31 | 9.8 |
+| 2007 | 6,458 | 38 | 8.00 | 9.8 |
+| 2006 | 6,995 | 42 | 7.94 | 9.8 |
+| 2005 | 4,627 | 21 | 6.23 | 9.8 |
+| 2004 | 2,644 | 11 | 7.33 | 9.8 |
+| 2003 | 1,504 | 6 | 5.73 | 7.5 |
+| 2002 | 2,357 | 11 | 7.43 | 9.8 |
+| 2001 | 1,537 | 5 | 7.54 | 9.8 |
+| 2000 | 1,236 | 0 | — | 0.0 |
+| 1999 | 1,540 | 24 | 7.62 | 9.8 |
+| **Total** | **372,407** | **201,254** | **6.88** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）

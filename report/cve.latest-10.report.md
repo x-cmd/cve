@@ -2,15 +2,15 @@
 
 | CVE | Score | Product | CWE | Description |
 | --- | ---:  | ---     | :-: | ---         |
-| [CVE-2026-90679](https://nvd.nist.gov/vuln/detail/CVE-2026-90679) | 4.3 | Forgejo/Forgejo | [348](https://cwe.mitre.org/data/definitions/348.html) | Forgejo 13.0.0 through 16.0.4, when "[federation] ENABLED = true" is set, has a… |
-| [CVE-2026-90678](https://nvd.nist.gov/vuln/detail/CVE-2026-90678) | 7.5 | HAProxy/HAProxy | [130](https://cwe.mitre.org/data/definitions/130.html) | An issue was discovered in HAProxy 3.3.0 through 3.4.4 and in 3.5-dev1 through… |
-| [CVE-2026-90668](https://nvd.nist.gov/vuln/detail/CVE-2026-90668) | 8.7 | UnrealIRCd/UnrealIRCd | [770](https://cwe.mitre.org/data/definitions/770.html) | The webserver in UnrealIRCd 6.0.5 through 6.2.6 before 6.2.7 does not limit the… |
-| [CVE-2026-90651](https://nvd.nist.gov/vuln/detail/CVE-2026-90651) | 8.1 | Socket/Socket Firewall | [295](https://cwe.mitre.org/data/definitions/295.html) | Socket Firewall (socketdev/socket-registry-firewall) in registry mode before… |
-| [CVE-2026-90648](https://nvd.nist.gov/vuln/detail/CVE-2026-90648) | 7.1 | WebAssembly/wabt | [252](https://cwe.mitre.org/data/definitions/252.html) | wasm2c in WebAssembly wabt through 1.0.41 allows sandbox escape in some… |
-| [CVE-2026-90647](https://nvd.nist.gov/vuln/detail/CVE-2026-90647) | 9.1 | Kalkitech/ASE2000 V2 Communication Test Set | [295](https://cwe.mitre.org/data/definitions/295.html) | ASE/Kalkitech ASE2000 V2 Communication Test Set 2.35 through 2.37 on Windows… |
-| [CVE-2026-90616](https://nvd.nist.gov/vuln/detail/CVE-2026-90616) | 7.4 | Flatpak/Flatpak | [61](https://cwe.mitre.org/data/definitions/61.html) | In Flatpak before 1.18.1, a malicious sandboxed app can obtain arbitrary read… |
-| [CVE-2026-90560](https://nvd.nist.gov/vuln/detail/CVE-2026-90560) | 8.8 | luben/zstd-jni | [125](https://cwe.mitre.org/data/definitions/125.html) | zstd-jni versions 1.2.0 through 1.5.7-13 contain an out-of-bounds read… |
-| [CVE-2026-90559](https://nvd.nist.gov/vuln/detail/CVE-2026-90559) | 8.7 | xerial/snappy-java | [787](https://cwe.mitre.org/data/definitions/787.html) | snappy-java through 1.1.10.8 contains an out-of-bounds write vulnerability in… |
-| [CVE-2026-90558](https://nvd.nist.gov/vuln/detail/CVE-2026-90558) | 9.8 | irontec/sngrep | [121](https://cwe.mitre.org/data/definitions/121.html) | sngrep through 1.8.4 contains stack buffer overflow vulnerabilities in SIP… |
+| [CVE-2026-90783](https://nvd.nist.gov/vuln/detail/CVE-2026-90783) | 8.5 | Moritz Bunkus/MKVToolNix | [680](https://cwe.mitre.org/data/definitions/680.html) | MKVToolNix through 101.0 contains a heap buffer overflow in the bundled avilib… |
+| [CVE-2026-90782](https://nvd.nist.gov/vuln/detail/CVE-2026-90782) | 6.0 | Systerel/S2OPC | [476](https://cwe.mitre.org/data/definitions/476.html) | S2OPC through 1.7.3 contains a null pointer dereference in… |
+| [CVE-2026-90781](https://nvd.nist.gov/vuln/detail/CVE-2026-90781) | 4.8 | ALSA Project/alsa-lib | [193](https://cwe.mitre.org/data/definitions/193.html) | alsa-lib through 1.2.16.1 contains a stack buffer overflow in the… |
+| [CVE-2026-90780](https://nvd.nist.gov/vuln/detail/CVE-2026-90780) | 8.7 | SIPp/sipp | [120](https://cwe.mitre.org/data/definitions/120.html) | SIPp through 3.7.7 contains a buffer overflow vulnerability in the get_header()… |
+| [CVE-2026-90779](https://nvd.nist.gov/vuln/detail/CVE-2026-90779) | 8.7 | SIPp/sipp | [121](https://cwe.mitre.org/data/definitions/121.html) | SIPp through 3.7.7 contains a stack buffer overflow vulnerability in… |
+| [CVE-2026-90778](https://nvd.nist.gov/vuln/detail/CVE-2026-90778) | 8.7 | SIPp/sipp | [120](https://cwe.mitre.org/data/definitions/120.html) | SIPp through 3.7.7 contains a buffer overflow vulnerability in get_peer_tag()… |
+| [CVE-2026-90777](https://nvd.nist.gov/vuln/detail/CVE-2026-90777) | 8.8 | espnet/espnet | [502](https://cwe.mitre.org/data/definitions/502.html) | ESPnet before 202609 deserializes pretrained model checkpoints using torch.load… |
+| [CVE-2026-90776](https://nvd.nist.gov/vuln/detail/CVE-2026-90776) | 8.7 | nodemailer/nodemailer | [407](https://cwe.mitre.org/data/definitions/407.html) | Nodemailer versions 9.1.0 through 10.0.4 contain a quadratic time complexity… |
+| [CVE-2026-90775](https://nvd.nist.gov/vuln/detail/CVE-2026-90775) | 7.1 | PostGIS/address_standardizer | [125](https://cwe.mitre.org/data/definitions/125.html) | PostGIS address_standardizer through 3.7.0 fails to validate the Weight… |
+| [CVE-2026-90774](https://nvd.nist.gov/vuln/detail/CVE-2026-90774) | 8.7 | orhun/rustypaste | [22](https://cwe.mitre.org/data/definitions/22.html) | rustypaste before 0.18.1 validates the destination path before applying the… |
 
 _Click a CVE id for the full record on NVD._
