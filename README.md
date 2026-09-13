@@ -1,25 +1,24 @@
-# 25 years of XSS, and AI stacks are still shipping it.
-
-Every 4 hours, MITRE publishes a handful of new CVEs. Most go
-unread. The interesting ones — the eval-injection in the agent
-framework you depend on, the path traversal in the MCP server
-sitting next to your LLM, the missing-auth on the SQL backend
-your retrieval pipeline writes to — those are buried in 370,000
-other records.
-
-**This repo exists to pull the buried ones out.** It's a
-daily-refreshed mirror of
-[CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5) plus
-the [MITRE CWE catalog](https://cwe.mitre.org/), pre-aggregated
-into the rankings below. Plain text on GitHub release assets —
-`curl` it, `awk` it, point DuckDB at it, or just `x cve info
-CVE-2024-0001` it. No API key, no rate limit.
+# CVE Insights for AI Builders
 
 <!-- cve-data-as-of:START -->
 **Data as of: 2026-09-13** _(refreshed daily from upstream cvelistV5 — pull this page tomorrow and the rankings will have moved)._
 <!-- cve-data-as-of:END -->
 
 > 🌐 **中文版：[README.cn.md](./README.cn.md)** —— same data, Chinese CWE names (MITRE 官方中文翻译, ~91% 覆盖；缺失自动回退英文).
+>
+> **📑 Contents**
+> - [What landed in your stack this week](#what-landed-in-your-stack-this-week)
+> - [The same bugs have been on top for 25 years — and AI stacks still ship them](#the-same-bugs-have-been-on-top-for-25-years--and-ai-stacks-still-ship-them)
+> - [Volume doubles every 5 years — if your scanner is annual, you're 6-12 months behind](#volume-doubles-every-5-years--if-your-scanner-is-annual-youre-6-12-months-behind)
+> - [Want the raw numbers? They're TSVs, free, no API key](#want-the-raw-numbers-theyre-tsvs-free-no-api-key)
+> - [This repo is the producer; `x cve` is the consumer](#this-repo-is-the-producer-x-cve-is-the-consumer)
+> - [Want to change how the data is generated? Read this](#want-to-change-how-the-data-is-generated-read-this)
+> - [License — Apache 2.0, yes you can use this commercially](#license--apache-20-yes-you-can-use-this-commercially)
+> - [If this repo isn't enough, here's where to go next](#if-this-repo-isnt-enough-heres-where-to-go-next)
+> - [The questions people actually ask](#the-questions-people-actually-ask)
+>
+> **For end users** — `x cve` recipes, raw TSV downloads: see [`SKILL.md`](./SKILL.md).
+> **For developers** — schema, repo layout, scripts, CI pipeline: see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 >
 > **📑 Contents**
 > - [The 10 newest CVEs](#the-10-newest-cves)
