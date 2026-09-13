@@ -398,13 +398,13 @@ text, standard Unix tooling is enough:
 
 ```sh
 # All XSS CVEs scored >= 7.0 since 2024
-xz -dc cve-2024.tsv xz -dc cve-2025.tsv xz -dc cve-2026.tsv 2>/dev/null     | awk -F'\t' '$8 ~ /(^|;)79(;|$)/ && $6+0 >= 7'
+xz -dc cve-2024.tsv cve-2025.tsv cve-2026.tsv 2>/dev/null     | awk -F'\t' '$8 ~ /(^|;)79(;|$)/ && $6+0 >= 7'
 
 # All CVEs affecting Apache HTTP Server in the current year
 xz -dc cve-2026.tsv     | awk -F'\t' '$4 ~ /Apache\/HTTP Server/ {print $1, $6, $9}'
 
 # Top vendors by CVE count since 2024
-xz -dc cve-2024.tsv xz -dc cve-2025.tsv xz -dc cve-2026.tsv 2>/dev/null     | awk -F'\t' { for (i=1;i<=split($4,p,";");i++) print p[i] }'     | sort | uniq -c | sort -rn | head -20
+xz -dc cve-2024.tsv cve-2025.tsv cve-2026.tsv 2>/dev/null     | awk -F'\t' { for (i=1;i<=split($4,p,";");i++) print p[i] }'     | sort | uniq -c | sort -rn | head -20
 ```
 
 The release includes pre-aggregated variants for the common
