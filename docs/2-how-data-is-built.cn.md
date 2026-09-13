@@ -6,7 +6,10 @@ x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: How the data is built, inLanguage: en, about: x-cmd/cve pipeline
+    - '@type': TechArticle
+      headline: 'How the data is built'
+      inLanguage: 'en'
+      about: 'x-cmd/cve pipeline'
 ---
 每 4 小时，GitHub Actions 上的 CI 克隆 [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5)，遍历每条 CVE JSON 记录，输出一份按年份索引的 9 列 TSV。MITRE CWE 目录同流程。这套 pipeline 是 6 个 Python 脚本 + 1 个 workflow 文件，零依赖。
 

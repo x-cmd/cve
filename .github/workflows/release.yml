@@ -243,6 +243,17 @@ jobs:
         # runs in well under a second on 28 years of data.
         run: python3 .x-cmd/latest.py
 
+      - name: Markdown lint (rumdl)
+        # Lint the user-facing markdown files with rumdl
+        # (https://github.com/x-cmd/doc-2026 convention). Catches
+        # missing blank lines around tables, multi-line emphasis,
+        # blank-line-after-list, etc. The .rumdl.toml in the repo
+        # root excludes rules that don't apply (MD036/MD041/MD013
+        # /MD051/MD033) — see that file for the rationale.
+        run: |
+          pip install --quiet rumdl==0.1.25
+          rumdl check .rumdl.toml README.md README.cn.md SKILL.md CONTRIBUTING.md docs/
+
       - name: Inline reports into README + README.cn
         # Stitch both report/cve.report.md (per-year stats) and
         # report/cwe.report.md (top-10 CWE rankings) into README.md

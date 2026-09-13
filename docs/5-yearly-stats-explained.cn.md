@@ -6,7 +6,10 @@ x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: Reading the yearly CVE growth table, inLanguage: en, about: cve.report.tsv
+    - '@type': TechArticle
+      headline: 'Reading the yearly CVE growth table'
+      inLanguage: 'en'
+      about: 'cve.report.tsv'
 ---
 README 上第三张表 ——「CVE 增长得有多快？」——来自 `report/cve.report.{tsv,md}`。展示自 1999 年以来每年的 CVE 量 + 已打分 + 平均 + 最高 CVSS。
 

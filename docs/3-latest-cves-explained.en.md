@@ -6,7 +6,10 @@ x-keywords: latest CVEs, cve.latest-10.report.md, CVSS base score, patched signa
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: Reading the latest-CVE table, inLanguage: en, about: cve.latest-10.report.md
+    - '@type': TechArticle
+      headline: 'Reading the latest-CVE table'
+      inLanguage: 'en'
+      about: 'cve.latest-10.report.md'
 ---
 
 # Reading the latest-CVE table

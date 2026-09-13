@@ -6,7 +6,10 @@ x-keywords: per-year CVE stats, YTD as of, scored vs unscored, cve.report.tsv, t
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: Reading the yearly CVE growth table, inLanguage: en, about: cve.report.tsv
+    - '@type': TechArticle
+      headline: 'Reading the yearly CVE growth table'
+      inLanguage: 'en'
+      about: 'cve.report.tsv'
 ---
 
 # Reading the yearly CVE growth table

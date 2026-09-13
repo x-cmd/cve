@@ -6,7 +6,10 @@ x-keywords: CWE join, mean CVSS, since 2024, MIN_CVE_FOR_SCORE_RANK, top 100 CWE
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: How the Top CWE tables are computed, inLanguage: en, about: CWE ranking
+    - '@type': TechArticle
+      headline: 'How the Top CWE tables are computed'
+      inLanguage: 'en'
+      about: 'CWE ranking'
 ---
 
 # How the Top CWE tables are computed

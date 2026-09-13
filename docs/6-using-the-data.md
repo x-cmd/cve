@@ -6,7 +6,10 @@ x-keywords: curl CVE database, xz TSV, x cve shell module, DuckDB CVE, pandas CV
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: Using the data, inLanguage: en, about: data consumption
+    - '@type': TechArticle
+      headline: 'Using the data'
+      inLanguage: 'en'
+      about: 'data consumption'
 ---
 
 # Using the data

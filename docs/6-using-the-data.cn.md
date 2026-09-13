@@ -6,7 +6,10 @@ x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: Using the data, inLanguage: en, about: data consumption
+    - '@type': TechArticle
+      headline: 'Using the data'
+      inLanguage: 'en'
+      about: 'data consumption'
 ---
 三种消费 CVE / CWE 数据的方式，按集成成本递增排列。
 

@@ -11,7 +11,7 @@ TSV downloads.
 
 ## Repository layout
 
-```
+```text
 .
 ├── .x-cmd/
 │   ├── tsv.py              # full rebuild from a local cvelistV5 clone
@@ -47,7 +47,7 @@ tree on `main` stays small.
 
 Every `cve-YYYY.tsv` is written with rows in **descending cve-id order**:
 
-```
+```text
 CVE-2026-99999
 CVE-2026-99998
 CVE-2026-99997
@@ -133,8 +133,6 @@ catalog files this repo derives from MITRE:
 | `data/cwe.tsv`        | 21-column TSV (~3 MB), all MITRE fields | Verbatim mirror of MITRE 2000.csv | x-cwe module + any consumer that wants the full CWE catalog without hitting MITRE directly |
 | `data/cwe.slim.tsv`   | 2-column TSV (~50 KB), `CWE-ID` + `Name` only | Derived from `data/cwe.tsv` | Joined against `data/cve-*.tsv` for cwe_report.py |
 
-
-
 | File | Shape | Source | Purpose |
 | ---  | ---   | ---    | ---     |
 | `data/cwe.tsv`        | 21-column TSV (~3 MB), all MITRE fields preserved | Verbatim mirror of MITRE 2000.csv (header row, spaces in column names replaced with `_`) | x-cwe module and any consumer that wants the full CWE catalog without hitting MITRE directly |
@@ -192,5 +190,3 @@ its output was overwritten by step 1's full rebuild every time
 release.yml followed via `workflow_run`, so the incremental work was
 dead weight. See [issue #1](https://github.com/x-cmd/cve/issues/1)
 for the numbers.
-
-

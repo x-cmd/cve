@@ -6,7 +6,10 @@ x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: How the Top CWE tables are computed, inLanguage: en, about: CWE ranking
+    - '@type': TechArticle
+      headline: 'How the Top CWE tables are computed'
+      inLanguage: 'en'
+      about: 'CWE ranking'
 ---
 README 上的两张 CWE 表来自同一个 join、按两种方式排序。这页解释 join 做什么、两种排序含义、数字为什么会随时间漂移。
 

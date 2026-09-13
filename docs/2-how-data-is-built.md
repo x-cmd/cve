@@ -6,7 +6,10 @@ x-keywords: cvelistV5, tsv.py, cwe.py, cwe_zh.py, release.yml, CI pipeline, xz
 x-json-ld:
   '@context': https://schema.org
   '@graph':
-    - '@type': TechArticle, headline: How the data is built, inLanguage: en, about: x-cmd/cve pipeline
+    - '@type': TechArticle
+      headline: 'How the data is built'
+      inLanguage: 'en'
+      about: 'x-cmd/cve pipeline'
 ---
 
 # How the data is built

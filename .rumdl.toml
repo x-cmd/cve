@@ -1,0 +1,29 @@
+# rumdl config for x-cmd/cve.
+#
+# Project conventions / quirks that need suppression:
+#
+# MD036 — bold (**xxx**) is used as in-section sub-labels after H2
+#   headings (e.g. "## CVE growth trend" then "**Note:** ..."). This
+#   idiom is intentional and not a heading.
+#
+# MD041 — top-level docs (README.md, README.cn.md) open with YAML
+#   frontmatter (`--- x-title: ... ---`) and skip the H1; the H1 is
+#   implicit in the frontmatter. Same reason doc-2026 install
+#   articles skip MD041.
+#
+# MD013 — long URLs and table cells are common in this repo
+#   (NVD detail links, CWE definition links, full cve-report
+#   tables). Wrapping them makes the prose harder to read.
+#
+# MD051 — the "TSV columns (9)" anchor is referenced as
+#   `#tsv-columns-9` (lowercased + parenthesised stripped); rumdl
+#   doesn't do that auto-slug conversion, so it flags the link as
+#   missing. It's a false positive.
+#
+# MD033 — inline HTML is used by the CI-generated BEGIN/END blocks
+#   (cve-data-as-of, cve.report.md, etc.) and by the user-authored
+#   `<details>` / `<summary>` folds around the CVSS-scoring
+#   popularization section. Required for the docs to render.
+
+[global]
+disable = ["MD036", "MD041", "MD013", "MD051", "MD033"]
