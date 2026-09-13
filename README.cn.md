@@ -24,6 +24,8 @@
 
 | CVE | Score | Product | CWE | Description |
 | --- | ---:  | ---     | :-: | ---         |
+| [CVE-2026-90679](https://nvd.nist.gov/vuln/detail/CVE-2026-90679) | 4.3 | Forgejo/Forgejo | [348](https://cwe.mitre.org/data/definitions/348.html) | Forgejo 13.0.0 through 16.0.4, when "[federation] ENABLED = true" is set, has a… |
+| [CVE-2026-90678](https://nvd.nist.gov/vuln/detail/CVE-2026-90678) | 7.5 | HAProxy/HAProxy | [130](https://cwe.mitre.org/data/definitions/130.html) | An issue was discovered in HAProxy 3.3.0 through 3.4.4 and in 3.5-dev1 through… |
 | [CVE-2026-90668](https://nvd.nist.gov/vuln/detail/CVE-2026-90668) | 8.7 | UnrealIRCd/UnrealIRCd | [770](https://cwe.mitre.org/data/definitions/770.html) | The webserver in UnrealIRCd 6.0.5 through 6.2.6 before 6.2.7 does not limit the… |
 | [CVE-2026-90651](https://nvd.nist.gov/vuln/detail/CVE-2026-90651) | 8.1 | Socket/Socket Firewall | [295](https://cwe.mitre.org/data/definitions/295.html) | Socket Firewall (socketdev/socket-registry-firewall) in registry mode before… |
 | [CVE-2026-90648](https://nvd.nist.gov/vuln/detail/CVE-2026-90648) | 7.1 | WebAssembly/wabt | [252](https://cwe.mitre.org/data/definitions/252.html) | wasm2c in WebAssembly wabt through 1.0.41 allows sandbox escape in some… |
@@ -32,8 +34,6 @@
 | [CVE-2026-90560](https://nvd.nist.gov/vuln/detail/CVE-2026-90560) | 8.8 | luben/zstd-jni | [125](https://cwe.mitre.org/data/definitions/125.html) | zstd-jni versions 1.2.0 through 1.5.7-13 contain an out-of-bounds read… |
 | [CVE-2026-90559](https://nvd.nist.gov/vuln/detail/CVE-2026-90559) | 8.7 | xerial/snappy-java | [787](https://cwe.mitre.org/data/definitions/787.html) | snappy-java through 1.1.10.8 contains an out-of-bounds write vulnerability in… |
 | [CVE-2026-90558](https://nvd.nist.gov/vuln/detail/CVE-2026-90558) | 9.8 | irontec/sngrep | [121](https://cwe.mitre.org/data/definitions/121.html) | sngrep through 1.8.4 contains stack buffer overflow vulnerabilities in SIP… |
-| [CVE-2026-90557](https://nvd.nist.gov/vuln/detail/CVE-2026-90557) | 6.9 | freeciv/freeciv | [125](https://cwe.mitre.org/data/definitions/125.html) | Freeciv versions 3.1.0 through 3.2.5 contain an out-of-bounds read… |
-| [CVE-2026-90556](https://nvd.nist.gov/vuln/detail/CVE-2026-90556) | 8.5 | freeciv/freeciv | [122](https://cwe.mitre.org/data/definitions/122.html) | Freeciv versions before 3.2.6 contain a heap buffer overflow in worklist_load()… |
 
 _Click a CVE id for the full record on NVD._
 <!-- END cve.latest-10.report.md -->
@@ -44,7 +44,7 @@ _Click a CVE id for the full record on NVD._
 
 <!-- BEGIN cwe.report.zh.md -->
 
-自 2024 年以来，共 117,523 个 CVE，涉及 683 个不同的 CWE。
+自 2024 年以来，共 117,528 个 CVE，涉及 683 个不同的 CWE。
 
 ### 2024 年以来，工程师们最常犯的错误是什么？
 
@@ -53,10 +53,10 @@ _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 | Rank | CWE | Name | CVEs | Avg score |
 | ---: | :-: | :--- | ---: | ---:      |
 | 1 | [79](https://cwe.mitre.org/data/definitions/79.html) | 网页生成过程中的输入中和不当（“跨站脚本”） | 17,205 | 6.17 |
-| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | SQL 命令中使用的特殊元素中和不当（“SQL 注入”） | 7,730 | 7.46 |
+| 2 | [89](https://cwe.mitre.org/data/definitions/89.html) | SQL 命令中使用的特殊元素中和不当（“SQL 注入”） | 7,731 | 7.46 |
 | 3 | [862](https://cwe.mitre.org/data/definitions/862.html) | 缺少授权 | 6,336 | 5.97 |
-| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | 对下游组件使用的输出中特殊元素的未正确中和 ('注入') | 4,294 | 7.02 |
-| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | 对受限目录的路径名限制不当（“路径遍历”） | 3,321 | 7.18 |
+| 4 | [74](https://cwe.mitre.org/data/definitions/74.html) | 对下游组件使用的输出中特殊元素的未正确中和 ('注入') | 4,295 | 7.02 |
+| 5 | [22](https://cwe.mitre.org/data/definitions/22.html) | 对受限目录的路径名限制不当（“路径遍历”） | 3,322 | 7.18 |
 | 6 | [352](https://cwe.mitre.org/data/definitions/352.html) | 跨站请求伪造 (CSRF) | 3,276 | 5.81 |
 | 7 | [94](https://cwe.mitre.org/data/definitions/94.html) | 不当的代码生成控制（“代码注入”） | 2,793 | 6.79 |
 | 8 | [416](https://cwe.mitre.org/data/definitions/416.html) | 释放后重用 (Use After Free) | 2,570 | 7.67 |
@@ -89,7 +89,7 @@ _逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
-| 2026 _（截至 2026-09-13）_ | 56,164 | 52,943 | 7.08 | 10.0 |
+| 2026 _（截至 2026-09-13）_ | 56,168 | 52,947 | 7.08 | 10.0 |
 | 2025 | 43,471 | 42,044 | 6.79 | 10.0 |
 | 2024 | 38,451 | 37,057 | 6.81 | 10.0 |
 | 2023 | 30,616 | 24,751 | 6.73 | 10.0 |
@@ -117,7 +117,7 @@ _逐年 CVE 数量与严重程度。_
 | 2001 | 1,537 | 5 | 7.54 | 9.8 |
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
-| **Total** | **372,344** | **200,913** | **6.87** | **10.0** |
+| **Total** | **372,348** | **200,917** | **6.87** | **10.0** |
 <!-- END cve.report.md -->
 
 ## 报表（Reports）
