@@ -116,12 +116,15 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 2024+ | 96%+ |
 
 For most of CVE's first two decades, the majority of records
-shipped without a published CVSS vector. CNAs didn't have to
-publish one and most didn't bother. The inflection around
-**2021–2022** tracks the broad adoption of CVSS v3.1 across
-the Linux CNA, Microsoft, and other big vendors — plus the
-NVD's stricter "no score = deprioritized" posture. By 2024
-it's basically universal.
+**had no CVSS vector at all** in the upstream JSON — the
+`containers.cna.metrics[]` field was simply absent, not "v1
+that we lost". CNAs weren't required to publish one and most
+didn't bother. CVSS v2.0 became the standard in 2007, but
+adoption was slow — sampling shows under 10% scored until ~2018.
+Around **2021–2022** the share crosses 50% as CVSS v3.0/v3.1
+became the default expectation across the bigger CNAs and
+NVD's triage started deprioritizing un-scored records. By 2024
+the share is 96%+ and basically universal.
 
 </details>
 
