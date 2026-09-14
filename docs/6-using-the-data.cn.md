@@ -7,9 +7,9 @@ x-json-ld:
   '@context': https://schema.org
   '@graph':
     - '@type': TechArticle
-      headline: 'Using the data'
-      inLanguage: 'en'
-      about: 'data consumption'
+      headline: '如何使用这些数据'
+      inLanguage: 'zh-Hans'
+      about: '数据消费'
 ---
 三种消费 CVE / CWE 数据的方式，按集成成本递增排列。
 

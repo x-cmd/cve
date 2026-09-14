@@ -5,8 +5,9 @@
 <!-- cve-data-as-of:END -->
 
 > 🌐 **English version: [README.md](./README.md)**.
-
+>
 > **📑 目录**
+>
 > - [CVE 增长得有多快？](#cve-增长得有多快)
 > - [报表（Reports）](#报表reports)
 > - [关于 x-cmd/cve](#关于-xcmdcve)
@@ -16,7 +17,6 @@
 >
 > **开发者文档** —— 仓库结构、schema、脚本、CI：[`CONTRIBUTING.md`](./CONTRIBUTING.md)
 > **数据使用** —— `x cve` 命令、TSV 下载：[`SKILL.md`](./SKILL.md)
-
 
 <!-- BEGIN cve.latest-10.report.md -->
 
@@ -38,7 +38,7 @@
 _Click a CVE id for the full record on NVD._
 <!-- END cve.latest-10.report.md -->
 
-# CVE 教会我们什么
+## CVE 教会我们什么
 
 > 本页是上游 CVE 索引的实时镜像。下方表格（逐年统计、CWE 错误 Top 10、按严重程度 Top 10）由每日 CI 自动生成，并非人工编排。
 
@@ -46,7 +46,7 @@ _Click a CVE id for the full record on NVD._
 
 自 2024 年以来，共 117,666 个 CVE，涉及 683 个不同的 CWE。
 
-### 2024 年以来，工程师们最常犯的错误是什么？
+## 2024 年以来，工程师们最常犯的错误是什么？
 
 _Top 10 CWE by CVE count —— 按 CVE 数量排序的前 10。_
 
@@ -79,14 +79,15 @@ _Top 10 CWE by average CVSS score —— 至少 10 个 CVE 以避免单个 CWE �
 | 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | 缓冲区复制时未检查输入大小（“经典缓冲区溢出”） | 1,120 | 8.12 | 10.0 |
 | 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | 关键功能缺少身份验证 | 1,277 | 8.12 | 10.0 |
 | 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | 基于栈的缓冲区溢出 | 1,836 | 8.12 | 10.0 |
+
 <!-- END cwe.report.zh.md -->
 
 <!-- BEGIN cve.report.md -->
 
 
 ## CVE 增长得有多快？
-_逐年 CVE 数量与严重程度。_
 
+_逐年 CVE 数量与严重程度。_
 
 | Year | CVEs | Scored | Avg score | Max score |
 | ---: | ---: | ---:   | ---:      | ---:      |
@@ -119,6 +120,7 @@ _逐年 CVE 数量与严重程度。_
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
 | **Total** | **372,453** | **201,299** | **6.88** | **10.0** |
+
 <!-- END cve.report.md -->
 
 ## 报表（Reports）

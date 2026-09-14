@@ -22,7 +22,6 @@ records on the index. If any of the products below are in your
 dependency tree (almost certainly), click through to the NVD page
 and check the affected-version range against your pinned versions.
 
-
 <!-- BEGIN cve.latest-10.report.md -->
 
 **The 10 newest CVEs** (descending CVE id = newest published first).
@@ -90,12 +89,14 @@ _Top 10 CWE by average CVSS score. Min 10 CVEs to suppress single-CWE outliers._
 | 8 | [120](https://cwe.mitre.org/data/definitions/120.html) | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') | 1,120 | 8.12 | 10.0 |
 | 9 | [306](https://cwe.mitre.org/data/definitions/306.html) | Missing Authentication for Critical Function | 1,277 | 8.12 | 10.0 |
 | 10 | [121](https://cwe.mitre.org/data/definitions/121.html) | Stack-based Buffer Overflow | 1,836 | 8.12 | 10.0 |
+
 <!-- END cwe.report.md -->
 
 <!-- BEGIN cve.report.md -->
 
 
 ## How fast is CVE growing?
+
 > 2026 is on track for ~75,000 CVEs — double 2024's 38,451 in
 > just two years. If your scanning cadence is annual, you're
 > 6-12 months behind the most recent year. Source:
@@ -174,6 +175,7 @@ fold above.
 | 2000 | 1,236 | 0 | — | 0.0 |
 | 1999 | 1,540 | 24 | 7.62 | 9.8 |
 | **Total** | **372,453** | **201,299** | **6.88** | **10.0** |
+
 <!-- END cve.report.md -->
 
 ## Reports
@@ -295,7 +297,7 @@ catalog holds ~370,000 records going back to CVE-1999-0001.
 ### What is CWE?
 
 **CWE** (Common Weakness Enumeration) is the taxonomy of software
-weakness *types* — categories like "Cross-Site Scripting",
+weakness _types_ — categories like "Cross-Site Scripting",
 "Use After Free", "Path Traversal". A CVE points at one or more
 CWE ids in its `problemTypes[]` array; this repo joins the two so
 you can ask "how many XSS vulns shipped this year?" without
@@ -305,9 +307,9 @@ scanning 370k records by hand. MITRE's full CWE catalog lives at
 
 ### What is the difference between CVE and CWE?
 
-- **CVE** = a *specific instance* of a bug (e.g. CVE-2026-90616:
+- **CVE** = a _specific instance_ of a bug (e.g. CVE-2026-90616:
   Flatpak before 1.18.1 has a sandbox-escape).
-- **CWE** = the *category* of bug (e.g. CWE-22: Path Traversal).
+- **CWE** = the _category_ of bug (e.g. CWE-22: Path Traversal).
 
 A single CVE typically references one or more CWE ids that
 describe the class of weakness. CWE counts across CVEs are how
@@ -336,7 +338,7 @@ For the top-100 (all years and since-2024 windows), see
 ### What are the most dangerous (highest CVSS) CWE classes?
 
 The **Top 10 CWE by average CVSS score** table ranks weakness
-*types* by the mean CVSS base score of the CVEs that reference
+_types_ by the mean CVSS base score of the CVEs that reference
 them (with at least 10 samples to suppress single-CVE outliers).
 The head of this list tends to be dominated by:
 
@@ -346,7 +348,7 @@ The head of this list tends to be dominated by:
 - [CWE-288](https://cwe.mitre.org/data/definitions/288.html) — Authentication Bypass via Alternate Channel
 - [CWE-121](https://cwe.mitre.org/data/definitions/121.html) — Stack-based Buffer Overflow
 
-These are the classes that, when shipped, *hurt the most*. The
+These are the classes that, when shipped, _hurt the most_. The
 table is regenerated on every CI run — see
 [`report/cwe.top100.by-cve-score.report.tsv`](./report/cwe.top100.by-cve-score.report.tsv)
 for the full top-100.
@@ -614,4 +616,3 @@ If you need Chinese CVE text for an AI tool you ship, the
 realistic path is: pipe the English `desc` field from this repo's
 TSV through a translation model in your own pipeline. Don't
 trust an unofficial mirror to be complete or current.
-

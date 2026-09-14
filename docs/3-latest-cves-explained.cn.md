@@ -7,8 +7,8 @@ x-json-ld:
   '@context': https://schema.org
   '@graph':
     - '@type': TechArticle
-      headline: 'Reading the latest-CVE table'
-      inLanguage: 'en'
+      headline: '最新 CVE 表怎么读'
+      inLanguage: 'zh-Hans'
       about: 'cve.latest-10.report.md'
 ---
 页面顶部的最新 10 条 CVE 表由 `.x-cmd/latest.py` 从每个 per-year TSV 的头部生成。每跑一次 CI 就刷新。
