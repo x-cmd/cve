@@ -1,27 +1,20 @@
 ---
+
 x-title: 怎么读年度 CVE 增长表
 x-desc: 怎么读 per-year CVE 量 + CVSS 统计表 — YTD、已打分 vs 未打分、Total 行的含义。
 x-sidebar: 年度统计解读
 x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
-  '@context': https://schema.org
+  '@context': <https://schema.org>
   '@graph':
     - '@type': TechArticle
       headline: '年度 CVE 增长表怎么读'
       inLanguage: 'zh-Hans'
       about: 'cve.report.tsv'
----
-README 上第三张表 ——「CVE 增长得有多快？」——来自 `report/cve.report.{tsv,md}`。展示自 1999 年以来每年的 CVE 量 + 已打分 + 平均 + 最高 CVSS。
+---README 上的第三张表——"CVE 增长得有多快？"——来自 `report/cve.report.{tsv,md}`。
+展示自 1999 年以来每年的 CVE 量 + 已打分 + 平均 + 最高 CVSS。
 
-
-# Reading the yearly CVE growth table
-
-The third table on [`README.md`](../../README.md) — "How fast is
-CVE growing?" — comes from `report/cve.report.{tsv,md}`. It shows
-CVE volume + scored count + average + max CVSS for every year
-since 1999.
-
-## The columns
+## 字段说明
 
 | Field | What it is | How to use it |
 |---|---|---|
@@ -36,7 +29,7 @@ The current-year row carries a `YTD` annotation (e.g.
 the `CVEs` count is partial, not final. Same shape as the
 end-of-year number, just smaller.
 
-## The total row
+## Total 行
 
 `Total` is the **sum across all years**, not the count of unique
 CVE ids. Because the catalog keeps historical records (we don't
@@ -52,7 +45,7 @@ Two related totals exist, in different files:
   `cwe_report.py` — distinct `(CVE, CWE)` pairs in the
   `since 2024` window. Different number; not on the README.
 
-## Why some years have Avg score `—`
+## 为什么有些年份 Avg score 是 —
 
 Years with zero scored CVEs (2000 in the current data) render
 the `Avg score` cell as an em-dash (`—`) rather than `0.0` or
@@ -61,7 +54,7 @@ the `Avg score` cell as an em-dash (`—`) rather than `0.0` or
 weighted average across years — so it stays sane when some years
 contribute zero scores.
 
-## How fast is the catalog actually growing?
+## 目录实际上增长多快？
 
 Recent years:
 
@@ -81,7 +74,7 @@ behind on the most recent year's worth of disclosures. The 4-hour
 refresh cadence in this repo's CI is one answer; per-stream
 subscription (NVD RSS, vendor advisories) is another.
 
-## What "scored" means
+## "已打分"是什么意思
 
 A CVE is "scored" when the CNA published at least one CVSS
 vector — v2.0, v3.0, v3.1, or v4.0. Older CVEs (1999-2016) and
@@ -94,14 +87,14 @@ column in `cve-YYYY.tsv` is that single number; the raw upstream
 JSON (accessible via `x cve detail CVE-YYYY-NNNN`) carries the
 full vector.
 
-## How the file is built
+## 文件怎么生成的
 
 `.x-cmd/report.py` walks every `data/cve-YYYY.tsv`, counts rows +
 scored rows + sums scores per year, then writes both
 `cve.report.tsv` (5 cols, machine-readable) and `cve.report.md`
 (markdown table for the README).
 
-## Where to read next
+## 继续阅读
 
 - [`1-how-data-is-built.md`](./1-how-data-is-built.md) — pipeline + scripts
 - [`3-top-cwes-explained.md`](./3-top-cwes-explained.md) — the other two tables

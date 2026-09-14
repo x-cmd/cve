@@ -1,31 +1,26 @@
 ---
+
 x-title: 数据怎么来的
 x-desc: CVEProject/cvelistV5 每 4 小时怎么变成这仓库的 per-year TSV。
 x-sidebar: 数据怎么来的
 x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
-  '@context': https://schema.org
+  '@context': <https://schema.org>
   '@graph':
     - '@type': TechArticle
       headline: '数据怎么产生的'
       inLanguage: 'zh-Hans'
       about: 'x-cmd/cve 流水线'
----
-每 4 小时，GitHub Actions 上的 CI 克隆 [CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5)，遍历每条 CVE JSON 记录，输出一份按年份索引的 9 列 TSV。MITRE CWE 目录同流程。这套 pipeline 是 6 个 Python 脚本 + 1 个 workflow 文件，零依赖。
+---本仓库是**生产端**——读取
+[CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5)，按年抽取精简 9 列 TSV，xz 压缩后发布为 [GitHub Release 资源](https://github.com/x-cmd/cve/releases/tag/data)。
+**消费端**是 [`x cve`](https://x-cmd.com/mod/cve) shell 模块，按需下载、xz 解压、运行时无需联网。
+姊妹模块 [`x cwe`](https://x-cmd.com/mod/cwe) 用于浏览 CWE 目录。
 
+下面是这个 pipeline 的细节。
 
-# How the data is built
+## 流水线总览
 
-Every 4 hours, a CI run on GitHub Actions clones
-[CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5),
-walks every CVE JSON record, and emits a year-indexed 9-column
-TSV. The MITRE CWE catalog is fetched the same way. The whole
-pipeline is six Python scripts and one workflow file, all
-dependency-free.
-
-## Pipeline overview
-
-```
+```text
 cvelistV5 JSON ─► tsv.py ─► data/cve-YYYY.tsv
                                   │
 mitre.org 2000.csv ─► cwe.py ─► data/cwe.tsv + data/cwe.slim.tsv
@@ -40,7 +35,7 @@ release.yml inline step ─► README.md + README.cn.md (front-of-page tables)
 release.yml xz step      ─► release/data/*.xz (xz-compressed TSVs)
 ```
 
-## The scripts (all Python 3.8+ stdlib)
+## 脚本（Python 3.8+ 标准库）
 
 | Script | Reads | Writes | What it does |
 |---|---|---|---|
@@ -54,7 +49,7 @@ release.yml xz step      ─► release/data/*.xz (xz-compressed TSVs)
 `_cve_index.py` is the shared parser (json → 9-cell row) and IO
 helpers used by all the above.
 
-## Schedule
+## 调度
 
 `.github/workflows/release.yml` runs every 4 hours at
 `37 */4 * * *` UTC plus on every push to `main`. A typical run:
@@ -93,7 +88,7 @@ consumers' cached sha256s stay valid.
 See [`2-latest-cves-explained.md`](./2-latest-cves-explained.md) for
 field-by-field meaning.
 
-## Where to read next
+## 继续阅读
 
 - [`3-top-cwes-explained.md`](./3-top-cwes-explained.md) — how the Top 10 CWE tables are computed
 - [`4-yearly-stats-explained.md`](./4-yearly-stats-explained.md) — YTD, scored vs unscored, totals

@@ -24,7 +24,7 @@ numbers shift over time.
 Each CVE row in `data/cve-YYYY.tsv` has a `cwe` column holding
 one or more CWE ids (prefix stripped, joined by `;`):
 
-```
+```text
 CVE-2024-12345  cwe="79;352"     # XSS + CSRF
 CVE-2024-67890  cwe="89"          # SQL Injection
 CVE-2024-99999  cwe=""            # no weakness category assigned

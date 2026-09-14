@@ -24,6 +24,13 @@
 #   (cve-data-as-of, cve.report.md, etc.) and by the user-authored
 #   `<details>` / `<summary>` folds around the CVSS-scoring
 #   popularization section. Required for the docs to render.
+#
+# MD057 — false positives on cross-file links. The doc-2026 install
+#   articles have many of these (e.g. ./3-top-cwes-explained.md
+#   pointing back at ./1-how-data-is-built.md); rumdl doesn't walk
+#   the repo to resolve them. Files exist; we just can't lint the
+#   cross-references from inside one file without scanning the
+#   whole tree.
 
 [global]
-disable = ["MD036", "MD041", "MD013", "MD051", "MD033"]
+disable = ["MD036", "MD041", "MD013", "MD051", "MD033", "MD057"]

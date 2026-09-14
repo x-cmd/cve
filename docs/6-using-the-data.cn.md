@@ -1,23 +1,17 @@
 ---
+
 x-title: 怎么使用数据
 x-desc: 三种消费 CVE / CWE 数据的方式 —— curl + xz 用原始 TSV、x cve shell 模块、DuckDB / pandas。
 x-sidebar: 怎么使用数据
 x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
-  '@context': https://schema.org
+  '@context': <https://schema.org>
   '@graph':
     - '@type': TechArticle
       headline: '如何使用这些数据'
       inLanguage: 'zh-Hans'
       about: '数据消费'
----
-三种消费 CVE / CWE 数据的方式，按集成成本递增排列。
-
-
-# Using the data
-
-Three ways to consume the CVE / CWE data, in increasing order of
-integration cost.
+---三种消费 CVE / CWE 数据的方式，按集成成本递增排列。
 
 ## 1. Raw TSVs (`curl` + `xz`)
 
@@ -52,7 +46,7 @@ awk -F'\t' '$6!=""' cve-2026.tsv \
   | cut -f1,4,6
 ```
 
-## 2. `x cve` shell module
+## 2. `x cve` shell 模块
 
 [`x cve`](https://x-cmd.com/mod/cve) wraps the TSVs and exposes
 a small CLI for one-record lookups. Install
@@ -138,7 +132,7 @@ xss = df.filter(
 ).sort("score", descending=True)
 ```
 
-## When to pick which
+## 何时选哪个
 
 - **One record, browsing, Shodan enrichment** → `x cve` (option 2).
 - **Bulk analytics, joins into Python/R/DuckDB, scripted ETL** →

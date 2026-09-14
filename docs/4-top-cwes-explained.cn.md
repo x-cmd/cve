@@ -1,32 +1,24 @@
 ---
+
 x-title: Top CWE 排名怎么算的
 x-desc: CVE 怎么 join 到 CWE、按数量排名、按平均 CVSS 排名、为什么有「since 2024」窗口。
 x-sidebar: Top CWE 解读
 x-keywords: CVE, CWE, AI 安全, 漏洞情报
 x-json-ld:
-  '@context': https://schema.org
+  '@context': <https://schema.org>
   '@graph':
     - '@type': TechArticle
       headline: 'Top CWE 排名怎么算'
       inLanguage: 'zh-Hans'
       about: 'CWE 排名'
----
-README 上的两张 CWE 表来自同一个 join、按两种方式排序。这页解释 join 做什么、两种排序含义、数字为什么会随时间漂移。
+---README 上的两张 CWE 表来自同一个 join、按两种方式排序。这页解释 join 做什么、两种排序含义、数字为什么会随时间漂移。
 
-
-# How the Top CWE tables are computed
-
-The two CWE tables on [`README.md`](../../README.md) come from
-the same join, ranked two different ways. This page explains
-what the join does, what the two ranking axes mean, and why the
-numbers shift over time.
-
-## The join: every CVE × every CWE it references
+## Join：每条 CVE × 它引用的每个 CWE
 
 Each CVE row in `data/cve-YYYY.tsv` has a `cwe` column holding
 one or more CWE ids (prefix stripped, joined by `;`):
 
-```
+```text
 CVE-2024-12345  cwe="79;352"     # XSS + CSRF
 CVE-2024-67890  cwe="89"          # SQL Injection
 CVE-2024-99999  cwe=""            # no weakness category assigned
@@ -37,7 +29,7 @@ per (CVE, CWE) pair. A CVE with `cwe="79;352"` contributes +1
 to both CWE-79 and CWE-352. A CVE with empty `cwe` contributes
 to nothing.
 
-## Ranking by CVE count
+## 按 CVE 数量排名
 
 `report/cwe.top100.by-cve-count.report.tsv` sorts every CWE
 descending by that exploded count. Stable tiebreak: by mean CVSS
@@ -52,7 +44,7 @@ before 2024 so the ranking reflects **what engineers are getting
 wrong right now** — see the SINCE_YEAR constant in
 [`.x-cmd/cwe_report.py`](https://github.com/x-cmd/cve/blob/main/.x-cmd/cwe_report.py).
 
-## Ranking by mean CVSS
+## 按平均 CVSS 排名
 
 `report/cwe.top100.by-cve-score.report.tsv` sorts CWEs by
 **mean CVSS base score** across their associated CVEs (with at
@@ -69,7 +61,7 @@ classified as `Embedded Malicious Code` (CWE-506) with score
 incident, not a class trend. The 10-sample floor suppresses
 those outliers.
 
-## What's not in the ranking
+## 排名不包含的内容
 
 - **CWE views and categories** (CWE-699 "Software Development",
   CWE-1000 "Research Concepts"). The `cwe_report.py` ranks
@@ -83,7 +75,7 @@ those outliers.
   `REJECT`, our pipeline drops it from the next `tsv.py` rebuild
   — those rows simply disappear from the catalog.
 
-## Why the numbers shift run-to-run
+## 为什么数字每次跑会变
 
 Two reasons the table changes every 4 hours:
 
@@ -99,7 +91,7 @@ The pre-aggregated TSVs are committed to git on every CI run, so
 you can `git log -- report/cwe.top100.by-cve-count.since-2024.report.tsv`
 to see the historical shape of the ranking.
 
-## How the file is built
+## 文件怎么生成的
 
 `.x-cmd/cwe_report.py` does the join + ranking, emits both TSVs
 (all years + since 2024) and two markdown files (English +
@@ -108,7 +100,7 @@ Chinese). The Chinese version is only emitted when
 [`1-how-data-is-built.md`](./1-how-data-is-built.md) for how that
 file is populated.
 
-## Where to read next
+## 继续阅读
 
 - [`1-how-data-is-built.md`](./1-how-data-is-built.md) — pipeline + scripts
 - [`2-latest-cves-explained.md`](./2-latest-cves-explained.md) — column meanings

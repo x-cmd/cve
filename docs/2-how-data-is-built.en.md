@@ -23,7 +23,7 @@ dependency-free.
 
 ## Pipeline overview
 
-```
+```text
 cvelistV5 JSON ─► tsv.py ─► data/cve-YYYY.tsv
                                   │
 mitre.org 2000.csv ─► cwe.py ─► data/cwe.tsv + data/cwe.slim.tsv
