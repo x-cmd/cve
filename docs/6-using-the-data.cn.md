@@ -11,35 +11,38 @@ x-json-ld:
       headline: '如何使用这些数据'
       inLanguage: 'zh-Hans'
       about: '数据消费'
----三种消费 CVE / CWE 数据的方式，按集成成本递增排列。
+---
 
-## 1. Raw TSVs (`curl` + `xz`)
+# 怎么使用数据
 
-Data lives at
-[github.com/x-cmd/cve/releases/tag/data](https://github.com/x-cmd/cve/releases/tag/data)
-as plain xz-compressed TSVs. No install, no shell module, no
-API key.
+三种使用 CVE / CWE 数据的方式，按集成成本从低到高排列。
+
+## 1. 原始 TSV（`curl` + `xz`）
+
+数据托管在
+[github.com/x-cmd/cve/releases/tag/data](https://github.com/x-cmd/cve/releases/tag/data)，
+就是普通的 xz 压缩 TSV。无需安装、无需 shell 模块、无需 API key。
 
 ```sh
-# One year of CVEs (~5 MB xz)
+# 一年 CVE（约 5 MB xz）
 curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-2026.tsv.xz \
   | xz -dc > cve-2026.tsv
 
-# Whole catalog (~21 MB xz)
+# 全量目录（约 21 MB xz）
 curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cve-all.tar.xz \
   | tar -xJ
 
-# Just the CWE catalog (~150 KB xz)
+# 只要 CWE 目录（约 150 KB xz）
 curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cwe.tsv.xz \
   | xz -dc > cwe.tsv
 ```
 
-The 9 columns of `cve-YYYY.tsv` are documented in
-[`3-latest-cves-explained`](./3-latest-cves-explained.en.md). A
-worked example:
+`cve-YYYY.tsv` 的 9 个列在
+[`3-latest-cves-explained`](./3-latest-cves-explained.en.md) 有说明。一个
+实战示例：
 
 ```sh
-# Top 10 CVEs by score in 2026
+# 2026 年分数最高的 10 条 CVE
 awk -F'\t' '$6!=""' cve-2026.tsv \
   | sort -t$'\t' -k6,6nr \
   | head -10 \
@@ -48,35 +51,33 @@ awk -F'\t' '$6!=""' cve-2026.tsv \
 
 ## 2. `x cve` shell 模块
 
-[`x cve`](https://x-cmd.com/mod/cve) wraps the TSVs and exposes
-a small CLI for one-record lookups. Install
-[x-cmd](https://x-cmd.com/install), then:
+[`x cve`](https://x-cmd.com/mod/cve) 把 TSV 包了一层，提供一个小 CLI 用于单条记录查询。先装
+[x-cmd](https://x-cmd.com/install)，然后：
 
 ```sh
-x cve                          # list all CVEs (newest first)
-x cve fz                       # fzf picker
-x cve info CVE-2024-0001        # one record by id (YYYY-NNNN shorthand works too)
-x cve detail CVE-2024-0001      # full upstream JSON from CVEProject/cvelistV5
-x shodan cve CVE-2024-0001      # EPSS + KEV + exploit-writeups enrichment
-x cwe ls                        # every CWE in the catalog
-x cwe 79                        # one CWE's full description
+x cve                          # 列出所有 CVE（最新优先）
+x cve fz                       # fzf 选择器
+x cve info CVE-2024-0001        # 按 id 查一条记录（YYYY-NNNN 简写也行）
+x cve detail CVE-2024-0001      # 来自 CVEProject/cvelistV5 的完整上游 JSON
+x shodan cve CVE-2024-0001      # EPSS + KEV + exploit-writeups 富化
+x cwe ls                        # 目录中所有 CWE
+x cwe 79                        # 单条 CWE 的完整描述
 ```
 
-`x cve` reads the per-year TSVs from this repo's release assets,
-so it works air-gapped once the assets have been fetched.
+`x cve` 从本仓库 release 资产读取按年切分的 TSV，所以只要资产被拉取过，就能离线工作。
 
 ## 3. Python — DuckDB / pandas / polars
 
-The TSVs are plain text; all three read them directly.
+TSV 就是纯文本，三者都能直接读。
 
-### DuckDB (recommended for SQL-style queries)
+### DuckDB（推荐用于 SQL 风格查询）
 
 ```python
 import duckdb
 con = duckdb.connect()
 con.execute("INSTALL httpfs; LOAD httpfs;")
 
-# One year via HTTP
+# 通过 HTTP 读取一年数据
 df = con.execute("""
   SELECT * FROM read_csv(
     'https://github.com/x-cmd/cve/releases/download/data/cve-2026.tsv.xz',
@@ -85,8 +86,7 @@ df = con.execute("""
 """).df()
 ```
 
-DuckDB's `union_all_by_name` joins all 28 per-year files into one
-logical table:
+DuckDB 的 `union_all_by_name` 把全部 28 个按年文件合并成一张逻辑表：
 
 ```python
 years = list(range(2024, 2027))
@@ -96,7 +96,7 @@ tables = [
 ]
 df_all = con.execute(" UNION ALL ".join(tables)).df()
 
-# Every XSS CVE scored >= 7 since 2024
+# 2024 年以来分数 >= 7 的所有 XSS CVE
 xss = df_all.filter(
     (df_all["cwe"].fillna("").str.contains(r"(^|;)79(;|$)")) &
     (df_all["score"].astype(float) >= 7)
@@ -111,7 +111,7 @@ df = pd.read_csv("cve-2026.tsv", sep="\t", dtype=str, keep_default_na=False)
 df["score"] = pd.to_numeric(df["score"], errors="coerce")
 df["patched"] = df["patched"].astype(int)
 
-# Top vendors for CWE-79 (XSS) since 2024
+# 2024 年以来 CWE-79 (XSS) 的头部供应商
 mask = df["cwe"].str.contains(r"(^|;)79(;|$)", regex=True, na=False)
 vendors = (
     df[mask].assign(v=df["vp"].str.split(";"))
@@ -134,16 +134,15 @@ xss = df.filter(
 
 ## 何时选哪个
 
-- **One record, browsing, Shodan enrichment** → `x cve` (option 2).
-- **Bulk analytics, joins into Python/R/DuckDB, scripted ETL** →
-  raw TSV (option 1 or 3).
+- **单条记录、浏览、Shodan 富化** → `x cve`（方案 2）。
+- **批量分析、join 进 Python/R/DuckDB、脚本化 ETL** →
+  原始 TSV（方案 1 或 3）。
 
-The raw TSVs are the same data either way — `x cve` is just a
-small convenience layer on top.
+无论哪种方式，原始 TSV 都是同一份数据 —— `x cve` 只是上面套的一层轻量便利封装。
 
-## What's next
+## 接下来读什么
 
-- The schema reference: [`3-latest-cves-explained`](./3-latest-cves-explained.en.md).
-- The CWE join + ranking logic: [`4-top-cwes-explained`](./4-top-cwes-explained.en.md).
-- How the data is built: [`2-how-data-is-built`](./2-how-data-is-built.en.md).
-- [README.md](../../README.md) for the live tables.
+- 字段定义：[`3-latest-cves-explained`](./3-latest-cves-explained.en.md)。
+- CWE join + 排名逻辑：[`4-top-cwes-explained`](./4-top-cwes-explained.en.md)。
+- 数据怎么生成的：[`2-how-data-is-built`](./2-how-data-is-built.en.md)。
+- [README.md](../../README.md) 查看实时表格。
