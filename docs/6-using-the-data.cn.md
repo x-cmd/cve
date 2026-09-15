@@ -38,8 +38,7 @@ curl -fsSL https://github.com/x-cmd/cve/releases/download/data/cwe.tsv.xz \
 ```
 
 `cve-YYYY.tsv` 的 9 个列在
-[`3-latest-cves-explained`](./3-latest-cves-explained.en.md) 有说明。一个
-实战示例：
+[`3-latest-cves-explained`](./3-latest-cves-explained.en.md) 有说明。实战示例：
 
 ```sh
 # 2026 年分数最高的 10 条 CVE
@@ -86,7 +85,7 @@ df = con.execute("""
 """).df()
 ```
 
-DuckDB 的 `union_all_by_name` 把全部 28 个按年文件合并成一张逻辑表：
+DuckDB 把全部 28 个按年文件合并成一张逻辑表：
 
 ```python
 years = list(range(2024, 2027))
@@ -138,7 +137,7 @@ xss = df.filter(
 - **批量分析、join 进 Python/R/DuckDB、脚本化 ETL** →
   原始 TSV（方案 1 或 3）。
 
-无论哪种方式，原始 TSV 都是同一份数据 —— `x cve` 只是上面套的一层轻量便利封装。
+两种方式拿到的 TSV 是同一份数据 —— `x cve` 只是上面套的一层轻量便利封装。
 
 ## 接下来读什么
 
